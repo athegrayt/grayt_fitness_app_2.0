@@ -9,17 +9,15 @@ class FoodJournal extends Component {
 			date: '',
 		},
 		foodSearch: {
-			food: '',
+			food: null,
 			foodSelected: false,
 			foodList: [],
-			amount: '',
-			unit: '',
-			time: '',
-			calories: '',
+			amount: null,
+			unit: null,
+			time: null,
+			calories: null,
 		},
-		journalEntries: [
-			{time: '' ,description: '',calories: ''}
-		],
+		journalEntries: [],
 	};
 
 	static getDerivedStateFromProps(props, state) {
@@ -39,42 +37,45 @@ class FoodJournal extends Component {
 	foodSearchHandler = () => {
 		const updatedFoodSearch = { ...this.state.foodSearch };
 		const food = this.state.foodSearch.food;
-		if (food === undefined) {
+		if (food === null) {
 			alert('Please enter the type of food');
+			return
+		}else{
+
+			const endpointSelect = `https://trackapi.nutritionix.com/v2/natural/nutrients`;
+			fetch(endpointSelect, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'x-app-id': '5876afdb',
+					'x-app-key': process.env.REACT_APP_API_KEY2,
+				},
+				body: JSON.stringify({
+					query: `${food.toLowerCase()}`,
+					timezone: 'US/Eastern',
+				}),
+			})
+				.then((res) => res.json())
+				.then((data) => {
+					const unit = data.foods[0].serving_unit;
+					let calories = data.foods[0].nf_calories;
+					const time = data.foods[0].consumed_at;
+					const amount = data.foods[0].serving_qty;
+					if (amount !== 1) {
+						calories = calories / amount;
+					}
+					updatedFoodSearch.foodSelected = true;
+					updatedFoodSearch.unit = unit;
+					updatedFoodSearch.calories = calories.toFixed(0);
+					updatedFoodSearch.time = time;
+					updatedFoodSearch.amount = amount;
+					console.log(updatedFoodSearch);
+					this.setState({ foodSearch: updatedFoodSearch });
+				})
+				.catch(error=>console.log(error));
 		}
-		const endpointSelect = `https://trackapi.nutritionix.com/v2/natural/nutrients`;
-		fetch(endpointSelect, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'x-app-id': '5876afdb',
-				'x-app-key': process.env.REACT_APP_API_KEY2,
-			},
-			body: JSON.stringify({
-				query: `${food.toLowerCase()}`,
-				timezone: 'US/Eastern',
-			}),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data);
-				const unit = data.foods[0].serving_unit;
-				let calories = data.foods[0].nf_calories;
-				const time = data.foods[0].consumed_at;
-				const amount = data.foods[0].serving_qty;
-				if (amount !== 1) {
-					calories = calories / amount;
-				}
-				updatedFoodSearch.foodSelected = true;
-				updatedFoodSearch.unit = unit;
-				updatedFoodSearch.calories = calories.toFixed(0);
-				updatedFoodSearch.time = time;
-				updatedFoodSearch.amount = amount;
-				console.log(updatedFoodSearch);
-				this.setState({ foodSearch: updatedFoodSearch });
-			});
 	};
-	// };
+
 	inputChangeHandler = (event) => {
 		const food = event.target.value;
 		const updatedFoodSearch = {
@@ -98,47 +99,52 @@ class FoodJournal extends Component {
 		this.setState({ foodSearch: updatedFoodSearch });
 	};
 
-	addEntryHandler = () => {
-		const updatedJournalEntry = [...this.state.journalEntries];
+	addEntryHandler = async() => {
+		// const updatedJournalEntry = this.state.journalEntries;
 		const { amount, food, unit } = this.state.foodSearch;
 		let { time, calories } = this.state.foodSearch;
 		time = time.slice(11, 19);
-		
 		calories = calories * amount
 		const deleteRequest = false;
-		const description = `${amount} ${unit} of ${food} `;
-		updatedJournalEntry.push({ time, description, calories, deleteRequest });
-		this.localStorageHandler(updatedJournalEntry);
-		this.setState({
+		let description = `${amount} ${unit} of ${food}`;
+		if(food === unit){
+			description = `${amount} ${food}`;
+		}
+		const updatedJournalEntry= { time, description, calories, deleteRequest };
+		await this.setState({
 			foodSearch: { foodSelected: false },
-			journalEntries: updatedJournalEntry,
+			journalEntries: [...this.state.journalEntries, updatedJournalEntry],
 		});
-	};
-
-
-	deleteHandler = (entryID) => {
-		const updatedJournalEntry = [...this.state.journalEntries];
-		console.log(`Before: ${updatedJournalEntry}`)
-		updatedJournalEntry.splice(entryID, 1);
-		console.log(`After: ${updatedJournalEntry}`)
-		console.log('delete')
-		this.localStorageHandler(updatedJournalEntry);
-		this.setState({
-			journalEntries: updatedJournalEntry,
-		});
+		await this.localStorageHandler();
 	};
 	
 	localStorageHandler = (updatedJournalEntry) => {
+		updatedJournalEntry = this.state.journalEntries;
 		localStorage.setItem('journalEntries', JSON.stringify(updatedJournalEntry));
 	};
-	deleteRequestHandler = (entryID) => {
-		const updatedJournalEntry = [...this.state.journalEntries];
-		updatedJournalEntry[entryID].deleteRequest = !this.state.journalEntries[
-			entryID
-		].deleteRequest;
+
+	deleteHandler = (entryID) => {
+		const updatedJournalEntry = this.state.journalEntries;
+		console.log('Before:'+ updatedJournalEntry)
+		updatedJournalEntry.splice(entryID, 1);
+		console.log(`After: ${updatedJournalEntry}`)
+		this.localStorageHandler(updatedJournalEntry);
 		this.setState({
 			journalEntries: updatedJournalEntry,
 		});
+		console.log('delete')
+	};
+	
+	deleteRequestHandler = (entryID) => {
+		const updatedJournalEntry = this.state.journalEntries;
+		if (updatedJournalEntry[entryID]){
+			updatedJournalEntry[entryID].deleteRequest = !this.state.journalEntries[
+				entryID
+			].deleteRequest;
+		}
+			this.setState({
+				journalEntries: updatedJournalEntry,
+			});
 	};
 
 	render() {
