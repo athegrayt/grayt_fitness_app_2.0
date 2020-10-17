@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import Cockpit from '../../components/Cockpit/Cockpit';
 import FoodSearch from '../../components/FoodSearch/FoodSearch';
 import JournalEntries from '../../components/JournalEntries/JournalEntries';
+import axios from '../../axios-journalEntries'
+import Spinner from '../../components/UI/Spinner/Spinner'
 
 class FoodJournal extends Component {
 	state = {
@@ -17,7 +19,7 @@ class FoodJournal extends Component {
 			time: null,
 			calories: null,
 		},
-		journalEntries: [],
+		journalEntries: null,
 	};
 
 	static getDerivedStateFromProps(props, state) {
@@ -29,9 +31,15 @@ class FoodJournal extends Component {
 	}
 
 	componentDidMount() {
-		const storedJournalEntries =
-			JSON.parse(localStorage.getItem('journalEntries')) || [];
-		this.setState({ journalEntries: storedJournalEntries });
+		axios
+			.get(
+				'/journalEntries/-MJiNVfRlzMYzhlUWgDe.json'
+			)
+			.then((response) => {
+				console.log(response);
+				this.setState({ journalEntries: response.data });
+			})
+			.catch((error) => console.log(error));
 	}
 
 	foodSearchHandler = () => {
@@ -39,9 +47,8 @@ class FoodJournal extends Component {
 		const food = this.state.foodSearch.food;
 		if (food === null) {
 			alert('Please enter the type of food');
-			return
-		}else{
-
+			return;
+		} else {
 			const endpointSelect = `https://trackapi.nutritionix.com/v2/natural/nutrients`;
 			fetch(endpointSelect, {
 				method: 'POST',
@@ -72,7 +79,7 @@ class FoodJournal extends Component {
 					console.log(updatedFoodSearch);
 					this.setState({ foodSearch: updatedFoodSearch });
 				})
-				.catch(error=>console.log(error));
+				.catch((error) => console.log(error));
 		}
 	};
 
@@ -99,55 +106,69 @@ class FoodJournal extends Component {
 		this.setState({ foodSearch: updatedFoodSearch });
 	};
 
-	addEntryHandler = async() => {
-		// const updatedJournalEntry = this.state.journalEntries;
+	addEntryHandler = async () => {
 		const { amount, food, unit } = this.state.foodSearch;
 		let { time, calories } = this.state.foodSearch;
 		time = time.slice(11, 19);
-		calories = calories * amount
+		calories = calories * amount;
 		const deleteRequest = false;
 		let description = `${amount} ${unit} of ${food}`;
-		if(food === unit){
+		if (food === unit) {
 			description = `${amount} ${food}`;
 		}
-		const updatedJournalEntry= { time, description, calories, deleteRequest };
+		const updatedJournalEntry = { time, description, calories, deleteRequest };
 		await this.setState({
 			foodSearch: { foodSelected: false },
 			journalEntries: [...this.state.journalEntries, updatedJournalEntry],
 		});
-		await this.localStorageHandler();
-	};
-	
-	localStorageHandler = (updatedJournalEntry) => {
-		updatedJournalEntry = this.state.journalEntries;
-		localStorage.setItem('journalEntries', JSON.stringify(updatedJournalEntry));
+		await this.firebaseHandler()
 	};
 
-	deleteHandler = (entryID) => {
+	firebaseHandler = (journalEntries) => {
+		journalEntries = this.state.journalEntries;
+		axios
+			.put('/journalEntries/-MJiNVfRlzMYzhlUWgDe.json', journalEntries)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+
+	deleteHandler = async (entryID) => {
 		const updatedJournalEntry = this.state.journalEntries;
-		console.log('Before:'+ updatedJournalEntry)
 		updatedJournalEntry.splice(entryID, 1);
-		console.log(`After: ${updatedJournalEntry}`)
-		this.localStorageHandler(updatedJournalEntry);
-		this.setState({
+		await this.setState({
 			journalEntries: updatedJournalEntry,
 		});
-		console.log('delete')
+		await this.firebaseHandler();
 	};
-	
+
 	deleteRequestHandler = (entryID) => {
 		const updatedJournalEntry = this.state.journalEntries;
-		if (updatedJournalEntry[entryID]){
+		if (updatedJournalEntry[entryID]) {
 			updatedJournalEntry[entryID].deleteRequest = !this.state.journalEntries[
 				entryID
 			].deleteRequest;
 		}
-			this.setState({
-				journalEntries: updatedJournalEntry,
-			});
+		this.setState({
+			journalEntries: updatedJournalEntry,
+		});
 	};
 
 	render() {
+		let journalEntries = <Spinner />;
+		if (this.state.journalEntries) {
+			journalEntries = (
+				<JournalEntries
+					journalEntries={this.state.journalEntries}
+					deleteHandler={this.deleteHandler.bind(this)}
+					deleteRequestHandler={this.deleteRequestHandler}
+					// deleteRequest={this.state.deleteRequest}
+				/>
+			);
+		}
 		return (
 			<Fragment>
 				<Cockpit date={this.state.cockpit.date} />
@@ -162,12 +183,7 @@ class FoodJournal extends Component {
 					clicked={this.foodSearchHandler}
 					addEntry={this.addEntryHandler}
 				/>
-				<JournalEntries
-					journalEntries={this.state.journalEntries}
-					deleteHandler={this.deleteHandler.bind(this)}
-					deleteRequestHandler={this.deleteRequestHandler}
-					// deleteRequest={this.state.deleteRequest}
-				/>
+				{journalEntries}
 			</Fragment>
 		);
 	}
