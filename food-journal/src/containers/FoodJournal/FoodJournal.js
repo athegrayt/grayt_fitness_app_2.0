@@ -8,7 +8,7 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 class FoodJournal extends Component {
 	state = {
 		cockpit: {
-			date: '',
+			date: null,
 		},
 		foodSearch: {
 			food: null,
@@ -22,15 +22,21 @@ class FoodJournal extends Component {
 		journalEntries: null,
 	};
 
-	static getDerivedStateFromProps(props, state) {
-		const d = new Date();
-		const date = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
-		state.cockpit.date = date;
+	// static getDerivedStateFromProps(props, state) {
+	// 	const d = new Date();
+	// 	const date = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
+	// 	state.cockpit.date = date;
 
-		return state;
-	}
+	// 	return state;
+	// }
 
 	componentDidMount() {
+		
+		const d = new Date();
+		const date = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+		console.log(d)
+		this.setState({cockpit: {date: date}})
+		
 		axios
 			.get(
 				'/journalEntries/-MJiNVfRlzMYzhlUWgDe.json'
