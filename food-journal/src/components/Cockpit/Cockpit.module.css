@@ -1,4 +1,10 @@
 .Cockpit{
     display: flex;
     justify-content: center;
+    flex-flow: wrap;
+    margin-bottom: 0px;
+}
+
+h1{
+    margin-bottom: 0px;
 }

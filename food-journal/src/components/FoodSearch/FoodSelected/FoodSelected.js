@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Button from '../../UI/Button/Button'
 import classes from './FoodSelected.module.css';
 
 const foodSelected = (props) => {
@@ -15,7 +16,9 @@ const foodSelected = (props) => {
 			</div>
 			<div className={classes.foodInfo}>
 				<h2>{props.food}</h2>
-				<button onClick={props.addEntry}>ADD ENTRY</button>
+				<Button btnType="Success" clicked={props.addEntry}>
+					ADD ENTRY
+				</Button>
 			</div>
 		</div>
 	);

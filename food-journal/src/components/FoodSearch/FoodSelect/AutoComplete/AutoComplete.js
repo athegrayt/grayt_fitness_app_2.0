@@ -37,7 +37,7 @@ export default function Asynchronous(props) {
 		fetchData()
 
 		return () => setLoading(false)
-	}, [foods]);
+	}, [food]);
 
 	React.useEffect(() => {
 		if (!open) {

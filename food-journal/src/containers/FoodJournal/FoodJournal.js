@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Cockpit from '../../components/Cockpit/Cockpit';
 import FoodSearch from '../../components/FoodSearch/FoodSearch';
+import Modal from '../../components/UI/Modal/Modal'
 import JournalEntries from '../../components/JournalEntries/JournalEntries';
 import axios from '../../axios-journalEntries'
 import Spinner from '../../components/UI/Spinner/Spinner'
@@ -12,6 +13,7 @@ class FoodJournal extends Component {
 		},
 		foodSearch: {
 			food: null,
+			invalid: false,
 			foodSelected: false,
 			foodList: [],
 			amount: null,
@@ -21,14 +23,6 @@ class FoodJournal extends Component {
 		},
 		journalEntries: null,
 	};
-
-	// static getDerivedStateFromProps(props, state) {
-	// 	const d = new Date();
-	// 	const date = `${d.getMonth()}/${d.getDate()}/${d.getFullYear()}`;
-	// 	state.cockpit.date = date;
-
-	// 	return state;
-	// }
 
 	componentDidMount() {
 		
@@ -52,7 +46,8 @@ class FoodJournal extends Component {
 		const updatedFoodSearch = { ...this.state.foodSearch };
 		const food = this.state.foodSearch.food;
 		if (food === null) {
-			alert('Please enter the type of food');
+			this.setState({foodSearch:{invalid: true}})
+			// alert('Please enter the type of food');
 			return;
 		} else {
 			const endpointSelect = `https://trackapi.nutritionix.com/v2/natural/nutrients`;
@@ -88,7 +83,9 @@ class FoodJournal extends Component {
 				.catch((error) => console.log(error));
 		}
 	};
-
+	foodSearchReTryHandler = () => {
+		this.setState({ foodSearch: { invalid: false } });
+	}
 	inputChangeHandler = (event) => {
 		const food = event.target.value;
 		const updatedFoodSearch = {
@@ -177,6 +174,11 @@ class FoodJournal extends Component {
 		}
 		return (
 			<Fragment>
+				<Modal
+					show={this.state.foodSearch.invalid}
+					modalClosed={this.foodSearchReTryHandler}>
+					<p>Please enter the type of food</p>
+				</Modal>
 				<Cockpit date={this.state.cockpit.date} />
 				<FoodSearch
 					foodSelected={this.state.foodSearch.foodSelected}
