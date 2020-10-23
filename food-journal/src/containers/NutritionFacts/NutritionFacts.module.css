@@ -1,0 +1,11 @@
+.NutritionFacts{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+.NutritionFacts h1{
+    text-align: center;
+    width: 100%;
+    justify-content: center;
+}

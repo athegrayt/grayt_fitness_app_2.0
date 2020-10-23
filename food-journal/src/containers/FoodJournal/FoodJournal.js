@@ -11,17 +11,8 @@ class FoodJournal extends Component {
 		cockpit: {
 			date: null,
 		},
-		foodSearch: {
-			food: null,
-			invalid: false,
-			foodSelected: false,
-			foodList: [],
-			amount: null,
-			unit: null,
-			time: null,
-			calories: null,
-		},
-		journalEntries: null,
+		foodSearch: {},
+		journalEntries: [],
 	};
 
 	componentDidMount() {
@@ -36,14 +27,13 @@ class FoodJournal extends Component {
 				'/journalEntries/-MJiNVfRlzMYzhlUWgDe.json'
 			)
 			.then((response) => {
-				console.log(response);
 				this.setState({ journalEntries: response.data });
 			})
 			.catch((error) => console.log(error));
 	}
 
 	foodSearchHandler = () => {
-		const updatedFoodSearch = { ...this.state.foodSearch };
+		let updatedFoodSearch = { ...this.state.foodSearch };
 		const food = this.state.foodSearch.food;
 		if (food === null) {
 			this.setState({foodSearch:{invalid: true}})
@@ -65,20 +55,29 @@ class FoodJournal extends Component {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					const unit = data.foods[0].serving_unit;
-					let calories = data.foods[0].nf_calories;
-					const time = data.foods[0].consumed_at;
-					const amount = data.foods[0].serving_qty;
-					if (amount !== 1) {
-						calories = calories / amount;
-					}
-					updatedFoodSearch.foodSelected = true;
-					updatedFoodSearch.unit = unit;
-					updatedFoodSearch.calories = calories.toFixed(0);
-					updatedFoodSearch.time = time;
-					updatedFoodSearch.amount = amount;
-					console.log(updatedFoodSearch);
-					this.setState({ foodSearch: updatedFoodSearch });
+					console.log(data);
+					const nf = Object.keys(data.foods[0])
+						.filter((key) => {
+							return (
+								key.match(/nf_*/) ||
+								key.match(/serving*/) ||
+								key.match(/consumed*/) ||
+								key.match(/food*/)
+							);
+						})
+						.reduce(
+							(nfObject, curKey) => ({
+								...nfObject,
+								[curKey]: data.foods[0][curKey],
+							}),
+							{}
+						);
+					nf.deleteRequest = false;		
+					nf.foodSelected = true;
+					updatedFoodSearch = nf;
+					this.setState({
+						foodSearch: updatedFoodSearch,
+					});
 				})
 				.catch((error) => console.log(error));
 		}
@@ -98,28 +97,19 @@ class FoodJournal extends Component {
 		const updatedFoodSearch = {
 			...this.state.foodSearch,
 		};
-		updatedFoodSearch.amount = event.target.value;
+		updatedFoodSearch.serving_qty = event.target.value;
 		this.setState({ foodSearch: updatedFoodSearch });
 	};
 	unitChangeHandler = (event) => {
 		const updatedFoodSearch = {
 			...this.state.foodSearch,
 		};
-		updatedFoodSearch.unit = event.target.value;
+		updatedFoodSearch.serving_unit = event.target.value;
 		this.setState({ foodSearch: updatedFoodSearch });
 	};
 
 	addEntryHandler = async () => {
-		const { amount, food, unit } = this.state.foodSearch;
-		let { time, calories } = this.state.foodSearch;
-		time = time.slice(11, 19);
-		calories = calories * amount;
-		const deleteRequest = false;
-		let description = `${amount} ${unit} of ${food}`;
-		if (food === unit) {
-			description = `${amount} ${food}`;
-		}
-		const updatedJournalEntry = { time, description, calories, deleteRequest };
+		const updatedJournalEntry = this.state.foodSearch;
 		await this.setState({
 			foodSearch: { foodSelected: false },
 			journalEntries: [...this.state.journalEntries, updatedJournalEntry],
@@ -127,8 +117,8 @@ class FoodJournal extends Component {
 		await this.firebaseHandler()
 	};
 
-	firebaseHandler = (journalEntries) => {
-		journalEntries = this.state.journalEntries;
+	firebaseHandler = () => {
+		const journalEntries = this.state.journalEntries;
 		axios
 			.put('/journalEntries/-MJiNVfRlzMYzhlUWgDe.json', journalEntries)
 			.then((res) => {
@@ -149,7 +139,9 @@ class FoodJournal extends Component {
 	};
 
 	deleteRequestHandler = (entryID) => {
+		console.log(entryID);
 		const updatedJournalEntry = this.state.journalEntries;
+		console.log(updatedJournalEntry);
 		if (updatedJournalEntry[entryID]) {
 			updatedJournalEntry[entryID].deleteRequest = !this.state.journalEntries[
 				entryID
@@ -168,7 +160,6 @@ class FoodJournal extends Component {
 					journalEntries={this.state.journalEntries}
 					deleteHandler={this.deleteHandler.bind(this)}
 					deleteRequestHandler={this.deleteRequestHandler}
-					// deleteRequest={this.state.deleteRequest}
 				/>
 			);
 		}
@@ -182,9 +173,9 @@ class FoodJournal extends Component {
 				<Cockpit date={this.state.cockpit.date} />
 				<FoodSearch
 					foodSelected={this.state.foodSearch.foodSelected}
-					food={this.state.foodSearch.food}
-					amount={this.state.foodSearch.amount}
-					unit={this.state.foodSearch.unit}
+					food={this.state.foodSearch.food_name}
+					amount={this.state.foodSearch.serving_qty}
+					unit={this.state.foodSearch.serving_unit}
 					changed={this.inputChangeHandler}
 					amountChanged={this.amountChangeHandler}
 					unitChanged={this.unitChangeHandler}
