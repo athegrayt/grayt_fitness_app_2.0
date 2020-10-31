@@ -5,6 +5,7 @@ import Modal from '../../components/UI/Modal/Modal'
 import JournalEntries from '../../components/JournalEntries/JournalEntries';
 import axios from '../../axios-journalEntries'
 import Spinner from '../../components/UI/Spinner/Spinner'
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
 
 class FoodJournal extends Component {
 	state = {
@@ -12,7 +13,7 @@ class FoodJournal extends Component {
 			date: null,
 		},
 		foodSearch: {},
-		journalEntries: [],
+		journalEntries: null,
 	};
 
 	componentDidMount() {
@@ -170,7 +171,8 @@ class FoodJournal extends Component {
 					modalClosed={this.foodSearchReTryHandler}>
 					<p>Please enter the type of food</p>
 				</Modal>
-				<Cockpit date={this.state.cockpit.date} />
+				<Cockpit date={this.state.cockpit.date}
+				journalEntries={this.state.journalEntries} />
 				<FoodSearch
 					foodSelected={this.state.foodSearch.foodSelected}
 					food={this.state.foodSearch.food_name}
@@ -188,4 +190,4 @@ class FoodJournal extends Component {
 	}
 }
 
-export default FoodJournal;
+export default withErrorHandler(FoodJournal, axios);

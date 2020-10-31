@@ -1,16 +1,16 @@
 import React from 'react'
 import classes from './NavigationItems.module.css'
-// import NavigationItem from './NavigationItem/NavigationItem'
-import {NavLink} from 'react-router-dom'
+import NavigationItem from './NavigationItem/NavigationItem'
+
     
     
 const navigationItems = (props) =>{
    return (
 			<ul className={classes.NavigationItems}>
-				<NavLink to="/food-journal">
+				<NavigationItem exact={props.exact}link="/food-journal">
 					Food Journal
-				</NavLink>
-				<NavLink to="/nutrition-facts">Nutritional Facts</NavLink>
+				</NavigationItem>
+				<NavigationItem link="/nutrition-facts">Nutritional Facts</NavigationItem>
 			</ul>
 		);
     

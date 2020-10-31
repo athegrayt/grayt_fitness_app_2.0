@@ -20,7 +20,7 @@ class NutritionFacts extends Component {
 							.filter((entry) => {
 								return entry.match(/nf_*/);
 							})
-							.reduce((o, k, i) => ({ ...o, [k]: entry[k] }), {});
+							.reduce((o, k, i) => ({ ...o, [k]: +entry[k] }), {});
 					})
 					
 				console.log(nutritionFacts);
