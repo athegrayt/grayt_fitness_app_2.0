@@ -7,10 +7,13 @@ import NavigationItem from './NavigationItem/NavigationItem'
 const navigationItems = (props) =>{
    return (
 			<ul className={classes.NavigationItems}>
-				<NavigationItem exact={props.exact}link="/food-journal">
+				<NavigationItem exact={props.exact} link="/food-journal">
 					Food Journal
 				</NavigationItem>
-				<NavigationItem link="/nutrition-facts">Nutritional Facts</NavigationItem>
+				<NavigationItem link="/nutrition-facts">
+					Nutritional Facts
+				</NavigationItem>
+				<NavigationItem link="/user-info">User Info</NavigationItem>
 			</ul>
 		);
     

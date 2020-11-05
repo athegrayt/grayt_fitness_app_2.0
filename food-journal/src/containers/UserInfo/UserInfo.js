@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './UserInfo.module.css';
