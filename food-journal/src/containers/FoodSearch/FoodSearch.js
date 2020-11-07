@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import * as actionTypes from '../../store/actions'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Forms/Input/Input'
 import axios from '../../axios-journalEntries';
@@ -162,6 +164,16 @@ class foodSearch extends Component {
 			});
 	};
 
+	resetHandler= () => {
+		const reset = {}
+		const resetOrderForm = this.state.orderForm
+		resetOrderForm.food_name.value = ''
+		this.setState({
+			foodSearch: reset,
+			orderForm:resetOrderForm 
+		})
+	}
+
 	render() {
 		let foodSearch = null;
 		const formElementsArray = [];
@@ -191,7 +203,7 @@ class foodSearch extends Component {
 			? (foodSearch = (
 					<div className={classes.FoodSearch}>
 						{foodSearchInputs}
-						<Button btnType="Success" clicked={this.addEntryHandler}>
+						<Button btnType="Success" clicked={()=>{this.props.onaddEntry(this.state.foodSearch); this.resetHandler();}}>
 							ADD ENTRY
 						</Button>
 					</div>
@@ -221,4 +233,12 @@ foodSearch.propTypes = {
 	clicked: PropTypes.func,
 };
 
-export default foodSearch;
+const mapDispatchToProps = dispatch => {
+	return{
+		onaddEntry: (entry) => dispatch({
+			type: actionTypes.ADD_ENTRY, entry: entry 
+		})
+	}
+}
+
+export default connect(null, mapDispatchToProps)(foodSearch);

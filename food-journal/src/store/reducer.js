@@ -1,7 +1,7 @@
 import * as actionTypes from './actions'
 
 const initialState = {
-	
+	calGoal: 2000,
 	journalEntries: [
 		{
 			consumed_at: '2020-10-21T18:36:03+00:00',
@@ -30,8 +30,14 @@ const reducer = (state=initialState, action) =>{
    switch(action.type){
        case actionTypes.ADD_ENTRY:
            return{
-               ...state.journalEntries.concat(action.entry)
-           }
+			   ...state,
+			   journalEntries: state.journalEntries.concat(action.entry)
+		   }
+		case actionTypes.DELETE_ENTRY:
+			return{
+				...state, 
+				journalEntries: state.journalEntries.filter( (entry, i) => i !== action.entryID)
+			}
         default:
             return state
    }
