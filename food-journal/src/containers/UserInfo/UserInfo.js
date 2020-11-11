@@ -116,11 +116,6 @@ class UserInfo extends Component {
 				formElementIdentifier
 			].value;
 		}
-		// const info = {
-		// 	user: this.props.ingredients,
-		// 	price: this.props.price,
-		// 	infoData: formData,
-		// };
 		axios
 			.post('/dataInfo.json', formData)
 			.then((response) => {

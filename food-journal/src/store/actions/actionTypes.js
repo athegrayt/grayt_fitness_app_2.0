@@ -1,0 +1,6 @@
+export const ADD_ENTRY = 'ADD_ENTRY'
+export const FOOD_SEARCH = 'FOOD_SEARCH'
+export const DELETE_ENTRY = 'DELETE_ENTRY'
+export const INIT_ENTRIES = 'INIT_ENTRIES';
+export const FETCH_ENTRIES_FAILED = 'FETCH_ENTRIES_FAILED';
+export const SET_ENTRIES = 'SET_ENTRIES';

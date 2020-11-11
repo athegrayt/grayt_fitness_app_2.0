@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import * as actionTypes from '../../store/actions';
-import JournalEntry from './JournalEntry/JournalEntry'
+import * as jouranlEntryActions from '../../store/actions/index';
+import JournalEntry from '../../components/JournalEntry/JournalEntry'
 import Modal from '../../components/UI/Modal/Modal'
 import NutritionSummary from '../../components/NutritionSummary/NutritionSummary'
 import classes from './JournalEntries.module.css'
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler'
+import axios from '../../axios-journalEntries'
 		
 class JournalEntries extends Component {
 	state={
@@ -14,6 +16,9 @@ class JournalEntries extends Component {
 		entryID: null
 	}
 
+	componentDidMount(){
+		this.props.onInitEntries();
+	}
 
 	deleteRequestHandler = (entryID) => {
 		console.log(entryID)
@@ -61,10 +66,8 @@ const mapStateToProps = state =>{
 const mapDispatchToProps = dispatch =>{
 	return{
 		onEntryDelete: (id) =>
-			dispatch({
-				type: actionTypes.DELETE_ENTRY, entryID: id
-			})
-		
+			dispatch(jouranlEntryActions.entryDelete(id)),
+		onInitEntries: () => dispatch(jouranlEntryActions.initEntries())
 	}
 } 
-export default connect(mapStateToProps, mapDispatchToProps)(JournalEntries);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(JournalEntries, axios));

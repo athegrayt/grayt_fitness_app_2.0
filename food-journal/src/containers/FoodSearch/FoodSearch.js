@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import * as actionTypes from '../../store/actions'
+import * as foodSearchActions from '../../store/actions/index'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Forms/Input/Input'
 import axios from '../../axios-journalEntries';
@@ -235,9 +235,7 @@ foodSearch.propTypes = {
 
 const mapDispatchToProps = dispatch => {
 	return{
-		onaddEntry: (entry) => dispatch({
-			type: actionTypes.ADD_ENTRY, entry: entry 
-		})
+		onaddEntry: (entry) => dispatch(foodSearchActions.addEntry(entry))
 	}
 }
 
