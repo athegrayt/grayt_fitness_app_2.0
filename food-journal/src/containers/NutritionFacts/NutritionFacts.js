@@ -9,25 +9,25 @@ class NutritionFacts extends Component {
 		journalEntries: [],
 	};
 
-	componentDidMount() {
-		axios
-			.get('/journalEntries/-MJiNVfRlzMYzhlUWgDe.json')
-			.then((response) => {
-                console.log(response.data);
-				const nutritionFacts = response.data
-					.map((entry) => {
-						return Object.keys(entry)
-							.filter((entry) => {
-								return entry.match(/nf_*/);
-							})
-							.reduce((o, k, i) => ({ ...o, [k]: +entry[k] }), {});
-					})
+	// componentDidMount() {
+	// 	axios
+	// 		.get('/journalEntries/-MJiNVfRlzMYzhlUWgDe.json')
+	// 		.then((response) => {
+    //             console.log(response.data);
+	// 			const nutritionFacts = response.data
+	// 				.map((entry) => {
+	// 					return Object.keys(entry)
+	// 						.filter((entry) => {
+	// 							return entry.match(/nf_*/);
+	// 						})
+	// 						.reduce((o, k, i) => ({ ...o, [k]: +entry[k] }), {});
+	// 				})
 					
-				console.log(nutritionFacts);
-				this.setState({ journalEntries: nutritionFacts });
-			})
-			.catch((error) => console.log(error));
-	}
+	// 			console.log(nutritionFacts);
+	// 			this.setState({ journalEntries: nutritionFacts });
+	// 		})
+	// 		.catch((error) => console.log(error));
+	// }
 
 	render() {
 		let nutritionFactsSum = null;

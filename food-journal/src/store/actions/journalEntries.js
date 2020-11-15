@@ -11,7 +11,7 @@ export const entryDelete = (id) => {
 export const setEntries = (entries) => {
 	return {
 		type: actionTypes.SET_ENTRIES,
-		Entries: entries,
+		entries: entries,
 	};
 };
 
@@ -21,16 +21,32 @@ export const fetchEntriesFailed = () => {
 	};
 };
 
-export const initEntries = () => {
+export const initEntries = (token, userId) => {
 	return (dispatch) => {
+		const queryParams =
+			`?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
 		axios
 			.get(
-				'https://grayt-fitness.firebaseio.com/journalEntries/-MJiNVfRlzMYzhlUWgDe.json'
+				'https://grayt-fitness.firebaseio.com/journalEntries.json' +
+					queryParams
 			)
 			.then((response) => {
-				dispatch(setEntries(response.data));
+				const curJournalEntries = []
+				for(let entryKey in response.data){
+					curJournalEntries.push(response.data[entryKey].journalEntry)
+				}
+				console.log(curJournalEntries)
+				dispatch(setEntries(curJournalEntries));
 			})
-			.catch((error) => {
+			.catch((err) => {
+				if (err.response) {
+					console.log(err.response.data);
+				} else if (err.request) {
+					console.log(err.request);
+				} else {
+					console.log('err', err.message);
+				}
+				console.log(err);
 				dispatch(fetchEntriesFailed());
 			});
 	};

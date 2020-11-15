@@ -17,7 +17,7 @@ class JournalEntries extends Component {
 	}
 
 	componentDidMount(){
-		this.props.onInitEntries();
+		this.props.onInitEntries(this.props.token, this.props.userId);
 	}
 
 	deleteRequestHandler = (entryID) => {
@@ -35,6 +35,7 @@ class JournalEntries extends Component {
 	render() {
 		let entries = <Spinner />;
 		if (this.props.jrlEntry) {
+			console.log(this.props.jrlEntry);
 			entries = this.props.jrlEntry.map( (entry, i) =>{
 				return (
 				<JournalEntry
@@ -59,7 +60,9 @@ class JournalEntries extends Component {
 
 const mapStateToProps = state =>{
 	return {
-		jrlEntry: state.journalEntries,
+		jrlEntry: state.journalEntries.journalEntries,
+		token: state.auth.token,
+		userId: state.auth.userId,
 	};
 }
 
@@ -67,7 +70,7 @@ const mapDispatchToProps = dispatch =>{
 	return{
 		onEntryDelete: (id) =>
 			dispatch(jouranlEntryActions.entryDelete(id)),
-		onInitEntries: () => dispatch(jouranlEntryActions.initEntries())
+		onInitEntries: (token, userId) => dispatch(jouranlEntryActions.initEntries(token, userId))
 	}
 } 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(JournalEntries, axios));

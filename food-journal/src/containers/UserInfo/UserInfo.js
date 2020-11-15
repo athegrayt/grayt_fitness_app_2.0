@@ -1,9 +1,12 @@
 import React, { Component, Fragment } from 'react';
+import { connect } from 'react-redux';
+import * as userInfoActions from '../../store/actions/index';
 import Button from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './UserInfo.module.css';
 import axios from '../../axios-journalEntries';
-import Input from '../../components/UI/Forms/Input/Input'
+import Input from '../../components/UI/Forms/Input/Input';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class UserInfo extends Component {
 	state = {
@@ -21,47 +24,6 @@ class UserInfo extends Component {
 				valid: false,
 				touched: false,
 			},
-			// street: {
-			// 	elementType: 'input',
-			// 	elementConfig: {
-			// 		type: 'text',
-			// 		placeholder: 'Street',
-			// 	},
-			// 	value: '',
-			// 	validation: {
-			// 		required: true,
-			// 	},
-			// 	valid: false,
-			// 	touched: false,
-			// },
-			// zipCode: {
-			// 	elementType: 'input',
-			// 	elementConfig: {
-			// 		type: 'text',
-			// 		placeholder: 'Zip Code',
-			// 	},
-			// 	value: '',
-			// 	validation: {
-			// 		required: true,
-			// 		minLength: 5,
-			// 		maxLength: 5,
-			// 	},
-			// 	valid: false,
-			// 	touched: false,
-			// },
-			// country: {
-			// 	elementType: 'input',
-			// 	elementConfig: {
-			// 		type: 'text',
-			// 		placeholder: 'Country',
-			// 	},
-			// 	value: '',
-			// 	validation: {
-			// 		required: true,
-			// 	},
-			// 	valid: false,
-			// 	touched: false,
-			// },
 			email: {
 				elementType: 'input',
 				elementConfig: {
@@ -89,26 +51,65 @@ class UserInfo extends Component {
 				validation: {},
 				valid: true,
 			},
-			caloriesKnown: {
-				elementType: 'select',
+			calorieGoal: {
+				elementType: 'input',
 				elementConfig: {
-					options: [
-						{ value: 'yes', displayValue: 'Yes' },
-						{ value: 'no', displayValue: 'No' },
-					],
+					type: 'text',
+					placeholder: 'Ex. 2000',
 				},
-				value: 'Yes',
-				prompt: 'Do you already have an idea of your daily calorie amount?',
-				validation: {},
-				valid: true,
+				value: '',
+				validation: {
+					required: true,
+					isNumeric: true
+				},
+				valid: false,
+				prompt: 'What is your goal daily calorie limit?',
+				touched: false,
+				// elementType: 'select',
+				// elementConfig: {
+				// 	options: [
+				// 		{ value: 'yes', displayValue: 'Yes' },
+				// 		{ value: 'no', displayValue: 'No' },
+				// 	],
+				// },
+				// value: 'Yes',
+				// prompt: 'Do you already have an idea of your daily calorie amount?',
+				// validation: {},
+				// valid: true,
 			},
 		},
 		formIsValid: false,
 		loading: false,
 	};
 
+	componentDidMount() {
+		axios
+			.get('/dataInfo.json')
+			.then((response) => {
+				console.log(response);
+				let oldUserData = { ...this.state.userInfo };
+				for (let formElementIdentifier in response.data) {
+					const updatedUserInfo = {
+						...this.state.userInfo,
+					};
+					const updatedFormElement = {
+						...updatedUserInfo[formElementIdentifier],
+					};
+					updatedFormElement.value = response.data[formElementIdentifier];
+					oldUserData[formElementIdentifier] = updatedFormElement;
+				}
+				console.log(oldUserData);
+				this.setState({ userInfo: oldUserData })
+				this.props.onSetCalGoal(this.state.userInfo.calorieGoal.value);;
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
 	infoHandler = (event) => {
 		event.preventDefault();
+		this.props.onSetCalGoal(this.state.userInfo.calorieGoal.value);
 		this.setState({ loading: true });
 		const formData = {};
 		for (let formElementIdentifier in this.state.userInfo) {
@@ -117,7 +118,7 @@ class UserInfo extends Component {
 			].value;
 		}
 		axios
-			.post('/dataInfo.json', formData)
+			.put('/dataInfo/.json', formData)
 			.then((response) => {
 				this.setState({ loading: false });
 				this.props.history.push('/food-journal');
@@ -151,16 +152,32 @@ class UserInfo extends Component {
 
 	checkValidity(value, rules) {
 		let isValid = true;
-		//Created Validation Rules
+		if (!rules) {
+			return true;
+		}
+
 		if (rules.required) {
 			isValid = value.trim() !== '' && isValid;
 		}
+
 		if (rules.minLength) {
 			isValid = value.length >= rules.minLength && isValid;
 		}
+
 		if (rules.maxLength) {
-			isValid = value.length <= rules.minLength && isValid;
+			isValid = value.length <= rules.maxLength && isValid;
 		}
+
+		if (rules.isEmail) {
+			const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+			isValid = pattern.test(value) && isValid;
+		}
+
+		if (rules.isNumeric) {
+			const pattern = /^\d+$/;
+			isValid = pattern.test(value) && isValid;
+		}
+
 		return isValid;
 	}
 
@@ -191,8 +208,7 @@ class UserInfo extends Component {
 							valueType={formElement.id}
 						/>
 					</Fragment>
-					))
-				}
+				))}
 				<Button
 					btnType="Success"
 					disabled={!this.state.formIsValid}
@@ -213,4 +229,13 @@ class UserInfo extends Component {
 	}
 }
 
-export default UserInfo;
+const mapDispatchToProps = (dispatch) => {
+	return {
+		onSetCalGoal: (calGoal) => dispatch(userInfoActions.setCalGoal(calGoal)),
+	};
+};
+export default connect(
+	null,
+	mapDispatchToProps
+)(withErrorHandler(UserInfo, axios));
+

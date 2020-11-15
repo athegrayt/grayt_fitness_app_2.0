@@ -29,8 +29,8 @@ const initialState = {
     
 const reducer = (state=initialState, action) =>{
    switch (action.type) {
-			case actionTypes.ADD_ENTRY:
-				return {
+			case actionTypes.ADD_ENTRY_SUCCESS:	
+			return {
 					...state,
 					journalEntries: state.journalEntries.concat(action.entry),
 				};
@@ -44,7 +44,7 @@ const reducer = (state=initialState, action) =>{
 			case actionTypes.SET_ENTRIES:
 				return {
 					...state,
-					journalEntries: action.Entries,
+					journalEntries: state.journalEntries.concat(action.entries),
 					error: false,
 				};
 			case actionTypes.FETCH_ENTRIES_FAILED:
@@ -52,6 +52,11 @@ const reducer = (state=initialState, action) =>{
 					...state,
 					error: true,
 				};
+			case actionTypes.SET_CAL_GOAL:
+				return {
+					...state,
+					calGoal: action.calGoal
+				}
 			default:
 				return state;
 		}

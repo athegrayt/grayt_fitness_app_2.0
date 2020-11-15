@@ -149,20 +149,25 @@ class foodSearch extends Component {
 			foodSearch: { foodSelected: false },
 			journalEntries: [...this.state.journalEntries, updatedJournalEntry],
 		});
-		await this.firebaseHandler();
+		// await this.firebaseHandler();
 	};
 
-	firebaseHandler = () => {
-		const journalEntries = this.state.journalEntries;
-		axios
-			.put('/journalEntries/-MJiNVfRlzMYzhlUWgDe.json', journalEntries)
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-	};
+	// firebaseHandler = () => {
+	// 	console.log('[FoodSearch] add to Firebase');
+	// 	const journalEntries ={
+	// 	journalEntry: this.state.journalEntries,
+	// 	userId: this.props.userId
+	// 	}
+	// 	const token = this.props.token	
+	// 	axios
+	// 		.put('/journalEntries.json?auth='+ token, journalEntries)
+	// 		.then((res) => {
+	// 			console.log(res);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
+	// };
 
 	resetHandler= () => {
 		const reset = {}
@@ -199,11 +204,16 @@ class foodSearch extends Component {
 			/>
 		))
 		const foodSelect = foodSearchInputs.slice(0, 1)
+		const entry ={
+		journalEntry: this.state.foodSearch,
+		userId: this.props.userId
+		}
+		const token = this.props.token;
 		this.state.foodSearch.foodSelected
 			? (foodSearch = (
 					<div className={classes.FoodSearch}>
 						{foodSearchInputs}
-						<Button btnType="Success" clicked={()=>{this.props.onaddEntry(this.state.foodSearch); this.resetHandler();}}>
+						<Button btnType="Success" clicked={()=>{this.props.onaddEntry(entry, token); this.resetHandler();}}>
 							ADD ENTRY
 						</Button>
 					</div>
@@ -233,10 +243,17 @@ foodSearch.propTypes = {
 	clicked: PropTypes.func,
 };
 
+const mapStateToProps = state => {
+	return {
+		userId: state.auth.userId,
+		token: state.auth.token
+	};
+}
+
 const mapDispatchToProps = dispatch => {
 	return{
-		onaddEntry: (entry) => dispatch(foodSearchActions.addEntry(entry))
+		onaddEntry: (entry, token) => dispatch(foodSearchActions.addEntry(entry, token))
 	}
 }
 
-export default connect(null, mapDispatchToProps)(foodSearch);
+export default connect(mapStateToProps, mapDispatchToProps)(foodSearch);
