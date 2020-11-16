@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import {Redirect} from 'react-router-dom'
 import { connect } from 'react-redux';
 import * as userInfoActions from '../../store/actions/index';
 import Button from '../../components/UI/Button/Button';
@@ -83,49 +84,47 @@ class UserInfo extends Component {
 	};
 
 	componentDidMount() {
-		axios
-			.get('/dataInfo.json')
-			.then((response) => {
-				console.log(response);
-				let oldUserData = { ...this.state.userInfo };
-				for (let formElementIdentifier in response.data) {
-					const updatedUserInfo = {
-						...this.state.userInfo,
-					};
-					const updatedFormElement = {
-						...updatedUserInfo[formElementIdentifier],
-					};
-					updatedFormElement.value = response.data[formElementIdentifier];
-					oldUserData[formElementIdentifier] = updatedFormElement;
-				}
-				console.log(oldUserData);
-				this.setState({ userInfo: oldUserData })
-				this.props.onSetCalGoal(this.state.userInfo.calorieGoal.value);;
-			})
-			.catch((error) => {
-				console.log(error);
-			});
+		let oldUserData = { ...this.state.userInfo };
+		for (let formElementIdentifier in this.props.info[0]) {
+			if (
+				formElementIdentifier !== 'userId' &&
+				formElementIdentifier !== 'date'
+			) {
+				const updatedUserInfo = {
+					...this.state.userInfo,
+				};
+				const updatedFormElement = {
+					...updatedUserInfo[formElementIdentifier],
+				};
+				updatedFormElement.value = this.props.info[0][formElementIdentifier];
+				oldUserData[formElementIdentifier] = updatedFormElement;
+			}
+		}
+		this.setState({ userInfo: oldUserData })
 	}
 
 	infoHandler = (event) => {
 		event.preventDefault();
 		this.props.onSetCalGoal(this.state.userInfo.calorieGoal.value);
 		this.setState({ loading: true });
-		const formData = {};
+		const userInfo = {};
 		for (let formElementIdentifier in this.state.userInfo) {
-			formData[formElementIdentifier] = this.state.userInfo[
+			userInfo[formElementIdentifier] = this.state.userInfo[
 				formElementIdentifier
 			].value;
 		}
-		axios
-			.put('/dataInfo/.json', formData)
-			.then((response) => {
-				this.setState({ loading: false });
-				this.props.history.push('/food-journal');
-			})
-			.catch((error) => {
-				this.setState({ loading: false });
-			});
+		userInfo.userId = this.props.userId
+		userInfo.date = new Date()
+		this.props.onSetInfo(userInfo, this.props.token, '/food-journal')
+		// axios
+		// 	.put('/dataInfo/.json', formData)
+		// 	.then((response) => {
+		// 		this.setState({ loading: false });
+		// 		this.props.history.push('/food-journal');
+		// 	})
+		// 	.catch((error) => {
+		// 		this.setState({ loading: false });
+		// 	});
 	};
 	inputChangedHandler = (event, inputIdentifier) => {
 		const updatedUserInfo = {
@@ -217,11 +216,17 @@ class UserInfo extends Component {
 				</Button>
 			</form>
 		);
-		if (this.state.loading) {
+		if (this.props.load && !this.props.fetched) {
 			form = <Spinner />;
+		}
+		let redirect = null
+		if(this.props.path){
+			redirect= <Redirect to={this.props.path}/>
+			this.props.onRedirectPath(null)
 		}
 		return (
 			<div className={classes.UserInfo}>
+				{redirect}
 				<h4>Enter your Account Information</h4>
 				{form}
 			</div>
@@ -229,13 +234,27 @@ class UserInfo extends Component {
 	}
 }
 
+const mapStateToProps = (state) => {
+	return{
+		load: state.userInfo.loading,
+		path: state.userInfo.path, 
+		info: state.userInfo.userInfo,
+		fetched: state.userInfo.fetched,
+		token: state.auth.token, 
+		userId: state.auth.userId, 
+	}
+}
+
 const mapDispatchToProps = (dispatch) => {
 	return {
+		
+		onSetInfo: (userInfo, token, path) => dispatch(userInfoActions.setInfo(userInfo, token, path)),
+		onRedirectPath: (path) => dispatch(userInfoActions.setAuthRedirectPath(path)),
 		onSetCalGoal: (calGoal) => dispatch(userInfoActions.setCalGoal(calGoal)),
 	};
 };
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(withErrorHandler(UserInfo, axios));
 

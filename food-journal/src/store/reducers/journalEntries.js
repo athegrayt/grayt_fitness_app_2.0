@@ -44,7 +44,7 @@ const reducer = (state=initialState, action) =>{
 			case actionTypes.SET_ENTRIES:
 				return {
 					...state,
-					journalEntries: state.journalEntries.concat(action.entries),
+					journalEntries: action.entries,
 					error: false,
 				};
 			case actionTypes.FETCH_ENTRIES_FAILED:

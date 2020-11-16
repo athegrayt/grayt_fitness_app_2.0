@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import * as jouranlEntryActions from '../../store/actions/index';
+import * as journalEntryActions from '../../store/actions/index';
 import JournalEntry from '../../components/JournalEntry/JournalEntry'
 import Modal from '../../components/UI/Modal/Modal'
 import NutritionSummary from '../../components/NutritionSummary/NutritionSummary'
@@ -18,6 +18,7 @@ class JournalEntries extends Component {
 
 	componentDidMount(){
 		this.props.onInitEntries(this.props.token, this.props.userId);
+		this.props.onfetchInfo(this.props.token, this.props.userId)
 	}
 
 	deleteRequestHandler = (entryID) => {
@@ -35,17 +36,26 @@ class JournalEntries extends Component {
 	render() {
 		let entries = <Spinner />;
 		if (this.props.jrlEntry) {
-			console.log(this.props.jrlEntry);
-			entries = this.props.jrlEntry.map( (entry, i) =>{
+			const todayYear = new Date().getFullYear();
+			const todayMonth = new Date().getMonth();
+			const todayDate = new Date().getDate();
+			const curDayEntries = this.props.jrlEntry.filter((entry) => {
 				return (
-				<JournalEntry
-					key={entry.consumed_at}
-					id={i}
-					entry={entry}
-					deleteRequestHandler={() => this.deleteRequestHandler(i)}
-				/>
-			);
-			})
+					new Date(entry.consumed_at.slice(0, 10)).getFullYear() === todayYear &&
+					new Date(entry.consumed_at.slice(0, 10)).getMonth() === todayMonth &&
+					new Date(entry.consumed_at.slice(0, 10)).getDate()+1 === todayDate
+				);
+			}); 
+			entries = curDayEntries.map((entry, i) => {
+				return (
+					<JournalEntry
+						key={entry.consumed_at}
+						id={i}
+						entry={entry}
+						deleteRequestHandler={() => this.deleteRequestHandler(i)}
+					/>
+				);
+			});
 		}
 		return(
 			<div className={classes.JournalEntries}>
@@ -67,10 +77,11 @@ const mapStateToProps = state =>{
 }
 
 const mapDispatchToProps = dispatch =>{
-	return{
-		onEntryDelete: (id) =>
-			dispatch(jouranlEntryActions.entryDelete(id)),
-		onInitEntries: (token, userId) => dispatch(jouranlEntryActions.initEntries(token, userId))
-	}
+	return {
+		onEntryDelete: (id) => dispatch(journalEntryActions.entryDelete(id)),
+		onInitEntries: (token, userId) =>
+			dispatch(journalEntryActions.initEntries(token, userId)),
+		onfetchInfo: (token, userId) => dispatch(journalEntryActions.fetchInfo(token, userId)),
+	};
 } 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(JournalEntries, axios));

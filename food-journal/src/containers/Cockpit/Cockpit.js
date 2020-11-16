@@ -6,19 +6,21 @@ import classes from './Cockpit.module.css'
 class Cockpit extends Component {
 	state = {
 		date: null,
-		calGoal: null
 	};
 
 	componentDidMount() {
 		const d = new Date();
 		const date = `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`;
-		const newCalGoal = this.props.goal
-		this.setState({ date: date, calGoal: newCalGoal });
+		this.setState({ date: date });
 	}
 
 	render() {
 		let calorieTotal = 0;
 		let perOfGoal= 0
+		let newCalGoal = 2000;
+		if (this.props.goal) {
+			newCalGoal = this.props.goal.calorieGoal;
+		}
 
 		if (this.props.jrlEntry.length) {
 			calorieTotal = this.props.jrlEntry
@@ -29,13 +31,14 @@ class Cockpit extends Component {
 					return total + cur;
 				});
 			calorieTotal = Math.round(calorieTotal)	
-			perOfGoal = Math.round(100*(calorieTotal/this.state.calGoal))
-				;
+			perOfGoal = Math.round(100 * (calorieTotal / newCalGoal));
 		}
 		return (
 			<div className={classes.Cockpit}>
 				<h1> {this.state.date}</h1>
-		<h3>Calories: {calorieTotal}/{this.state.calGoal} (%{perOfGoal})</h3>
+				<h3>
+					Calories: {calorieTotal}/{newCalGoal} (%{perOfGoal})
+				</h3>
 			</div>
 		);
 	}
@@ -44,7 +47,7 @@ class Cockpit extends Component {
 const mapStateToProps = state => {
 	return {
 		jrlEntry: state.journalEntries.journalEntries,
-		goal: state.journalEntries.calGoal,
+		goal: state.userInfo.userInfo[0],
 	};
 }
 

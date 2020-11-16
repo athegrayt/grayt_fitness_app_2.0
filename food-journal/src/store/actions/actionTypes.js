@@ -13,3 +13,10 @@ export const AUTH_FAIL = 'AUTH_FAIL';
 export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
 export const SET_CAL_GOAL = 'SET_CAL_GOAL';
+export const SET_INFO_START = 'SET_INFO_START';
+export const SET_INFO_SUCCESS = 'SET_INFO_SUCCESS';
+export const SET_INFO_FAIL = 'SET_INFO_FAIL';
+export const FETCH_INFO_START = 'FETCH_INFO_START';
+export const FETCH_INFO_SUCCESS = 'FETCH_INFO_SUCCESS';
+export const FETCH_INFO_FAIL = 'FETCH_INFO_FAIL';
+export const SET_AUTH_REDIRECT_PATH = 'SET_AUTH_REDIRECT_PATH';

@@ -5,6 +5,7 @@ import {Provider} from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import entriesReducer from './store/reducers/journalEntries';
 import authReducer from './store/reducers/auth';
+import userInfoReducer from './store/reducers/userInfo'
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -12,7 +13,8 @@ import * as serviceWorker from './serviceWorker';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
 	journalEntries: entriesReducer,
-	auth: authReducer,
+  auth: authReducer,
+  userInfo: userInfoReducer
 });
 
 const store = createStore(

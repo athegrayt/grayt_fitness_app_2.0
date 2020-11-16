@@ -8,24 +8,22 @@ export const addEntrySuccess = (entry) =>{
     }
 }
 
-export const addEntryFail = (error) => {
+export const addEntryFail = () => {
     return{
         type: actionTypes.ADD_ENTRY_FAIL,
-        error: error
+        
     }
 }
 
 export const addEntry = (entry, token) => {
-    console.log(token)
     return dispatch => {
         axios
 			.post('/journalEntries.json?auth='+ token, entry)
 			.then((res) => {
-                console.log(res);
-                dispatch(addEntrySuccess(entry))
+                dispatch(addEntrySuccess(res))
 			})
 			.catch((error) => {
-				console.log(error);
+                dispatch(addEntryFail())
 			});
     }
 } 

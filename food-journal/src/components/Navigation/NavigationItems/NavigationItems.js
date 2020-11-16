@@ -12,8 +12,8 @@ const navigationItems = (props) =>{
 					<NavigationItem exact={props.exact} link="/food-journal">
 						Food Journal
 					</NavigationItem>
-					<NavigationItem link="/nutrition-facts">
-						Nutritional Facts
+					<NavigationItem link="/journal-log">
+						Journal Log
 					</NavigationItem>
 					<NavigationItem link="/user-info">User Info</NavigationItem>
 				</Fragment> : null}
