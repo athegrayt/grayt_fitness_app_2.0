@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import { connect } from 'react-redux';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import * as journalEntryActions from '../../store/actions/index';
@@ -24,7 +24,18 @@ class JournalEntries extends Component {
 	deleteRequestHandler = (entryID) => {
 		console.log(entryID)
 		let newEntry = this.state.entry;
-		newEntry = this.props.jrlEntry[entryID]
+		const todayYear = new Date().getFullYear();
+		const todayMonth = new Date().getMonth();
+		const todayDate = new Date().getDate();
+		const curDayEntries = this.props.jrlEntry.filter((entry) => {
+			return (
+				new Date(entry.consumed_at.slice(0, 10)).getFullYear() === todayYear &&
+				new Date(entry.consumed_at.slice(0, 10)).getMonth() === todayMonth &&
+				new Date(entry.consumed_at.slice(0, 10)).getDate() + 1 === todayDate
+			);
+		}); 
+		newEntry = curDayEntries[entryID];
+		entryID = newEntry.consumed_at
 		this.setState({entry: newEntry, entryID: entryID, showNutrition: true})
 		
 	};
@@ -46,22 +57,38 @@ class JournalEntries extends Component {
 					new Date(entry.consumed_at.slice(0, 10)).getDate()+1 === todayDate
 				);
 			}); 
-			entries = curDayEntries.map((entry, i) => {
-				return (
-					<JournalEntry
-						key={entry.consumed_at}
-						id={i}
-						entry={entry}
-						deleteRequestHandler={() => this.deleteRequestHandler(i)}
-					/>
-				);
-			});
+			if (curDayEntries.length){
+				entries = curDayEntries.map((entry, i) => {
+					return (
+						<JournalEntry
+							key={entry.consumed_at}
+							id={i}
+							entry={entry}
+							deleteRequestHandler={() => this.deleteRequestHandler(i)}
+						/>
+					);
+				});
+			} else{
+				entries = (
+				<Fragment>
+					<p>There's nothing like a fresh start!</p>
+					<p>Make your first journal entry above to start tracking your diet!</p>
+				</Fragment>
+				)
+			}
 		}
 		return(
 			<div className={classes.JournalEntries}>
 			<Modal show={this.state.showNutrition} modalClosed={this.closeModalHandler}>
-				<NutritionSummary entry={this.state.entry} clicked={()=>
-					{this.props.onEntryDelete(this.state.entryID);this.closeModalHandler()}}/>
+				<NutritionSummary 
+				entry={this.state.entry} 
+				clicked={()=>
+					{this.props.onEntryDelete(
+						this.props.token, 
+						this.props.userId, 
+						this.props.jrlEntry,
+						this.state.entryID);
+						this.closeModalHandler()}}/>
 			</Modal>
 			{entries}
 			</div>);
@@ -78,10 +105,12 @@ const mapStateToProps = state =>{
 
 const mapDispatchToProps = dispatch =>{
 	return {
-		onEntryDelete: (id) => dispatch(journalEntryActions.entryDelete(id)),
+		onEntryDelete: (token, userId, curEntries, id) =>
+			dispatch(journalEntryActions.dbUpdate(token, userId, curEntries,id)),
 		onInitEntries: (token, userId) =>
 			dispatch(journalEntryActions.initEntries(token, userId)),
-		onfetchInfo: (token, userId) => dispatch(journalEntryActions.fetchInfo(token, userId)),
+		onfetchInfo: (token, userId) =>
+			dispatch(journalEntryActions.fetchInfo(token, userId)),
 	};
 } 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(JournalEntries, axios));

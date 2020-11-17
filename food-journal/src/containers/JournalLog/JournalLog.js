@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import * as journalLogActions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner'
 import Input from '../../components/UI/Forms/Input/Input'
-import Button from '../../components/UI/Button/Button'
 import Modal from '../../components/UI/Modal/Modal'
 import axios from '../../axios-journalEntries';
 import LogEntry from '../../components/LogEntry/LogEntry';
 import LogSummary from '../../components/LogSummary/LogSummary';
 import classes from './JournalLog.module.css';
+import {checkValidity} from '../../shared/utility'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class JournalLog extends Component {
@@ -33,7 +33,7 @@ class JournalLog extends Component {
 						{ value: '12', displayValue: 'December' },
 					],
 				},
-				value: 'lose',
+				value: '1',
 				prompt: 'Seletct Month',
 				validation: {},
 				valid: true,
@@ -50,7 +50,7 @@ class JournalLog extends Component {
 			...updatedUserInfo[inputIdentifier],
 		};
 		updatedFormElement.value = event.target.value;
-		updatedFormElement.valid = this.checkValidity(
+		updatedFormElement.valid = checkValidity(
 			updatedFormElement.value,
 			updatedFormElement.validation
 		);
@@ -64,37 +64,7 @@ class JournalLog extends Component {
 
 		this.setState({ userInfo: updatedUserInfo, formIsValid: formIsValid });
 	};
-	checkValidity(value, rules) {
-		let isValid = true;
-		if (!rules) {
-			return true;
-		}
-
-		if (rules.required) {
-			isValid = value.trim() !== '' && isValid;
-		}
-
-		if (rules.minLength) {
-			isValid = value.length >= rules.minLength && isValid;
-		}
-
-		if (rules.maxLength) {
-			isValid = value.length <= rules.maxLength && isValid;
-		}
-
-		if (rules.isEmail) {
-			const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-			isValid = pattern.test(value) && isValid;
-		}
-
-		if (rules.isNumeric) {
-			const pattern = /^\d+$/;
-			isValid = pattern.test(value) && isValid;
-		}
-
-		return isValid;
-	}
-
+	
 	selectDayHandler =(consumed_at)=>{
 		const selectedYear = new Date(consumed_at.slice(0, 10)).getFullYear();
 			const selectedMonth = new Date(consumed_at.slice(0, 10)).getMonth()	;
@@ -142,12 +112,6 @@ class JournalLog extends Component {
 						/>
 					</Fragment>
 				))}
-				<Button
-					btnType="Success"
-					disabled={!this.state.formIsValid}
-					clicked={this.selectMonthHandler}>
-					SELECT
-				</Button>
 			</form>
 		);
 		let entries = <Spinner />;
@@ -162,8 +126,7 @@ class JournalLog extends Component {
 					new Date(entry.consumed_at.slice(0, 10)).getMonth()+1 === selectedMonth
 				);
 			})
-
-			console.log(selectMonthEntries);
+			
 			if (selectMonthEntries){
 				
 				const singleDates =[]
@@ -178,18 +141,34 @@ class JournalLog extends Component {
 					let index=days.indexOf(num);
 					return selectMonthEntries[index]
 				})
-				entries = ans.map((entry, i) => {
-					return (
-						<LogEntry
-							key={entry.consumed_at}
-							id={i}
-							entry={entry}
-							deleteRequestHandler={() => this.selectDayHandler(entry.consumed_at)}
-						/>
+				console.log()
+				if (ans.length !== 0) {
+					entries = ans.map((entry, i) => {
+						return (
+							<LogEntry
+								key={entry.consumed_at}
+								id={i}
+								entry={entry}
+								deleteRequestHandler={() =>
+									this.selectDayHandler(entry.consumed_at)
+								}
+							/>
+						);
+					});
+				} else {
+					const monthNames = this.state.userInfo.month.elementConfig.options[
+						this.state.userInfo.month.value - 1
+					].displayValue;
+				 entries = (
+						<div>
+							<p>Sadly we couldn't find any entries for {monthNames}</p>
+							<span role="img" aria-label="crying-face">
+								😭 😭 😭{' '}
+							</span>
+							<p>Try selecting a different month!</p>
+						</div>
 					);
-				});
-			}else{
-				entries=<p>There are no saved entries for this month</p>
+				}
 			}
 		}
 		return (

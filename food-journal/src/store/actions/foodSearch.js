@@ -2,10 +2,11 @@ import * as actionTypes from './actionTypes'
 import axios from '../../axios-journalEntries';
 
 export const addEntrySuccess = (entry) =>{
-    return{
-        type: actionTypes.ADD_ENTRY_SUCCESS,
-        entry: entry.journalEntry
-    }
+    return {
+			type: actionTypes.ADD_ENTRY_SUCCESS,
+            entry: entry.journalEntry,
+            
+		};
 }
 
 export const addEntryFail = () => {
@@ -20,7 +21,7 @@ export const addEntry = (entry, token) => {
         axios
 			.post('/journalEntries.json?auth='+ token, entry)
 			.then((res) => {
-                dispatch(addEntrySuccess(res))
+                dispatch(addEntrySuccess(entry))
 			})
 			.catch((error) => {
                 dispatch(addEntryFail())

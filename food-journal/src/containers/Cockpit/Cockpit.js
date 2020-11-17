@@ -23,13 +23,26 @@ class Cockpit extends Component {
 		}
 
 		if (this.props.jrlEntry.length) {
-			calorieTotal = this.props.jrlEntry
-				.map((entry) => {
-					return entry.nf_calories;
-				})
-				.reduce((total, cur) => {
-					return total + cur;
-				});
+			const todayYear = new Date().getFullYear();
+			const todayMonth = new Date().getMonth();
+			const todayDate = new Date().getDate();
+			const curDayEntries = this.props.jrlEntry.filter((entry) => {
+				return (
+					new Date(entry.consumed_at.slice(0, 10)).getFullYear() ===
+						todayYear &&
+					new Date(entry.consumed_at.slice(0, 10)).getMonth() === todayMonth &&
+					new Date(entry.consumed_at.slice(0, 10)).getDate() + 1 === todayDate
+				);
+			});
+			if (curDayEntries.length){
+				calorieTotal = curDayEntries
+					.map((entry) => {
+						return entry.nf_calories;
+					})
+					.reduce((total, cur) => {
+						return total + cur;
+					});
+			}
 			calorieTotal = Math.round(calorieTotal)	
 			perOfGoal = Math.round(100 * (calorieTotal / newCalGoal));
 		}

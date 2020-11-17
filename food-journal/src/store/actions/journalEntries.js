@@ -8,6 +8,27 @@ export const entryDelete = (id) => {
     }
 }
 
+
+export const dbUpdate = (token, userId, curEntries, id) => {
+	return (dispatch) => {
+		dispatch(entryDelete(id))
+		const deletedEntry = curEntries.filter(
+						(entry, i) => entry.consumed_at === id
+					)
+		const dbKey = deletedEntry[0].dbKey;
+		axios
+			.delete(
+				`https://grayt-fitness.firebaseio.com/journalEntries/${dbKey}.json?auth=${token}`
+			)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	};
+}
+
 export const setEntries = (entries) => {
 	return {
 		type: actionTypes.SET_ENTRIES,
@@ -33,20 +54,12 @@ export const initEntries = (token, userId) => {
 			.then((response) => {
 				const curJournalEntries = []
 				for(let entryKey in response.data){
+					response.data[entryKey].journalEntry.dbKey = `${entryKey}`;
 					curJournalEntries.push(response.data[entryKey].journalEntry)
 				}
-				console.log(curJournalEntries)
 				dispatch(setEntries(curJournalEntries));
 			})
 			.catch((err) => {
-				if (err.response) {
-					console.log(err.response.data);
-				} else if (err.request) {
-					console.log(err.request);
-				} else {
-					console.log('err', err.message);
-				}
-				console.log(err);
 				dispatch(fetchEntriesFailed());
 			});
 	};

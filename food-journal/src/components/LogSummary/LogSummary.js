@@ -1,6 +1,7 @@
 import React from 'react'
 import Spinner from '../UI/Spinner/Spinner'
 import JournalEntry from '../JournalEntry/JournalEntry'
+import classes from './LogSummary.module.css'
     
 const LogSummary = (props) =>{
    let entries = <Spinner />;
@@ -26,7 +27,9 @@ const LogSummary = (props) =>{
     return (
 		<div>
 			<h1>Total Cal:{calorieTotal}</h1>
+		<div className={classes.LogSummary}>
 			{entries}
+		</div>
 		</div>
 		)
 };

@@ -1,8 +1,6 @@
 .NutritionSummary{
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
     text-align: center;
     overflow: scroll;
     height: 25vh;
+    margin:auto
 }

@@ -8,5 +8,9 @@
     border-radius: 25%;
     box-shadow: rgba(0, 0, 0, 0.4);
     justify-content: center;
-    margin: 1rem;
+    margin: 10px;
+}
+.NutritionFact p {
+    margin-block-end: 10px;
+    margin-block-start: 10px;
 }

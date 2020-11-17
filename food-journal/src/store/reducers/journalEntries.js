@@ -24,7 +24,8 @@ const initialState = {
 			serving_weight_grams: 85,
 		},
 	],
-	error: false
+	error: false,
+	entryDelete: false
 };
     
 const reducer = (state=initialState, action) =>{
@@ -34,12 +35,13 @@ const reducer = (state=initialState, action) =>{
 					...state,
 					journalEntries: state.journalEntries.concat(action.entry),
 				};
-			case actionTypes.DELETE_ENTRY:
-				return {
+			case actionTypes.DELETE_ENTRY:	
+			return {
 					...state,
 					journalEntries: state.journalEntries.filter(
-						(entry, i) => i !== action.entryID
+						(entry, i) => entry.consumed_at !== action.entryID
 					),
+					entryDelete: true
 				};
 			case actionTypes.SET_ENTRIES:
 				return {

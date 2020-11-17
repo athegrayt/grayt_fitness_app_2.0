@@ -35,7 +35,6 @@ export const fetchInfo = (token, userId) => {
 		axios
 			.get('/userInfo.json' + queryParams)
 			.then((response) => {
-				console.log(response)
 				let curUserInfo = [];
 				for (let entryKey in response.data) {
 					curUserInfo.push(response.data[entryKey]);
@@ -45,18 +44,9 @@ export const fetchInfo = (token, userId) => {
 					b = new Date(b.date).getTime()
 					return b-a
 				})
-				console.log(curUserInfo);
 				dispatch(fetchInfoSuccess(curUserInfo));
 			})
 			.catch((err) => {
-				if (err.response) {
-					console.log(err.response.data);
-				} else if (err.request) {
-					console.log(err.request);
-				} else {
-					console.log('err', err.message);
-				}
-				console.log(err);
 				dispatch(fetchInfoFailed());
 			});
 	};
@@ -92,7 +82,6 @@ export const setInfo = (userInfo, token, path) => {
 		axios
 			.post('/userInfo.json?auth=' + token, userInfo)
 			.then((res) => {
-				console.log(res)
 				dispatch(setInfoSuccess(res))
 				dispatch(setAuthRedirectPath(path))
 			})

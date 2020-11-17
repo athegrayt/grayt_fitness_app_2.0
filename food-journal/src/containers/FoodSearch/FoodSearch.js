@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import * as foodSearchActions from '../../store/actions/index'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Forms/Input/Input'
-import axios from '../../axios-journalEntries';
+import {checkValidity} from '../../shared/utility'
 import classes from './FoodSearch.module.css'
 import PropTypes from 'prop-types'
 
@@ -58,7 +58,7 @@ class foodSearch extends Component {
 			...updatedOrderForm[inputIdentifier],
 		};
 		updatedFormElement.value = event.target.value;
-		updatedFormElement.valid = this.checkValidity(
+		updatedFormElement.valid = checkValidity(
 			updatedFormElement.value,
 			updatedFormElement.validation
 		);
@@ -73,18 +73,18 @@ class foodSearch extends Component {
 		this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
 	};
 
-	checkValidity(value, rules) {
-		let isValid = true;
-		//Created Validation Rules
-		if (rules.required) {
-			isValid = value.trim() !== '' && isValid;
-		}
-		if (rules.minLength) {
-			isValid = value.length >= rules.minLength && isValid;
-		}
+	// checkValidity(value, rules) {
+	// 	let isValid = true;
+	// 	//Created Validation Rules
+	// 	if (rules.required) {
+	// 		isValid = value.trim() !== '' && isValid;
+	// 	}
+	// 	if (rules.minLength) {
+	// 		isValid = value.length >= rules.minLength && isValid;
+	// 	}
 
-		return isValid;
-	}
+	// 	return isValid;
+	// }
 
 	foodSearchHandler = () => {
 		const food = this.state.orderForm.food_name.value;
@@ -206,7 +206,7 @@ class foodSearch extends Component {
 		const foodSelect = foodSearchInputs.slice(0, 1)
 		const entry ={
 		journalEntry: this.state.foodSearch,
-		userId: this.props.userId
+		userId: this.props.userId, 
 		}
 		const token = this.props.token;
 		this.state.foodSearch.foodSelected
