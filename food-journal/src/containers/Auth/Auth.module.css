@@ -1,4 +1,6 @@
 .Auth {
+    display: flex;
+    flex-flow: column;
     margin: 20px auto;
     width: 80%;
     text-align: center;

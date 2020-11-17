@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 class foodSearch extends Component {
 	state = {
 		foodSearch: {},
+		errorMessage: null,
 		orderForm: {
 			food_name: {
 				elementType: 'input',
@@ -48,6 +49,7 @@ class foodSearch extends Component {
 			},
 		},
 		formIsValid: false,
+		searching: true
 	};
 
 	inputChangedHandler = (event, inputIdentifier) => {
@@ -73,18 +75,26 @@ class foodSearch extends Component {
 		this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
 	};
 
-	// checkValidity(value, rules) {
-	// 	let isValid = true;
-	// 	//Created Validation Rules
-	// 	if (rules.required) {
-	// 		isValid = value.trim() !== '' && isValid;
-	// 	}
-	// 	if (rules.minLength) {
-	// 		isValid = value.length >= rules.minLength && isValid;
-	// 	}
+	enterKeyHandler = (event) => {
+		const code = event.keyCode || event.which;
+		if (code === 13) {
+			if(this.state.searching){
+				this.foodSearchHandler()
+			}else{
+				this.addEntryHandler();
+			}
+		}
+	}
 
-	// 	return isValid;
-	// }
+	addEntryHandler=()=>{
+		const entry = {
+			journalEntry: this.state.foodSearch,
+			userId: this.props.userId,
+		};
+		const token = this.props.token;
+		this.props.onaddEntry(entry, token);
+		this.resetHandler();
+	}
 
 	foodSearchHandler = () => {
 		const food = this.state.orderForm.food_name.value;
@@ -108,7 +118,9 @@ class foodSearch extends Component {
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					console.log(data);
+					if(data.message === "We couldn't match any of your foods"){
+						this.setState({errorMessage: "Sadly we couldn't find your food. Please check spelling or try another food!"})
+					}
 					const nf = Object.keys(data.foods[0])
 						.filter((key) => {
 							return (
@@ -137,37 +149,13 @@ class foodSearch extends Component {
 					console.log(updatedOrderForm);
 					this.setState({
 						foodSearch: nf,
-						orderForm: updatedOrderForm
+						orderForm: updatedOrderForm,
+						searching: false
 					})
 				}).catch((error) => console.log(error));
 		}
 	};	
 
-	addEntryHandler = async () => {
-		const updatedJournalEntry = this.state.foodSearch;
-		await this.setState({
-			foodSearch: { foodSelected: false },
-			journalEntries: [...this.state.journalEntries, updatedJournalEntry],
-		});
-		// await this.firebaseHandler();
-	};
-
-	// firebaseHandler = () => {
-	// 	console.log('[FoodSearch] add to Firebase');
-	// 	const journalEntries ={
-	// 	journalEntry: this.state.journalEntries,
-	// 	userId: this.props.userId
-	// 	}
-	// 	const token = this.props.token	
-	// 	axios
-	// 		.put('/journalEntries.json?auth='+ token, journalEntries)
-	// 		.then((res) => {
-	// 			console.log(res);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-	// };
 
 	resetHandler= () => {
 		const reset = {}
@@ -175,7 +163,8 @@ class foodSearch extends Component {
 		resetOrderForm.food_name.value = ''
 		this.setState({
 			foodSearch: reset,
-			orderForm:resetOrderForm 
+			orderForm:resetOrderForm, 
+			errorMessage: null 
 		})
 	}
 
@@ -197,6 +186,7 @@ class foodSearch extends Component {
 				changed={(event) =>
 					this.inputChangedHandler(event, formElement.id)
 				}
+				pressed={event => this.enterKeyHandler(event)}
 				invalid={!formElement.config.valid}
 				shouldValidate={formElement.config.validation}
 				touched={formElement.config.touched}
@@ -204,16 +194,16 @@ class foodSearch extends Component {
 			/>
 		))
 		const foodSelect = foodSearchInputs.slice(0, 1)
-		const entry ={
-		journalEntry: this.state.foodSearch,
-		userId: this.props.userId, 
-		}
-		const token = this.props.token;
+		// const entry ={
+		// journalEntry: this.state.foodSearch,
+		// userId: this.props.userId, 
+		// }
+		// const token = this.props.token;
 		this.state.foodSearch.foodSelected
 			? (foodSearch = (
 					<div className={classes.FoodSearch}>
 						{foodSearchInputs}
-						<Button btnType="Success" clicked={()=>{this.props.onaddEntry(entry, token); this.resetHandler();}}>
+						<Button btnType="Success" clicked={()=>this.addEntryHandler()}>
 							ADD ENTRY
 						</Button>
 					</div>
@@ -221,6 +211,7 @@ class foodSearch extends Component {
 			: (foodSearch = (
 					<div className={classes.FoodSearch}>
 						{foodSelect}
+						<p>{this.state.errorMessage}</p>
 						<Button
 							btnType="Success"
 							clicked={this.foodSearchHandler}

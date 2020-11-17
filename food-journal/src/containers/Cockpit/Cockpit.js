@@ -45,12 +45,13 @@ class Cockpit extends Component {
 			}
 			calorieTotal = Math.round(calorieTotal)	
 			perOfGoal = Math.round(100 * (calorieTotal / newCalGoal));
+			
 		}
 		return (
 			<div className={classes.Cockpit}>
 				<h1> {this.state.date}</h1>
 				<h3>
-					Calories: {calorieTotal}/{newCalGoal} (%{perOfGoal})
+					Calories: {calorieTotal}/{newCalGoal} <span className={perOfGoal> 100 ? classes.Over : null}>(%{perOfGoal})</span>
 				</h3>
 			</div>
 		);

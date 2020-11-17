@@ -110,7 +110,15 @@ class Auth extends Component {
 						let authRedirect = null;
 						if (this.props.isAuthenticated) {
 							authRedirect = <Redirect to="/food-journal" />;
-						}
+                        }
+                        let demoBTN = null
+                        if(!this.state.isSignup){
+                            demoBTN = (
+                                <Button clicked={this.demoModeHandler} btnType="Danger">
+                                    SIGNIN WITH DEMO
+                                </Button>
+                            );
+                        }
         return (
 					<div className={classes.Auth}>
 						{authRedirect}
@@ -122,9 +130,7 @@ class Auth extends Component {
 							{form}
 							<Button btnType="Success">SUBMIT</Button>
 						</form>
-						<Button clicked={this.demoModeHandler} btnType="Danger">
-							DEMO MODE
-						</Button>
+						{demoBTN}
 						<Button clicked={this.switchAuthModeHandler} btnType="Danger">
 							SWITCH TO {this.state.isSignup ? 'SIGNIN' : 'SIGNUP'}
 						</Button>
