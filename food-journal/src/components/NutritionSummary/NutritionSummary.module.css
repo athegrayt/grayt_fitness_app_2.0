@@ -1,6 +1,6 @@
-.NutritionSummary{
-    text-align: center;
-    overflow: scroll;
-    height: 25vh;
-    margin:auto
+.NutritionSummary {
+  text-align: center;
+  overflow: scroll;
+  height: 25vh;
+  margin: auto;
 }

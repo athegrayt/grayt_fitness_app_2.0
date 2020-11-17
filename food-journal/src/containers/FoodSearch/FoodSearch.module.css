@@ -1,4 +1,4 @@
-.FoodSearch{
+.FoodSearch {
   /* border: 2px solid black; */
   margin: 0 12.5%;
   display: flex;
@@ -6,5 +6,4 @@
   align-content: center;
   text-align: center;
   justify-content: center;
-
 }

@@ -1,16 +1,16 @@
-.Cockpit{
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    margin-bottom: 0px;
+.Cockpit {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 0px;
 }
 
-h1{
-    margin-bottom: 0px;
+h1 {
+  margin-bottom: 0px;
 }
 
-.Over{
-    color: red;
-    font: 700;
+.Over {
+  color: red;
+  font: 700;
 }
