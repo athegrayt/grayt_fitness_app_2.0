@@ -22,8 +22,6 @@ class JournalEntries extends Component {
   }
 
   deleteRequestHandler = (entryID) => {
-    console.log(entryID);
-    let newEntry = this.state.entry;
     const todayYear = new Date().getFullYear();
     const todayMonth = new Date().getMonth();
     const todayDate = new Date().getDate();
@@ -34,7 +32,7 @@ class JournalEntries extends Component {
         new Date(entry.consumed_at.slice(0, 10)).getDate() + 1 === todayDate
       );
     });
-    newEntry = curDayEntries[entryID];
+   let newEntry = curDayEntries[entryID];
     entryID = newEntry.consumed_at;
     this.setState({ entry: newEntry, entryID: entryID, showNutrition: true });
   };

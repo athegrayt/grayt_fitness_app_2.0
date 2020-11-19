@@ -87,8 +87,21 @@ class foodSearch extends Component {
   };
 
   addEntryHandler = () => {
+    let updatedFoodSearch = {...this.state.foodSearch}
+    const { serving_qty } = updatedFoodSearch;
+		for (let nutritionFact in updatedFoodSearch) {
+			if (updatedFoodSearch[nutritionFact] === null) {
+				updatedFoodSearch[nutritionFact] = 0;
+			}
+			if (Number.isFinite(updatedFoodSearch[nutritionFact])) {
+				updatedFoodSearch[nutritionFact] = Math.round(
+					updatedFoodSearch[nutritionFact] / serving_qty
+				);
+			}
+		}
+    updatedFoodSearch.serving_qty = +this.state.orderForm.serving_qty.value
     const entry = {
-      journalEntry: this.state.foodSearch,
+      journalEntry: updatedFoodSearch,
       userId: this.props.userId,
     };
     const token = this.props.token;
@@ -136,10 +149,11 @@ class foodSearch extends Component {
             .reduce(
               (nfObject, curKey) => ({
                 ...nfObject,
-                [curKey]: data.foods[0][curKey],
+                [curKey]: (data.foods[0][curKey]),
               }),
               {}
             );
+            console.log(nf)
           nf.deleteRequest = false;
           nf.foodSelected = true;
           const updatedOrderForm = {
@@ -169,6 +183,7 @@ class foodSearch extends Component {
       foodSearch: reset,
       orderForm: resetOrderForm,
       errorMessage: null,
+      searching:true
     });
   };
 
@@ -196,11 +211,6 @@ class foodSearch extends Component {
       />
     ));
     const foodSelect = foodSearchInputs.slice(0, 1);
-    // const entry ={
-    // journalEntry: this.state.foodSearch,
-    // userId: this.props.userId,
-    // }
-    // const token = this.props.token;
     this.state.foodSearch.foodSelected
       ? (foodSearch = (
           <div className={classes.FoodSearch}>
