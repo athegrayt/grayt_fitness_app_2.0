@@ -66,6 +66,7 @@ class Auth extends Component {
       this.state.controls.password.value,
       this.state.isSignup
     );
+
   };
 
   demoModeHandler = () => {
@@ -114,6 +115,9 @@ class Auth extends Component {
     let authRedirect = null;
     if (this.props.isAuthenticated) {
       errorMessage = null;
+      if(this.state.isSignup){
+        authRedirect = <Redirect to='/user-info'/>;
+      }
       authRedirect = <Redirect to="/food-journal" />;
     }
     let demoBTN = null;

@@ -33,6 +33,10 @@ export const checkValidity = (value, rules) => {
     isValid = pattern.test(value) && isValid;
   }
 
+  if(rules.isWholeNum){
+    isValid = value > 0
+  }
+
   return isValid;
 };
 

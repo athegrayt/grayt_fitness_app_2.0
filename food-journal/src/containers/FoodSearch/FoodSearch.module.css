@@ -7,3 +7,9 @@
   text-align: center;
   justify-content: center;
 }
+
+.BTN{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
