@@ -1,0 +1,14 @@
+.graphic{
+    text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 0px;
+}
+
+.percentage{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}

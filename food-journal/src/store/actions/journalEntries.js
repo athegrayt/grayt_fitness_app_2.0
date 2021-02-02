@@ -8,19 +8,14 @@ export const entryDelete = (id) => {
   };
 };
 
-export const dbUpdate = (token, userId, curEntries, id) => {
+export const dbUpdate = (token, dbKey, userId, meal) => {
   return (dispatch) => {
-    dispatch(entryDelete(id));
-    const deletedEntry = curEntries.filter(
-      (entry, i) => entry.consumed_at === id
-    );
-    const dbKey = deletedEntry[0].dbKey;
     axios
       .delete(
-        `https://grayt-fitness.firebaseio.com/journalEntries/${dbKey}.json?auth=${token}`
+        `https://grayt-fitness.firebaseio.com/${meal}/${dbKey}.json?auth=${token}`
       )
       .then((res) => {
-        console.log(res);
+        dispatch(initEntries(token, userId))
       })
       .catch((error) => {
         console.log(error);
@@ -28,12 +23,25 @@ export const dbUpdate = (token, userId, curEntries, id) => {
   };
 };
 
-export const setEntries = (entries) => {
+export const setEntries = (entries, meal) => {
   return {
-    type: actionTypes.SET_ENTRIES,
-    entries: entries,
+    type: actionTypes[`SET_${meal.toUpperCase()}`],
+    entries,
   };
 };
+
+export const setMeal = (meal) => {
+  return {
+    type: actionTypes.SET_MEAL,
+    meal
+  }
+}
+export const setBreakdown = (nutritionBreakDown) => {
+  return {
+		type: actionTypes.SET_BREAKDOWN,
+		nutritionBreakDown,
+	};
+}
 
 export const fetchEntriesFailed = () => {
   return {
@@ -41,23 +49,28 @@ export const fetchEntriesFailed = () => {
   };
 };
 
-export const initEntries = (token, userId) => {
-  return (dispatch) => {
+export const initEntries = (token, userId) => async dispatch =>{
+  try{
     const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
-    axios
-      .get(
-        "https://grayt-fitness.firebaseio.com/journalEntries.json" + queryParams
-      )
-      .then((response) => {
+    const breakfast = await axios.get("https://grayt-fitness.firebaseio.com/breakfast.json" + queryParams)
+    const lunch = await axios.get("https://grayt-fitness.firebaseio.com/lunch.json" + queryParams)
+    const dinner = await axios.get("https://grayt-fitness.firebaseio.com/dinner.json" + queryParams)
+    const snack = await axios.get("https://grayt-fitness.firebaseio.com/snack.json" + queryParams)
+    await [breakfast, lunch, dinner, snack].map((meal, i, arr)=>
+      {
+        const meals = ['breakfast', 'lunch', 'dinner', 'snack']
         const curJournalEntries = [];
-        for (let entryKey in response.data) {
-          response.data[entryKey].journalEntry.dbKey = `${entryKey}`;
-          curJournalEntries.push(response.data[entryKey].journalEntry);
+        if(meal.data){
+          for (let entryKey in meal.data) {
+            meal.data[entryKey].journalEntry.dbKey = `${entryKey}`;
+            curJournalEntries.push(meal.data[entryKey].journalEntry);
+          }
         }
-        dispatch(setEntries(curJournalEntries));
+      return dispatch(setEntries(curJournalEntries, meals[i]));
       })
-      .catch((err) => {
+  }catch(err){
+    console.log(err);
         dispatch(fetchEntriesFailed());
-      });
+      }
   };
-};
+

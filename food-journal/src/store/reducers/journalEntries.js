@@ -1,14 +1,33 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
+  foodSelected: null,
+  quantity: null,
+  unit: null,
   calGoal: 2000,
-  journalEntries: [],
+  nutritionFacts: {},
+  breakfast: [],
+  lunch: [],
+  dinner: [],
+  snack: [],
   error: false,
   entryDelete: false,
+  curEntry: {}, 
+  meal: null, 
+  breakdown: false,
+  nutritionBreakDown: {}
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case actionTypes.FOOD_SEARCH:
+      return {
+				...state,
+        foodSelected: action.foodSelected,
+        quantity: action.quantity,
+        unit: action.unit, 
+        nutritionFacts: action.nutritionFacts
+			};
     case actionTypes.ADD_ENTRY_SUCCESS:
       return {
         ...state,
@@ -22,10 +41,47 @@ const reducer = (state = initialState, action) => {
         ),
         entryDelete: true,
       };
-    case actionTypes.SET_ENTRIES:
-      return {
+    case actionTypes.SET_BREAKDOWN:  
+    return {
         ...state,
-        journalEntries: action.entries,
+        breakdown: !state.breakdown,
+        nutritionBreakDown: action.nutritionBreakDown,
+        error: false,
+      };
+    case actionTypes.SET_BREAKFAST:  
+    return {
+        ...state,
+        breakfast: action.entries,
+        error: false,
+      };
+    case actionTypes.SET_LUNCH:  
+    return {
+        ...state,
+        lunch: action.entries,
+        error: false,
+      };
+    case actionTypes.SET_DINNER:  
+    return {
+        ...state,
+        dinner: action.entries,
+        error: false,
+      };
+    case actionTypes.SET_SNACK:  
+    return {
+        ...state,
+        snack: action.entries,
+        error: false,
+      };
+    case actionTypes.SET_ENTRY:  
+    return {
+        ...state,
+        curEntry: action.entries,
+        error: false,
+      };
+    case actionTypes.SET_MEAL:  
+    return {
+        ...state,
+        meal: action.meal,
         error: false,
       };
     case actionTypes.FETCH_ENTRIES_FAILED:

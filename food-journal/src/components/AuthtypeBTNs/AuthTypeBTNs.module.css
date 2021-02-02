@@ -1,0 +1,5 @@
+.authBTN{
+    display: flex;
+    flex-flow: column;
+    margin: 2vh;
+}

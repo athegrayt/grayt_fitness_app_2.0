@@ -42,8 +42,8 @@ export const auth = (email, password, isSignup) => {
   return (dispatch) => {
     dispatch(authStart());
     const authData = {
-      email: email,
-      password: password,
+      email,
+      password,
       returnSecureToken: true,
     };
     let url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY3}`;
@@ -63,6 +63,7 @@ export const auth = (email, password, isSignup) => {
         dispatch(checkAuthTimeout(response.data.expiresIn));
       })
       .catch((err) => {
+        console.log(err)
         dispatch(authFail(err.response.data));
       });
   };

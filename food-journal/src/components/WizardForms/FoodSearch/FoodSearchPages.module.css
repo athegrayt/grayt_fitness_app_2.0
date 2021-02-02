@@ -1,0 +1,16 @@
+.foodSearchPage{
+display: flex;
+  flex-direction: column;
+  align-content: center;
+  text-align: center;
+  justify-content: center;
+}
+.foodSearchPage h3{
+  color: black;
+}
+
+.icon{
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}

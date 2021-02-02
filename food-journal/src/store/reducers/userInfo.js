@@ -1,11 +1,11 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  userInfo: {},
-  error: false,
-  loading: false,
-  path: null,
-  fetched: false,
+	userInfo: [{ calorieGoal:2000 }],
+	error: false,
+	loading: false,
+	path: null,
+	fetched: false,
 };
 
 const reducer = (state = initialState, action) => {

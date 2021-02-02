@@ -1,0 +1,38 @@
+
+.splashbg{
+  background-image: url('../../../assets/images/mike-von-CX0zKCHOpJo-unsplash.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: .5;
+  height: 100vh;
+  width:100vw;
+  transition: all .3s;
+}
+
+.blur{
+  filter: blur(8px)
+}
+.logo{
+  margin-top: 3vh;
+  width: 200px;
+}
+
+h3{
+  color:#ffffff;
+  text-align: center;
+  margin: 16px;
+
+}
+
+.content{
+  display: flex;
+  flex-flow: column;
+  /* justify-content: space-between; */
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  z-index: 2;
+  position: absolute;
+  top:0;
+}

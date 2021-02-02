@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as foodSearchActions from "../../store/actions/index";
-import Button from "../../components/UI/Button/Button";
-import Input from "../../components/UI/Forms/Input/Input";
-import { checkValidity } from "../../shared/utility";
+import * as foodSearchActions from "../../../store/actions/index";
+import Button from "../../../components/UI/Button/Button";
+import Input from "../../../components/UI/Forms/Input/Input";
+import { checkValidity } from "../../../shared/utility";
 import classes from "./FoodSearch.module.css";
 import PropTypes from "prop-types";
 
@@ -56,6 +56,8 @@ class foodSearch extends Component {
 		formIsValid: false,
 		searching: true,
 	};
+
+	
 
 	inputChangedHandler = (event, inputIdentifier) => {
 		const updatedOrderForm = {

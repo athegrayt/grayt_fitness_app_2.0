@@ -40,15 +40,13 @@ const JournalEntry = (props) => {
   }
 
   return (
-    <div
-      id={props.id}
-      className={classes.JournalEntry}
-      onClick={props.deleteRequestHandler}
-    >
-      <p>{consumed_at}</p>
-      <p>{description}</p>
-    </div>
-  );
+		<div
+			id={props.id}
+			className={classes.JournalEntry}
+			onClick={props.deleteRequestHandler}>
+			<p>{food_name}</p>
+		</div>
+	);
 };
 JournalEntry.propTypes = {
   deleteRequest: PropTypes.bool,

@@ -59,11 +59,4 @@ class Cockpit extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    jrlEntry: state.journalEntries.journalEntries,
-    goal: state.userInfo.userInfo[0],
-  };
-};
 
-export default connect(mapStateToProps)(Cockpit);

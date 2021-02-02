@@ -1,11 +1,17 @@
+export const SET_ENTRY = "SET_ENTRY";
 export const ADD_ENTRY = "ADD_ENTRY";
+export const SET_MEAL = "SET_MEAL";
+export const SET_BREAKDOWN = "SET_BREAKDOWN";
 export const ADD_ENTRY_SUCCESS = "ADD_ENTRY_SUCCESS";
 export const ADD_ENTRY_FAIL = "ADD_ENTRY_FAIL";
 export const FOOD_SEARCH = "FOOD_SEARCH";
 export const DELETE_ENTRY = "DELETE_ENTRY";
 export const INIT_ENTRIES = "INIT_ENTRIES";
 export const FETCH_ENTRIES_FAILED = "FETCH_ENTRIES_FAILED";
-export const SET_ENTRIES = "SET_ENTRIES";
+export const SET_BREAKFAST = "SET_BREAKFAST";
+export const SET_LUNCH = "SET_LUNCH";
+export const SET_DINNER = "SET_DINNER";
+export const SET_SNACK = "SET_SNACK";
 
 export const AUTH_START = "AUTH_START";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";
@@ -20,3 +26,7 @@ export const FETCH_INFO_START = "FETCH_INFO_START";
 export const FETCH_INFO_SUCCESS = "FETCH_INFO_SUCCESS";
 export const FETCH_INFO_FAIL = "FETCH_INFO_FAIL";
 export const SET_AUTH_REDIRECT_PATH = "SET_AUTH_REDIRECT_PATH";
+
+export const UPDATE_CUR_TAB = "UPDATE_CUR_TAB";
+export const SET_TAB_STATUS = "SET_TAB_STATUS";
+export const SET_PAGE = "SET_PAGE";

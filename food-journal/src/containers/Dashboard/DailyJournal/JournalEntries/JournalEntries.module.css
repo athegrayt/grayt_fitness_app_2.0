@@ -1,0 +1,30 @@
+.JournalEntries {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
+  height: 33vh;
+  justify-content: flex-start;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.add{
+  position: absolute;
+  right: 5%;
+  top: 5%;
+}
+
+.JournalEntries h3{
+  color: #000000;
+}
+.entries{
+  width: 80vw;
+  margin-block-start: 3vh;
+
+}
+.icon{
+  position: absolute;
+  top: 5%;
+  left: 5%;
+}

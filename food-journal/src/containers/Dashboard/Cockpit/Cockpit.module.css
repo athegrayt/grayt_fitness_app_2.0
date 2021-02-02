@@ -1,0 +1,14 @@
+.cockpit {
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 0px;
+  box-shadow: 5px 5px 10px gray;
+  border-radius: 10px;
+}
+
+.cockpit h3{
+    color: #000
+}

@@ -1,0 +1,14 @@
+
+.authPage{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  text-align: center;
+}
+
+.authPage input{
+  text-align: left;
+}
+.authPage label{
+  text-align: left;
+}
