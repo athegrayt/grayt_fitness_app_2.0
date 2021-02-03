@@ -12,6 +12,10 @@ export const SET_BREAKFAST = "SET_BREAKFAST";
 export const SET_LUNCH = "SET_LUNCH";
 export const SET_DINNER = "SET_DINNER";
 export const SET_SNACK = "SET_SNACK";
+export const ADD_BREAKFAST_ENTRY = "ADD_BREAKFAST_ENTRY";
+export const ADD_LUNCH_ENTRY = "ADD_LUNCH_ENTRY";
+export const ADD_DINNER_ENTRY = "ADD_DINNER_ENTRY";
+export const ADD_SNACK_ENTRY = "ADD_SNACK_ENTRY";
 
 export const AUTH_START = "AUTH_START";
 export const AUTH_SUCCESS = "AUTH_SUCCESS";

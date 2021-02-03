@@ -3,6 +3,7 @@
 	background-color: #ffffff;
 	height: 100vh;
 	width: 100vw;
+	text-align: center;
 }
 
 .homeIcon{
@@ -24,7 +25,6 @@ box-shadow: inset 0px 7px 3px -3px rgba(50, 50, 50, 0.75);
 }
 
 .logo {
-	margin-top: 16px;
 	width: 300px;
 }
 
@@ -35,16 +35,17 @@ h3 {
 }
 
 .content {
-	display: flex;
+	/* display: flex;
 	flex-flow: column;
-	/* border: 2px solid black; */
-	/* justify-content: space-between; */
+	text-align: center;
+	border: 2px solid black;
+	justify-content: space-between;
 	align-items: center;
 	height: 90vh;
 	width: 100vw;
 	z-index: 2;
 	position: absolute;
-	top: 0;
+	top: 0; */
 }
 
 .tabBar {

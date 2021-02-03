@@ -36,18 +36,13 @@ class JournalEntries extends Component {
 		this.setState({ entry: newEntry, entryID: entryID, showNutrition: true });
 	};
 
-	closeModalHandler = () => {
-		this.setState({ showNutrition: false });
-	};
-
 	render() {
-		let entries = <Spinner />;
+		let entries = null;
+		// let entries = <Spinner />;
 		if (this.props[`${this.props.meal}`]) {
-			const todayDate = new Date().toUTCString().slice(0, 15);
+			const todayDate = new Date().toLocaleString().slice(0, 10);
 			const curDayEntries = this.props[`${this.props.meal}`].filter((entry) => {
-				const date = new Date(entry.consumed_at.slice(0, 10))
-					.toUTCString()
-					.slice(0, 15);
+				const date = entry.consumed_at.slice(0, 10);
 				return date === todayDate;
 			});
 			if (curDayEntries.length) {
@@ -62,6 +57,7 @@ class JournalEntries extends Component {
 							clicked={() => {
 								this.props.setPage('nutriFacts')
 								this.props.setEntries(entry,'entry')
+								this.props.setBreakdown(null, true);
 							}}
 							deleteRequestHandler={() => this.deleteRequestHandler(i)}>
 							<JournalEntry entry={entry} />
@@ -70,13 +66,17 @@ class JournalEntries extends Component {
 				});
 			} else {
 				entries = (
-					<div>
+					<div className={classes.empty}>
 						<p>There's nothing like a fresh start!</p>
 						<p>
-							Make your first journal entry above to start tracking your diet!
+							Click on the{' '}
+							<span>
+								<RiAddCircleLine color='#9b9b9b' size='1rem' />
+							</span>{' '}
+							above to start tracking your diet!
 						</p>
 					</div>
-				);
+				) 
 			}
 		}
 		return (
@@ -99,7 +99,7 @@ class JournalEntries extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		meal: state.journalEntries.meal,
+		meal: state.tabBar.meal,
 		breakfast: state.journalEntries.breakfast,
 		lunch: state.journalEntries.lunch,
 		dinner: state.journalEntries.dinner,

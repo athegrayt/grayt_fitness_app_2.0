@@ -9,7 +9,7 @@ const Graphic = (props) =>{
        carbs: Math.floor(((carbs*4)/calories)*100), 
        fat: Math.floor(((fat*9)/calories)*100),
     }
-    let center = props.breakdown ? `${calories} cal`:`${props.perOfGoal}%`
+    let center = !props.breakdown && `${props.perOfGoal}%`
    let doughnutColor = '#CB5B6F';
 		if (props.perOfGoal > 25 && props.perOfGoal <= 75) {
 			doughnutColor = '#F2E467';
@@ -52,8 +52,8 @@ const Graphic = (props) =>{
 					data={state}
 					options={{
 						title: {
-							display: false,
-							text: 'Daily Caloric Intake',
+							display: props.breakdown ? true : false,
+							text: `Caloric Breakdown`,
 							fontSize: 20,
 						},
 						legend: {

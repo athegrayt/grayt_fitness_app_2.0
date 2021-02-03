@@ -5,7 +5,7 @@ import { FaClipboard, FaUser } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as classes from './Layout.module.css';
-import * as actions from '../../store/actions/tabBar'
+import * as actions from '../../store/actions'
 
 class TabBar extends Component { 
     render() {
@@ -20,7 +20,6 @@ class TabBar extends Component {
 			: classes.unselected;
 		return (
 			<div className={classes.layout}>
-				<main className={classes.content}>
 					<Link
 				to={{
 					pathname: '/dashboard',
@@ -28,6 +27,7 @@ class TabBar extends Component {
 				}}>
 				<img className={classes.logo} src={logo} alt='logo'></img>
 			</Link>
+				<main className={classes.content}>
 					{this.props.children}
 				</main>
 				<div className={classes.tabBar}>

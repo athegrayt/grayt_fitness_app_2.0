@@ -9,6 +9,11 @@
   text-align: center;
 }
 
+.empty{
+  width: 80%;
+  margin: 0 auto;
+}
+
 .add{
   position: absolute;
   right: 5%;

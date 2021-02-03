@@ -1,9 +1,10 @@
 .dailyJournal{
-    display: flex;
+    width: 80vw;
+    /* display: flex;
     flex-flow: column;
     justify-content: space-between;
     align-items: center;
-    transition: all .3s;
+    transition: all .3s; */
 }
 
 .dailyJournal .btns{
@@ -11,8 +12,9 @@
     display: flex;
     flex-flow: column;
     align-items: center;
-    height: 40vh;
-    width: 80%
+    width: 80%;
+    margin: 0 auto; 
+
 }
 .dailyJournal h3{
     color: #000

@@ -1,11 +1,29 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-journalEntries";
 
-export const addEntrySuccess = (entry) => {
-  return {
-    type: actionTypes.ADD_ENTRY_SUCCESS,
-    entry: entry.journalEntry,
-  };
+export const addEntrySuccess = (entry, meal) => {
+  switch(meal){
+	  case 'breakfast':
+		  return{
+			type: actionTypes.ADD_BREAKFAST_ENTRY,
+			entry
+		  }
+	  case 'lunch':
+		  return{
+			type: actionTypes.ADD_LUNCH_ENTRY,
+			entry
+		  }
+	  case 'dinner':
+		  return{
+			type: actionTypes.ADD_DINNER_ENTRY,
+			entry
+		  }
+		default:
+			return {
+				type: actionTypes.ADD_SNACK_ENTRY,
+				entry,
+			};
+  }
 };
 
 export const addEntryFail = () => {
@@ -19,10 +37,11 @@ export const addEntry = (meal, entry, token) => {
     axios
       .post(`/${meal}.json?auth=${token}`, entry)
       .then((res) => {
-        dispatch(addEntrySuccess(entry));
+		dispatch(addEntrySuccess(entry.journalEntry, meal));
       })
-      .catch((error) => {
-        dispatch(addEntryFail());
+      .catch((err) => {
+		console.log(err)
+		dispatch(addEntryFail());
       });
   };
 };
@@ -69,7 +88,7 @@ export const searchFood = (food) => (dispatch) => {
 					}),
 					{}
 				);
-				nf.consumed_at = new Date()
+				nf.consumed_at = new Date().toLocaleString()
 			return nf;
 		})
 		.then((res) =>

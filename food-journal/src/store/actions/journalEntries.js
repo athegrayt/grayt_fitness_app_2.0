@@ -30,16 +30,12 @@ export const setEntries = (entries, meal) => {
   };
 };
 
-export const setMeal = (meal) => {
-  return {
-    type: actionTypes.SET_MEAL,
-    meal
-  }
-}
-export const setBreakdown = (nutritionBreakDown) => {
+
+export const setBreakdown = (nutritionBreakDown, breakdown) => {
   return {
 		type: actionTypes.SET_BREAKDOWN,
-		nutritionBreakDown,
+    nutritionBreakDown,
+    breakdown
 	};
 }
 

@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from "react";
+import React, { Component } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "./hoc/Layout/Layout";
@@ -29,13 +29,13 @@ class App extends Component {
         <Switch>
           <Layout>
           <Route
-            path="/food-journal"
+            path="/dashboard"
             component={Dashboard}
           />
           <Route path="/journal-log" component={JournalLog} />
           <Route path="/user-info" component={UserInfo} />
           <Route path="/logout" component={Logout} />
-          <Redirect to="/food-journal" />
+          <Redirect to="/dashboard" />
           </Layout>
         </Switch>
       );

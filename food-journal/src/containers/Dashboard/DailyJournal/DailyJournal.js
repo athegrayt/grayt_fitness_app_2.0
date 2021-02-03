@@ -12,7 +12,6 @@ import * as classes from './DailyJournal.module.css'
     
 class DailyJournal extends Component {
 	state = {
-        page: null, 
 		food: null, 
 	};
     
@@ -20,19 +19,19 @@ class DailyJournal extends Component {
     tabHandler = () => {
 		this.props.setTabStatus(null);
 		this.props.setMeal(null)
+		this.props.setBreakdown(null, false);
 	};
 
 	mealSelectHandler = (meal, page) => {
-		this.setState({ page});
-		this.props.setTabStatus(true);
 		this.props.setMeal(meal)
+		this.props.setPage(page);
+		this.props.setTabStatus(true);
 	};
 	render() {
-        const {page} = this.state
-        const {status} = this.props
+        const {page ,status} = this.props
 		const cssClassesDailyJournal = [
 			classes.dailyJournal,
-			this.state.status ? classes.none : classes.block
+			status ? classes.none : classes.block
 		].join(' ');
 		const btns = ['breakfast', 'lunch', 'dinner', 'snack'].map((meal) => {
 			const upperCaseName = meal.charAt(0).toUpperCase() + meal.slice(1)
@@ -40,7 +39,7 @@ class DailyJournal extends Component {
 				<Button
 					key={meal}
 					type='text'
-					btnType='Success'
+					btnType='Dashboard'
 					clicked={() => this.mealSelectHandler(meal, 'jrlEntry')}>
 					{upperCaseName}
 				</Button>
@@ -49,7 +48,7 @@ class DailyJournal extends Component {
 		return (
 			<div>
 				<div className={cssClassesDailyJournal}>
-					<h3>Select to view of add</h3>
+					{/* <h3>Select to view of add</h3> */}
 					<div className={classes.btns}>{btns}</div>
 				</div>
 				<Modal
@@ -59,16 +58,16 @@ class DailyJournal extends Component {
 					{page === 'jrlEntry' && (
 						<JournalEntries
 							setFood={(food) => this.setState({ food })}
-							setPage={(page) => this.setState({ page })}
+							setPage={(page) => this.props.setPage(page)}
 							closeTab={this.tabHandler}
 						/>
 					)}
 					{page === 'foodSearch' && (
-						<FoodSearch previousPage={(page) => this.setState({ page })} />
+						<FoodSearch previousPage={(page) => this.props.setPage(page)} />
 					)}
 					{(page === 'nutriFacts') && (
 						<NutritionSummary
-							previousPage={(page) => this.setState({ page })}
+							previousPage={(page) => this.props.setPage(page)}
 						/>
 					)}
 				</Modal>
@@ -81,21 +80,12 @@ const mapStateToProps = (state) => {
 	return {
 		breakdown: state.journalEntries.breakdown,
 		status: state.tabBar.modalOpen,
+		page: state.tabBar.page,
 		token: state.auth.token,
 		userId: state.auth.userId,
 	};
 };
 
-// const mapDispatchToProps = (dispatch) => {
-// 	return {
-// 		dbUpdate: (token, userId, curEntries, id) =>
-// 			dispatch(journalEntryActions.dbUpdate(token, userId, curEntries, id)),
-// 		onInitEntries: (token, userId) =>
-// 			dispatch(journalEntryActions.initEntries(token, userId)),
-// 		onfetchInfo: (token, userId) =>
-// 			dispatch(journalEntryActions.fetchInfo(token, userId)),
-// 	};
-// };
 
 export default connect(
 	mapStateToProps,

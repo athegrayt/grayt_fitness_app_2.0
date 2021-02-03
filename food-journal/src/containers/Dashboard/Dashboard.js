@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import Cockpit from './Cockpit/Cockpit'
-import FoodSearch from './DailyJournal/FoodSearch/FoodSearch'
 import DailyJournal from './DailyJournal/DailyJournal'
-import JournalEntries from './DailyJournal/JournalEntries/JournalEntries'
 import {connect} from 'react-redux'
+import * as classes from './Dashboard.module.css'
 import * as actions from '../../store/actions'
 
 class Dashboard extends Component{
@@ -15,7 +14,7 @@ class Dashboard extends Component{
     }
     render(){
         return(
-            <div>
+            <div className={classes.dashboard}>
                 <Cockpit/>
                 <DailyJournal/>
             </div>
@@ -25,7 +24,7 @@ class Dashboard extends Component{
 
 const mapStateToProps = (state) => {
 	return {
-        meal: state.journalEntries.meal,
+        meal: state.tabBar.meal,
 		token: state.auth.token,
 		userId: state.auth.userId,
 	};

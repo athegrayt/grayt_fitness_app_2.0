@@ -1,0 +1,13 @@
+.dashboard{
+    display: flex;
+	flex-flow: column;
+	text-align: center;
+	margin-block-start: 5vh;
+	justify-content: space-around;
+	align-items: center;
+	height: 80vh;
+	width: 100vw;
+	z-index: 2;
+	position: absolute;
+	top: 0;
+}

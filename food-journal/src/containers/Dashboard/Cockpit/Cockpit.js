@@ -1,28 +1,42 @@
 import React from 'react';
-import Graphic from '../../../components/Graphic/Graphic'
-import {connect} from 'react-redux'
-import * as actions from '../../../store/actions'
-import * as classes from './Cockpit.module.css'
+import Graphic from '../../../components/Graphic/Graphic';
+import { connect } from 'react-redux';
+import * as actions from '../../../store/actions';
+import * as classes from './Cockpit.module.css';
 
 const Cockpit = (props) => {
-	const {breakfast, lunch, dinner, snack}= props
-	const meals = [{meal: breakfast, name: 'breakfast'}, {meal: lunch, name: 'lunch'}, {meal: dinner, name:'dinner'}, {meal: snack, name: 'snack'}]
-	const calCount = (meal) => {	
-		const todayDate = new Date().toUTCString().slice(0, 16);
+	const clicked = (calories, meal) => {
+		if (calories > 0) {
+			props.setBreakdown(nutritionTotal, null);
+			props.breakdown ? props.setTabStatus(null) : props.setTabStatus(true);
+			props.setPage(!props.breakdown ? 'nutriFacts' : 'jrlEntry');
+		}else if (calories === 0 && !meal) {
+			props.setTabStatus(true);
+			props.setPage('nutriFacts');
+		}
+	}
+	
+	const { breakfast, lunch, dinner, snack, nutritionBreakdown } = props;
+	const meals = [
+		{ meal: breakfast, name: 'breakfast' },
+		{ meal: lunch, name: 'lunch' },
+		{ meal: dinner, name: 'dinner' },
+		{ meal: snack, name: 'snack' },
+	];
+	const calCount = (meal) => {
+		const todayDate = new Date().toLocaleString().slice(0, 10);
 		const curDayEntries = meal.filter((entry) => {
-			const date = new Date(entry.consumed_at.slice(0, 10))
-			.toUTCString()
-			.slice(0, 16);
+			const date = entry.consumed_at.slice(0, 10)
 			return date === todayDate;
-		})
-		if(!curDayEntries.length){
+		});
+		if (!curDayEntries.length) {
 			return {
 				calories: 0,
 				carbs: 0,
 				protein: 0,
 				fat: 0,
 			};
-		}else{
+		} else {
 			const mealNutritionTotal = curDayEntries
 				.map((entry) => {
 					return {
@@ -40,53 +54,65 @@ const Cockpit = (props) => {
 						fat: Math.round(total.fat + cur.fat),
 					};
 				});
-		return mealNutritionTotal
+			return mealNutritionTotal;
 		}
-		}	
-	
+	};
+
 	let nutritionTotal = meals
 		.map((meal) => {
 			return calCount(meal.meal);
 		})
 		.reduce((total, cur) => {
-				return {
-						calories: Math.round(total.calories + cur.calories),
-						carbs: Math.round(total.carbs + cur.carbs),
-						protein: Math.round(total.protein + cur.protein),
-						fat: Math.round(total.fat + cur.fat),
-					};
-				});
-		
+			return {
+				calories: Math.round(total.calories + cur.calories),
+				carbs: Math.round(total.carbs + cur.carbs),
+				protein: Math.round(total.protein + cur.protein),
+				fat: Math.round(total.fat + cur.fat),
+			};
+		});
+
 	let newCalGoal = props.goal.calorieGoal;
-	if(props.meal){
-		nutritionTotal =meals
-		.filter((meal) => meal.name === props.meal)
-		.map((meal) => calCount(meal.meal))[0];
+	if (props.meal && !nutritionBreakdown) {
+		nutritionTotal = meals
+			.filter((meal) => meal.name === props.meal)
+			.map((meal) => calCount(meal.meal))[0];
 	}
-	console.log(nutritionTotal);
-	let perOfGoal = Math.round(100 * (nutritionTotal.calories / newCalGoal));;
+	if(nutritionBreakdown){
+		nutritionTotal = {
+			calories: nutritionBreakdown.nf_calories,
+			carbs: nutritionBreakdown.nf_total_carbohydrate,
+			protein: nutritionBreakdown.nf_protein,
+			fat: nutritionBreakdown.nf_total_fat,
+		};;
+	}
+	let perOfGoal = Math.round(100 * (nutritionTotal.calories / newCalGoal));
 	let meal = props.meal
 		? props.meal.charAt(0).toUpperCase() + props.meal.slice(1)
-		: "Today's";	
-    
-return (
-	<div
-		className={classes.cockpit}
-		onClick={() => props.setBreakdown(nutritionTotal)}>
-		<Graphic
-			perOfGoal={perOfGoal}
-			breakdown={props.breakdown}
-			nutritionTotal={nutritionTotal}
-		/>
-		<h3>{meal} Caloric Intake</h3>
-	</div>
-);
-}
+		: "Today's";
+	let label = props.breakdown
+		? `${nutritionTotal.calories} cal`
+		: `${meal} Caloric Intake`;
+	return (
+		<div
+			className={classes.cockpit}
+			onClick={() => {
+				clicked(nutritionTotal.calories, props.meal);
+			}}>
+			<Graphic
+				perOfGoal={perOfGoal}
+				breakdown={props.breakdown}
+				nutritionTotal={nutritionTotal}
+			/>
+			<h3>{label}</h3>
+		</div>
+	);
+};
 
 const mapStateToProps = (state) => {
 	return {
+		nutritionBreakdown: state.journalEntries.nutritionBreakdown,
 		breakdown: state.journalEntries.breakdown,
-		meal: state.journalEntries.meal,
+		meal: state.tabBar.meal,
 		breakfast: state.journalEntries.breakfast,
 		lunch: state.journalEntries.lunch,
 		dinner: state.journalEntries.dinner,

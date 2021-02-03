@@ -1,4 +1,9 @@
-import {UPDATE_CUR_TAB, SET_TAB_STATUS, SET_PAGE} from './actionTypes'
+import {
+	UPDATE_CUR_TAB,
+	SET_TAB_STATUS,
+	SET_PAGE,
+	SET_MEAL,
+} from './actionTypes';
 
 export const updateCurTab = (curTab, jeop) => {
 	return{
@@ -17,3 +22,10 @@ export const setPage = (page) => {
 		type: SET_PAGE, page 
 	}
 }
+
+export const setMeal = (meal) => {
+	return {
+		type: SET_MEAL,
+		meal,
+	};
+};
