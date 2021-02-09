@@ -4,7 +4,7 @@
   text-align: center;
   width: 100vw;
   margin: auto;
-  margin-block-start: 5vh;
+  /* margin-block-start: 5vh; */
 }
 .nutritionFacts {
   display: flex;
@@ -14,7 +14,6 @@
 }
 .nutritionSummary h3 {
   color: black;
-  margin-top: 0;
 }
 .icon{
   position: absolute;
@@ -25,4 +24,9 @@
   position: absolute;
   top: 5%;
   right: 5%;
+}
+
+.empty{
+  width: 80%;
+  margin: 0 auto;
 }

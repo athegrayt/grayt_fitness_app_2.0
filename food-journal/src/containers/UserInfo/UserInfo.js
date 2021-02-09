@@ -99,25 +99,25 @@ class UserInfo extends Component {
     loading: false,
   };
 
-  componentDidMount() {
-    let oldUserData = { ...this.state.userInfo };
-    for (let formElementIdentifier in this.props.info[0]) {
-      if (
-        formElementIdentifier !== "userId" &&
-        formElementIdentifier !== "date"
-      ) {
-        const updatedUserInfo = {
-          ...this.state.userInfo,
-        };
-        const updatedFormElement = {
-          ...updatedUserInfo[formElementIdentifier],
-        };
-        updatedFormElement.value = this.props.info[0][formElementIdentifier];
-        oldUserData[formElementIdentifier] = updatedFormElement;
-      }
-    }
-    this.setState({ userInfo: oldUserData });
-  }
+  // componentDidMount() {
+  //   let oldUserData = { ...this.state.userInfo };
+  //   for (let formElementIdentifier in this.props.info[0]) {
+  //     if (
+  //       formElementIdentifier !== "userId" &&
+  //       formElementIdentifier !== "date"
+  //     ) {
+  //       const updatedUserInfo = {
+  //         ...this.state.userInfo,
+  //       };
+  //       const updatedFormElement = {
+  //         ...updatedUserInfo[formElementIdentifier],
+  //       };
+  //       updatedFormElement.value = this.props.info[0][formElementIdentifier];
+  //       oldUserData[formElementIdentifier] = updatedFormElement;
+  //     }
+  //   }
+  //   this.setState({ userInfo: oldUserData });
+  // }
 
   infoHandler = (event) => {
     event.preventDefault();

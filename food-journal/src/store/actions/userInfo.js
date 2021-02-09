@@ -29,7 +29,7 @@ export const fetchInfoFailed = () => {
 
 export const fetchInfo = (token, userId) => {
   return (dispatch) => {
-    dispatch(fetchInfoStart());
+    // dispatch(fetchInfoStart());
     const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
     axios
       .get("/userInfo.json" + queryParams)
@@ -43,10 +43,10 @@ export const fetchInfo = (token, userId) => {
           b = new Date(b.date).getTime();
           return b - a;
         });
-        dispatch(fetchInfoSuccess(curUserInfo));
+        // dispatch(fetchInfoSuccess(curUserInfo));
       })
       .catch((err) => {
-        dispatch(fetchInfoFailed());
+        // dispatch(fetchInfoFailed());
       });
   };
 };

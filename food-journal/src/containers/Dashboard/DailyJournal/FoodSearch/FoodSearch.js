@@ -5,6 +5,7 @@ import FoodSearchFirstPage from '../../../../components/WizardForms/FoodSearch/F
 import FoodSearchSecondPage from '../../../../components/WizardForms/FoodSearch/FoodSearchSecondPage'
 import { required } from 'redux-form-validators'
 import * as actions from '../../../../store/actions/index'
+import * as classes from './FoodSearch.module.css'
 	
 class FoodSearch extends Component {
 	state = {
@@ -32,20 +33,20 @@ class FoodSearch extends Component {
 				}
 			}
 			updatedFoodSearch.serving_qty = +values.serving_qty;
-			const entry = {
-				journalEntry: updatedFoodSearch,
-				userId: this.props.userId,
-			};
+			updatedFoodSearch.userId=this.props.userId
+			const entry = updatedFoodSearch
+			console.log(entry)
 			const {meal, token} = this.props;
 			this.props.addEntry(meal, entry, token);
 			this.props.previousPage('jrlEntry');
+			this.props.setHint([])
 	};
 
 	render() {
 		const { page } = this.state;
 		const {previousPage} = this.props
 		return (
-			<div>
+			<div className={classes.foodSearch}>
 				{page === 1 && (
 					<FoodSearchFirstPage
 						previousPage={previousPage}

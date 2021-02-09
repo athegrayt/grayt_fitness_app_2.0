@@ -3,38 +3,49 @@ import {connect} from 'react-redux'
 import { FaAngleLeft } from 'react-icons/fa';
 import { RiDeleteBin2Line } from 'react-icons/ri';
 import Button from '../UI/Button/Button'
+import CalorieMeter from '../CalorieMeter/CalorieMeter'
 import NutritionFact from "../NutritionFact/NutritionFact";
 import * as actions from '../../store/actions'
 import classes from "./NutritionSummary.module.css";
 
 
 const NutritionSummary = (props) => {
-  const deleteHandler = () => {
-    props.dbUpdate(props.token, props.entry.dbKey, props.userId, props.meal)
+	const { nutritionBreakdown, calGoal, entry, token, userId, meal } = props;
+	let { serving_qty, serving_unit, food_name} = entry;
+	const deleteHandler = () => {
+		console.log(entry);
+		props.deleteEntry(
+			token,
+			entry.docID,
+			userId,
+			meal,
+			new Date(entry.consumed_at.seconds*1000).toISOString().slice(0, 10)
+		);
+		props.updateMealEntries(meal, token, userId);
 	props.previousPage('jrlEntry');
 	props.setBreakdown(null,false)
   }
 
-  let { serving_qty, serving_unit, food_name} = props.entry;
   let facts = [];
   let empty = false
-  if (props.nutritionBreakdown === null ) {
-	if(props.entry.nf_calories>0){
-		for (let name in props.entry) {
+  if (nutritionBreakdown === null ) {
+	if(entry.nf_calories>0){
+		for (let name in entry) {
 				if (
 					name.match(/nf_total_carbohydrate/) ||
+					name.match(/nf_total_calories/) ||
 					name.match(/nf_total_fat/) ||
 					name.match(/nf_protein/)
 				) {
 					let title = name.includes('total')
 						? name.replace(/nf_total|_/g, '')
 						: name.replace(/nf_|_/g, '');
-					let value = Math.round(props.entry[name] * serving_qty);
+					let value = Math.round(entry[name] * serving_qty);
 					if (title === 'carbohydrate') {
 						title = 'carbs';
 					}
-					if (props.entry[name] === 'nf_serving_qty') {
-						value = props.entry[name];
+					if (entry[name] === 'nf_serving_qty') {
+						value = entry[name];
 					}
 					facts.push({ title, value });
 				}
@@ -42,7 +53,7 @@ const NutritionSummary = (props) => {
 		}else{
 			empty = (
 				<div className={classes.empty}>
-					<p>Steps to get started:</p>
+					<p style={{marginTop: '0'}}>Steps to get started:</p>
 					<p>1. Close this tab</p>
 					<p>
 						2. Click on one of the{' '}
@@ -50,7 +61,7 @@ const NutritionSummary = (props) => {
 								style={{ width: '100px' }}
 								type='button'
 								btnType='Success'>
-								Meal Name
+								Meal
 							</Button>
 						{' '}
 						to start tracking your diet!
@@ -59,9 +70,9 @@ const NutritionSummary = (props) => {
 			);
 		}	
 	} else {
-		for (let name in props.nutritionBreakdown) {
+		for (let name in nutritionBreakdown) {
 			if(name !== 'calories'){
-				let value = props.nutritionBreakdown[name];
+				let value = nutritionBreakdown[name];
 				let title = name;
 				facts.push({ title, value });
 			}
@@ -75,22 +86,30 @@ const NutritionSummary = (props) => {
 				/>)
   })
   let description =
-		props.breakdown && props.nutritionBreakdown
-			? `${props.meal ? props.meal.toUpperCase() : "CURRENT"}`
+		props.breakdown && nutritionBreakdown
+			? `${props.meal ? `${props.meal} % of current calories:` : "Current % of caloric goal:"}`
 			: `${serving_qty} ${serving_unit} of ${food_name}`;
   if (food_name === serving_unit && !props.breakdown) {
 		description = `${serving_qty} ${food_name}`;
 	}
-  
+  let calDenominator = props.meal ? props.totalCal : calGoal;
 	let content = empty ? (
 		empty
 	) : (
 		<div>
 			<h3>{description}</h3>
+
+			{(props.breakdown && nutritionBreakdown) && (
+				<CalorieMeter
+					percent={Math.round(100 * (nutritionBreakdown.calories / calDenominator))}
+				/>
+			)}
 			<div className={classes.nutritionFacts}>{facts}</div>
-			<div className={classes.btn} onClick={() => deleteHandler()}>
-				<RiDeleteBin2Line color='#9b9b9b' size='2rem' />
-			</div>
+			{props.breakdown && nutritionBreakdown ? null : (
+				<div className={classes.btn} onClick={() => deleteHandler()}>
+					<RiDeleteBin2Line color='#9b9b9b' size='2rem' />
+				</div>
+			)}
 		</div>
 	);
 
@@ -98,9 +117,11 @@ const NutritionSummary = (props) => {
 		<div className={classes.nutritionSummary}>
 			<div
 				onClick={() => {
-					props.meal
-						? props.previousPage('jrlEntry')
-						: props.setTabStatus(false);
+					if(props.meal){
+						props.previousPage('jrlEntry')
+					}else{
+						props.setTabStatus(false);
+					}
 					props.setBreakdown(null, false)
 				}}
 				className={classes.icon}>
@@ -113,6 +134,8 @@ const NutritionSummary = (props) => {
 
 const mapStateToProps = state => {
   return {
+		totalCal: state.journalEntries.totalCal,
+		calGoal: state.journalEntries.calGoal,
 		breakdown: state.journalEntries.breakdown,
 		nutritionBreakdown: state.journalEntries.nutritionBreakDown,
 		meal: state.tabBar.meal,

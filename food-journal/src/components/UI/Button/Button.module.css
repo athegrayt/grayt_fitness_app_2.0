@@ -5,8 +5,8 @@
   outline: none;
   cursor: pointer;
   font: inherit;
-  padding: 10px;
-  margin: 1vh;
+  padding: 1vh 10vw;
+  margin: 1vh auto;
   border-radius: 10px;
   font-weight: bold;
   width: 100%

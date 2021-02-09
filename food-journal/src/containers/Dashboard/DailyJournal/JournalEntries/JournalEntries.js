@@ -1,6 +1,5 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import Spinner from '../../../../components/UI/Spinner/Spinner';
 import * as actions from '../../../../store/actions/index';
 import Button from '../../../../components/UI/Button/Button';
 import JournalEntry from '../../../../components/JournalEntry/JournalEntry'
@@ -16,56 +15,22 @@ class JournalEntries extends Component {
 	};
 
 	componentDidMount() {
-		// this.props.onInitEntries(this.props.token, this.props.userId);
 		this.props.fetchInfo(this.props.token, this.props.userId);
 	}
 
-	deleteRequestHandler = (entryID) => {
-		const todayYear = new Date().getFullYear();
-		const todayMonth = new Date().getMonth();
-		const todayDate = new Date().getDate();
-		const curDayEntries = this.props.jrlEntry.filter((entry) => {
-			return (
-				new Date(entry.consumed_at.slice(0, 10)).getFullYear() === todayYear &&
-				new Date(entry.consumed_at.slice(0, 10)).getMonth() === todayMonth &&
-				new Date(entry.consumed_at.slice(0, 10)).getDate() + 1 === todayDate
-			);
-		});
-		let newEntry = curDayEntries[entryID];
-		entryID = newEntry.consumed_at;
-		this.setState({ entry: newEntry, entryID: entryID, showNutrition: true });
+	deleteRequestHandler = (entry) => {
+		this.props.deleteEntry(
+			this.props.token,
+			entry.docID,
+			this.props.userId,
+			this.props.meal,
+			entry.consumed_at.toISOString().slice(0, 10)
+		);
 	};
 
 	render() {
-		let entries = null;
-		// let entries = <Spinner />;
-		if (this.props[`${this.props.meal}`]) {
-			const todayDate = new Date().toLocaleString().slice(0, 10);
-			const curDayEntries = this.props[`${this.props.meal}`].filter((entry) => {
-				const date = entry.consumed_at.slice(0, 10);
-				return date === todayDate;
-			});
-			if (curDayEntries.length) {
-				entries = curDayEntries.map((entry, i) => {
-					return (
-						<Button
-							style={{ margin: '1vh 0' }}
-							type='button'
-							btnType='Success'
-							key={entry.consumed_at}
-							id={i}
-							clicked={() => {
-								this.props.setPage('nutriFacts')
-								this.props.setEntries(entry,'entry')
-								this.props.setBreakdown(null, true);
-							}}
-							deleteRequestHandler={() => this.deleteRequestHandler(i)}>
-							<JournalEntry entry={entry} />
-						</Button>
-					);
-				});
-			} else {
-				entries = (
+		const curDayEntries = this.props[`${this.props.meal}`];
+		let entries = (
 					<div className={classes.empty}>
 						<p>There's nothing like a fresh start!</p>
 						<p>
@@ -77,8 +42,26 @@ class JournalEntries extends Component {
 						</p>
 					</div>
 				) 
-			}
-		}
+		if (curDayEntries && curDayEntries.length) {
+			entries = curDayEntries.map((entry, i) => {
+				return (
+					<Button
+						style={{ margin: '1vh 0' }}
+						type='button'
+						btnType='Success'
+						key={entry.consumed_at}
+						id={i}
+						clicked={() => {
+							this.props.setPage('nutriFacts');
+							this.props.setEntries(entry, 'entry');
+							this.props.setBreakdown(null, true);
+						}}
+						deleteRequestHandler={() => this.deleteRequestHandler(entry)}>
+						<JournalEntry entry={entry} />
+					</Button>
+				);
+			});
+		} 
 		return (
 			<div className={classes.JournalEntries}>
 				<div

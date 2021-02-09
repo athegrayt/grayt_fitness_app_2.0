@@ -1,7 +1,4 @@
 .foodSearch{
-display: flex;
-  flex-direction: column;
-  align-content: center;
-  text-align: center;
-  justify-content: center
+max-height: 37vh;
+max-width: 80vw;
 }

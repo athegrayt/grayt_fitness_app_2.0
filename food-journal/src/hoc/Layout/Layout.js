@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../../assets/images/logo2.png';
-import logoIcon from '../../assets/images/homeIcon.png'
+import HomeIcon from '../../components/UI/HomeIcon/HomeIcon'
 import { FaClipboard, FaUser } from 'react-icons/fa';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -9,9 +9,7 @@ import * as actions from '../../store/actions'
 
 class TabBar extends Component { 
     render() {
-		let homeIconClass = this.props.homeIcon
-			? classes.selected
-			: classes.unselected;
+		let homeIconClass = this.props.homeIcon ? '#44C9B0' : ' #fff';
 		let recordIconClass = this.props.recordIcon
 			? classes.selected
 			: classes.unselected;
@@ -20,39 +18,50 @@ class TabBar extends Component {
 			: classes.unselected;
 		return (
 			<div className={classes.layout}>
-					<Link
-				to={{
-					pathname: '/dashboard',
-					icon: 'home',
-				}}>
-				<img className={classes.logo} src={logo} alt='logo'></img>
-			</Link>
-				<main className={classes.content}>
-					{this.props.children}
-				</main>
+				<Link
+					to={{
+						pathname: '/dashboard',
+						icon: 'home',
+					}}>
+					<img className={classes.logo} src={logo} alt='logo'></img>
+				</Link>
+				<main className={classes.content}>{this.props.children}</main>
 				<div className={classes.tabBar}>
 					<div className={classes.icons}>
 						<Link
 							to={{
-								pathname: '/user-records',
+								pathname: '/records',
 								icon: 'records',
-							}}>
+							}}
+							onClick={() =>
+								this.props.updateCurTab(this.props.location.icon || 'records')
+							}>
 							<FaClipboard className={recordIconClass} />
 						</Link>
 						<div className={classes.homeIcon}>
-						<Link
-							to={{
-								pathname: '/dashboard',
-								icon: 'home',
-							}}>
-							<img src={logoIcon} alt='home' style={{width: '75%'}} className={homeIconClass} />
-						</Link>
+							<Link
+								to={{
+									pathname: '/dashboard',
+									icon: 'home',
+								}}
+								onClick={() =>
+									this.props.updateCurTab(this.props.location.icon || 'home')
+								}>
+								<HomeIcon
+									fill={homeIconClass}
+									title='home'
+									style={{ width: '75%' }}
+								/>
+							</Link>
 						</div>
 						<Link
 							to={{
 								pathname: '/user-settings',
 								icon: 'settings',
-							}}>
+							}}
+							onClick={() =>
+								this.props.updateCurTab(this.props.location.icon || 'settings')
+							}>
 							<FaUser className={settingsIconClass} />
 						</Link>
 					</div>

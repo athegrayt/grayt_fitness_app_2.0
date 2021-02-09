@@ -10,7 +10,7 @@ class Dashboard extends Component{
     componentDidMount=()=>{
         const { token, userId, location} = this.props
         this.props.initEntries(token, userId);
-        this.props.updateCurTab(location.icon || "home");
+        // this.props.updateCurTab(location.icon || "home");
     }
     render(){
         return(

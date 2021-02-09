@@ -2,7 +2,7 @@ import React from 'react';
 import { FaAngleLeft } from 'react-icons/fa';
 import { Field, reduxForm } from 'redux-form';
 import Button from '../../UI/Button/Button';
-import { required } from 'redux-form-validators';
+import { required, format } from 'redux-form-validators';
 import Input from '../../UI/Forms/Input/Input';
 import { journalFields } from '../../../containers/Dashboard/DailyJournal/FoodSearch/searchFields';
 import * as classes from './FoodSearchPages.module.css';
@@ -10,16 +10,10 @@ import * as classes from './FoodSearchPages.module.css';
 const FoodSearchSecondPage = (props) => {
 	const { food, qty, unit } = props;
 	let fields = journalFields.map(({ label, name, type }, i) => {
-		let options = null;
 		let value = null;
-		let validate = required();
-		if (type === 'select') {
-			validate = null
-			options = (
-				<option selected value={unit}>
-					{unit}
-				</option>
-			);
+		let error = null
+		if (props.errors) {
+			error = props.errors[name];
 		}
 		if (type === 'number') {
 			value = qty;
@@ -32,24 +26,38 @@ const FoodSearchSecondPage = (props) => {
 				type={type}
 				placeholder={label}
 				defaultValue={value}
-				{...options}
 				component={Input}
-				validate={validate}
+				validate={[
+					required(),
+					// format({ with: /\d/i }),
+					format({ without: /-/i, message: 'Please enter a valid amount.' }),
+				]}
+				min='0'
+				error={error}
 			/>
 		);
 	});
 	const { handleSubmit, previousPage } = props;
 	return (
-		<div>
-			
+		<div className={classes.foodSearchSecondPage}>
 			<div onClick={previousPage} className={classes.icon}>
 				<FaAngleLeft color='#9b9b9b' size='2rem' />
 			</div>
-			<h3 style={{color: '#000', marginBottom: '0'}}>{food}</h3>
-			
+			<div className={classes.info}>
+				<h3>FOOD:</h3>
+				<h3>{food}</h3>
+			</div>
+
 			<form onSubmit={handleSubmit} className={classes.foodSearchPage}>
-				{fields}
-				<Button type='submit' btnType='Success'>
+				<div className={classes.info}>
+					<h3>Amount:</h3>
+					<div style={{ width: '15vw' }}>{fields}</div>
+				</div>
+				<div className={classes.info}>
+					<h3>Unit:</h3>
+					<h3 style={{ color: '#000' }}>{unit}</h3>
+				</div>
+				<Button type='submit' btnType='Success'style={{margin: '2vh auto'}}>
 					Add Entry
 				</Button>
 			</form>
@@ -59,6 +67,6 @@ const FoodSearchSecondPage = (props) => {
 
 export default reduxForm({
 	form: 'foodSearch', // <------ same form name
-	destroyOnUnmount: false, // <------ preserve form data
-	required,
+	destroyOnUnmount: true, // <------ preserve form data
+	required, format,
 })(FoodSearchSecondPage);

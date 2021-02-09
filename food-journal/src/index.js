@@ -1,4 +1,5 @@
 import React from "react";
+
 import ReactDOM from "react-dom";
 import thunk from "redux-thunk";
 import {reducer as reduxForm} from 'redux-form'
@@ -11,6 +12,8 @@ import tabBarReducer from './store/reducers/tabBarReducer';
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 const composeEnhancers =
 	process.env.NODE_ENV === 'development'

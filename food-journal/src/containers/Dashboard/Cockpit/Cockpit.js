@@ -24,26 +24,14 @@ const Cockpit = (props) => {
 		{ meal: snack, name: 'snack' },
 	];
 	const calCount = (meal) => {
-		const todayDate = new Date().toLocaleString().slice(0, 10);
-		const curDayEntries = meal.filter((entry) => {
-			const date = entry.consumed_at.slice(0, 10)
-			return date === todayDate;
-		});
-		if (!curDayEntries.length) {
-			return {
-				calories: 0,
-				carbs: 0,
-				protein: 0,
-				fat: 0,
-			};
-		} else {
-			const mealNutritionTotal = curDayEntries
+		if(meal.length) {
+			const mealNutritionTotal = meal
 				.map((entry) => {
 					return {
-						calories: entry.nf_calories,
-						carbs: entry.nf_total_carbohydrate,
-						protein: entry.nf_protein,
-						fat: entry.nf_total_fat,
+						calories: entry.nf_calories * entry.serving_qty,
+						carbs: entry.nf_total_carbohydrate * entry.serving_qty,
+						protein: entry.nf_protein * entry.serving_qty,
+						fat: entry.nf_total_fat * entry.serving_qty,
 					};
 				})
 				.reduce((total, cur) => {
@@ -54,8 +42,15 @@ const Cockpit = (props) => {
 						fat: Math.round(total.fat + cur.fat),
 					};
 				});
+				console.log(mealNutritionTotal);
 			return mealNutritionTotal;
 		}
+		return {
+			calories: 0,
+			carbs: 0,
+			protein: 0,
+			fat: 0,
+		};
 	};
 
 	let nutritionTotal = meals
@@ -70,7 +65,8 @@ const Cockpit = (props) => {
 				fat: Math.round(total.fat + cur.fat),
 			};
 		});
-
+		props.setTotalCalories(nutritionTotal.calories);
+		
 	let newCalGoal = props.goal.calorieGoal;
 	if (props.meal && !nutritionBreakdown) {
 		nutritionTotal = meals
@@ -85,13 +81,15 @@ const Cockpit = (props) => {
 			fat: nutritionBreakdown.nf_total_fat,
 		};;
 	}
+
 	let perOfGoal = Math.round(100 * (nutritionTotal.calories / newCalGoal));
+		
 	let meal = props.meal
 		? props.meal.charAt(0).toUpperCase() + props.meal.slice(1)
-		: "Today's";
+		: "Current";
 	let label = props.breakdown
 		? `${nutritionTotal.calories} cal`
-		: `${meal} Caloric Intake`;
+		: `of caloric goal`;
 	return (
 		<div
 			className={classes.cockpit}
@@ -102,6 +100,7 @@ const Cockpit = (props) => {
 				perOfGoal={perOfGoal}
 				breakdown={props.breakdown}
 				nutritionTotal={nutritionTotal}
+				meal={meal}
 			/>
 			<h3>{label}</h3>
 		</div>
@@ -110,6 +109,7 @@ const Cockpit = (props) => {
 
 const mapStateToProps = (state) => {
 	return {
+		totalCal: state.journalEntries.totalCal,
 		nutritionBreakdown: state.journalEntries.nutritionBreakdown,
 		breakdown: state.journalEntries.breakdown,
 		meal: state.tabBar.meal,

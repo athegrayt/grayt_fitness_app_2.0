@@ -3,7 +3,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import Layout from "./hoc/Layout/Layout";
 import Dashboard from "../src/containers/Dashboard/Dashboard";
-import JournalLog from "./containers/JournalLog/JournalLog";
+import Records from "./containers/Records/Records";
 import UserInfo from "./containers/UserInfo/UserInfo";
 import Auth from "./containers/Auth/Auth";
 import Logout from "./containers/Auth/Logout/Logout";
@@ -32,8 +32,8 @@ class App extends Component {
             path="/dashboard"
             component={Dashboard}
           />
-          <Route path="/journal-log" component={JournalLog} />
-          <Route path="/user-info" component={UserInfo} />
+          <Route path="/records" component={Records} />
+          {/* <Route path="/user-info" component={UserInfo} /> */}
           <Route path="/logout" component={Logout} />
           <Redirect to="/dashboard" />
           </Layout>

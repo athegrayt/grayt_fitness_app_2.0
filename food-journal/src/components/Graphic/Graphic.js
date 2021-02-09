@@ -9,7 +9,7 @@ const Graphic = (props) =>{
        carbs: Math.floor(((carbs*4)/calories)*100), 
        fat: Math.floor(((fat*9)/calories)*100),
     }
-    let center = !props.breakdown && `${props.perOfGoal}%`
+    let center = !props.breakdown && `${props.perOfGoal}`
    let doughnutColor = '#CB5B6F';
 		if (props.perOfGoal > 25 && props.perOfGoal <= 75) {
 			doughnutColor = '#F2E467';
@@ -22,7 +22,7 @@ const Graphic = (props) =>{
 					labels: ['% of Protein', '% of Carbs', '% of Fat'],
 					datasets: [
 						{
-							label: 'Caloric Breakdown',
+							label: `Caloric Breakdown`,
 							backgroundColor: ['#CB5B6F', ' #F2E467', '#5BCBAC'],
 							hoverBackgroundColor: ['#CB5B6F', '#F2E467', '#5BCBAC'],
 							data: [
@@ -40,7 +40,7 @@ const Graphic = (props) =>{
 							label: 'Daily Calories',
 							backgroundColor: [doughnutColor],
 							hoverBackgroundColor: [doughnutColor],
-							data: [props.perOfGoal, 100 - props.perOfGoal],
+							data: [props.perOfGoal, (100 - props.perOfGoal)>0 ? 100 - props.perOfGoal: 0],
 						},
 					],
 			  };
@@ -52,8 +52,8 @@ const Graphic = (props) =>{
 					data={state}
 					options={{
 						title: {
-							display: props.breakdown ? true : false,
-							text: `Caloric Breakdown`,
+							display:  true,
+							text: props.breakdown ? `Caloric Breakdown` : `${props.meal} %`,
 							fontSize: 20,
 						},
 						legend: {

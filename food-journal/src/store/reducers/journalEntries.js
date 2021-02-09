@@ -5,6 +5,7 @@ const initialState = {
   quantity: null,
   unit: null,
   calGoal: 2000,
+  totalCal: 0,
   nutritionFacts: {},
   breakfast: [],
   lunch: [],
@@ -14,7 +15,8 @@ const initialState = {
   entryDelete: false,
   curEntry: {}, 
   breakdown: false,
-  nutritionBreakDown: null
+  nutritionBreakDown: null, 
+  hint: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -88,6 +90,12 @@ const reducer = (state = initialState, action) => {
 				snack: action.entries,
 				error: false,
 			};
+		case actionTypes.SET_HINT:
+			return {
+				...state,
+				hint: action.hint,
+				error: false,
+			};
 		case actionTypes.SET_ENTRY:
 			return {
 				...state,
@@ -104,6 +112,11 @@ const reducer = (state = initialState, action) => {
 			return {
 				...state,
 				calGoal: action.calGoal,
+			};
+		case actionTypes.SET_TOTAL_CAL:
+			return {
+				...state,
+				totalCal: action.totalCal,
 			};
 		default:
 			return state;

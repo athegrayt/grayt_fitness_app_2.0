@@ -1,7 +1,7 @@
 import React from 'react';
 import * as classes from './Input.module.css';
 
-const Input = ({ input, label, value, type, placeholder, onChange, error}) => {
+const Input = ({ input, label, type, placeholder, error, min}) => {
 	return (
 		<div 
 		>
@@ -9,10 +9,9 @@ const Input = ({ input, label, value, type, placeholder, onChange, error}) => {
 				{...input}
 				id={label}
 				placeholder={placeholder}
-				value={value}
-				onChange={onChange}
 				type={type}
 				className={classes.form__field}
+				min={min}
 			/>
 			<span className='red-text'>{error}</span>
 		</div>

@@ -14,3 +14,37 @@ display: flex;
   top: 5%;
   left: 5%;
 }
+
+.foodSearchSecondPage{
+  overflow: scroll;
+max-height: 37vh;
+    max-width: 80vw;
+    margin: 0 auto;
+}
+
+.autoComplete{
+  position: relative;
+}
+
+.autoCompleteSelect{
+  display: block;
+  position: absolute;
+    top: 70%;
+    right: 0;
+    left: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+.empty{
+  display: none;
+}
+
+.info{
+  display: flex;
+  flex-flow: wrap;
+  color: black
+}
+.info h3{
+  color: black
+}

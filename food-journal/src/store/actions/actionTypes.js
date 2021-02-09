@@ -1,6 +1,8 @@
 export const SET_ENTRY = "SET_ENTRY";
+export const SET_TOTAL_CAL = "SET_TOTAL_CAL";
 export const ADD_ENTRY = "ADD_ENTRY";
 export const SET_MEAL = "SET_MEAL";
+export const SET_HINT = "SET_HINT";
 export const SET_BREAKDOWN = "SET_BREAKDOWN";
 export const ADD_ENTRY_SUCCESS = "ADD_ENTRY_SUCCESS";
 export const ADD_ENTRY_FAIL = "ADD_ENTRY_FAIL";
