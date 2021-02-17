@@ -1,0 +1,15 @@
+.recordSummary{
+   display: flex;
+   flex-flow: column;
+   box-shadow: 5px 5px 10px gray;
+   border-radius: 10px; 
+}
+.caloricMeter{
+
+}
+.graphics{
+
+}
+.nutritionFact{
+    display: flex;
+}

@@ -1,5 +1,5 @@
 import {
-	SET_TAB_STATUS,
+	// SET_TAB_STATUS,
 	UPDATE_CUR_TAB,
 	SET_PAGE,
 	SET_MEAL,
@@ -18,16 +18,16 @@ const initialState = {
 
 const tabBarReducer = (state = initialState, action) => {
 	switch (action.type) {
-		case SET_TAB_STATUS:
-			const updateModalOpen =
-				action.modalOpen === null ? !state.modalOpen : action.modalOpen;
-			const updateMeal =
-				action.modalOpen === null && state.modalOpen ?  null : state.meal;
-			return {
-				...state,
-				modalOpen: updateModalOpen,
-				meal: updateMeal
-			};
+		// case SET_TAB_STATUS:
+		// 	const updateModalOpen =
+		// 		action.modalOpen === null ? !state.modalOpen : action.modalOpen;
+		// 	const updateMeal =
+		// 		action.modalOpen === null && state.modalOpen ?  null : state.meal;
+		// 	return {
+		// 		...state,
+		// 		modalOpen: updateModalOpen,
+		// 		meal: updateMeal
+		// 	};
 		case SET_PAGE:
 			return {
 				...state,

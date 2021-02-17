@@ -7,7 +7,9 @@ export {
 	setTotalCalories,
 } from './journalEntries';
 export { addEntry, searchFood, autoComplete, setHint } from './foodSearch';
-export { updateCurTab, setTabStatus, setPage, setMeal } from './tabbar';
+export { updateCurTab,
+	//  setTabStatus, 
+	 setPage, setMeal } from './tabbar';
 export { auth, logout, authCheckState } from './auth';
 export {
 	setCalGoal,

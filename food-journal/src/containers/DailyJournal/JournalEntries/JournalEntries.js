@@ -1,22 +1,22 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../../../store/actions/index';
-import Button from '../../../../components/UI/Button/Button';
-import JournalEntry from '../../../../components/JournalEntry/JournalEntry'
+import * as actions from '../../../store/actions/index';
+import Button from '../../../components/UI/Button/Button';
+import JournalEntry from '../../../components/JournalEntry/JournalEntry'
 import { FaAngleLeft } from 'react-icons/fa';
 import { RiAddCircleLine } from 'react-icons/ri';
 import classes from './JournalEntries.module.css';
-import withErrorHandler from '../../../../hoc/withErrorHandler/withErrorHandler';
-import axios from '../../../../axios-journalEntries';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
+import axios from '../../../axios-journalEntries';
 
 class JournalEntries extends Component {
 	state = {
 		entryID: null,
 	};
 
-	componentDidMount() {
-		this.props.fetchInfo(this.props.token, this.props.userId);
-	}
+	// componentDidMount() {
+	// 	this.props.fetchInfo(this.props.token, this.props.userId);
+	// }
 
 	deleteRequestHandler = (entry) => {
 		this.props.deleteEntry(
@@ -71,7 +71,7 @@ class JournalEntries extends Component {
 				</div>
 				<div
 					className={classes.add}
-					onClick={() => this.props.setPage('foodSearch')}>
+					onClick={() => this.props.setPageHook('foodSearch')}>
 					<RiAddCircleLine color='#9b9b9b' size='2rem' />
 				</div>
 				<div className={classes.entries}>{entries}</div>

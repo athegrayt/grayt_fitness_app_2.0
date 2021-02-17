@@ -34,5 +34,5 @@ export const FETCH_INFO_FAIL = "FETCH_INFO_FAIL";
 export const SET_AUTH_REDIRECT_PATH = "SET_AUTH_REDIRECT_PATH";
 
 export const UPDATE_CUR_TAB = "UPDATE_CUR_TAB";
-export const SET_TAB_STATUS = "SET_TAB_STATUS";
+export const SET_MODAL_STATUS = "SET_MODAL_STATUS";
 export const SET_PAGE = "SET_PAGE";

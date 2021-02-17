@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import thunk from "redux-thunk";
 import {reducer as reduxForm} from 'redux-form'
+import GlobalState from './context/GlobalState'
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import entriesReducer from "./store/reducers/journalEntries";
@@ -37,9 +38,11 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
+	  <GlobalState>
     <React.StrictMode>
       <App />
     </React.StrictMode>
+	  </GlobalState>
   </Provider>,
   document.getElementById("root")
 );

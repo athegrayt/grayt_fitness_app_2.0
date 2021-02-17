@@ -5,12 +5,13 @@
   justify-content: center;
   flex-direction: column;
   margin-bottom: 0px;
+  padding: 1vh 0;
 }
 
 .percentage{
     position: absolute;
     margin: 0 auto;
-    top: 24%;
+    /* top: 24%; */
     left: 50%;
     transform: translateX(-50%);
 }

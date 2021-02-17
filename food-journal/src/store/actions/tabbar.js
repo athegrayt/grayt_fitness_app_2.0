@@ -1,6 +1,6 @@
 import {
 	UPDATE_CUR_TAB,
-	SET_TAB_STATUS,
+	// SET_TAB_STATUS,
 	SET_PAGE,
 	SET_MEAL,
 } from './actionTypes';
@@ -12,11 +12,11 @@ export const updateCurTab = (curTab, jeop) => {
 		jeop
 	}
 }
-export const setTabStatus = (modalOpen) => {
-	return{
-		type: SET_TAB_STATUS, modalOpen 
-	}
-}
+// export const setTabStatus = (modalOpen) => {
+// 	return{
+// 		type: SET_TAB_STATUS, modalOpen 
+// 	}
+// }
 export const setPage = (page) => {
 	return{
 		type: SET_PAGE, page 

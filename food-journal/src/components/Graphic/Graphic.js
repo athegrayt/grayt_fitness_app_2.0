@@ -9,7 +9,7 @@ const Graphic = (props) =>{
        carbs: Math.floor(((carbs*4)/calories)*100), 
        fat: Math.floor(((fat*9)/calories)*100),
     }
-    let center = !props.breakdown && `${props.perOfGoal}`
+    let center = !props.breakdown && `${props.perOfGoal}%`
    let doughnutColor = '#CB5B6F';
 		if (props.perOfGoal > 25 && props.perOfGoal <= 75) {
 			doughnutColor = '#F2E467';
@@ -47,19 +47,20 @@ const Graphic = (props) =>{
 			
     return (
 			<div className={classes.graphic}>
-				<h2 className={classes.percentage}>{center}</h2>
+				<h3 className={classes.percentage}>{center}</h3>
 				<Doughnut
 					data={state}
 					options={{
 						title: {
-							display:  true,
+							display:  false,
 							text: props.breakdown ? `Caloric Breakdown` : `${props.meal} %`,
 							fontSize: 20,
 						},
 						legend: {
 							display: false,
-							position: 'right',
+							position: 'bottom',
 						},
+  						maintainAspectRatio: true 
 					}}
 				/>
 			</div>

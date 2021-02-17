@@ -50,3 +50,33 @@ export const timeFormatConvert = (str) => {
   min = min <= 9 ? "0" + min : min;
   return `${hours}:${min}${suffix}`;
 };
+
+export const calCount = (meal) => {
+	if (meal.length) {
+		const mealNutritionTotal = meal
+			.map((entry) => {
+				return {
+					calories: entry.nf_calories * entry.serving_qty,
+					carbs: entry.nf_total_carbohydrate * entry.serving_qty,
+					protein: entry.nf_protein * entry.serving_qty,
+					fat: entry.nf_total_fat * entry.serving_qty,
+				};
+			})
+			.reduce((total, cur) => {
+				return {
+					calories: Math.round(total.calories + cur.calories),
+					carbs: Math.round(total.carbs + cur.carbs),
+					protein: Math.round(total.protein + cur.protein),
+					fat: Math.round(total.fat + cur.fat),
+				};
+			});
+		console.log(mealNutritionTotal);
+		return mealNutritionTotal;
+	}
+	return {
+		calories: 0,
+		carbs: 0,
+		protein: 0,
+		fat: 0,
+	};
+};

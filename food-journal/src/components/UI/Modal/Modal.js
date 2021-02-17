@@ -2,14 +2,15 @@ import React from "react";
 import classes from "./Modal.module.css";
 
 const Modal = (props) => {
-  const {content} = props
-	const cssClasses = [
+  const {content, records} = props
+  const cssClasses = [
 		classes.modal,
 		props.status ? classes.open : classes.close,
 	].join(' ');
   const cssClassesContent = [
 		classes.content,
-		content && classes.dailyJournal
+		content && classes.dailyJournal,
+		records && classes.records
 	].join(' ');
   return (
 		<div className={cssClasses}>

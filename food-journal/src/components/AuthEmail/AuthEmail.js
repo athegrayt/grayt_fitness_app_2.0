@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { reduxForm, Field } from 'redux-form';
-import {required, email, confirmation} from 'redux-form-validators'
+import React, { useContext } from 'react';
+import {useForm} from 'react-hook-form'
 import Input from '../UI/Forms/Input/Input';
+import DailyJournalContext from '../../context/daily-journal-context'
 // import googleSignIn from '../../assets/google_signin_buttons/web/1x/btn_google_signin_dark_normal_web.png'
 import Button from '../UI/Button/Button';
 import * as classes from './AuthEmail.module.css' 
@@ -9,54 +9,44 @@ import {signInFields, signUpFields} from './authFields';
 import {withRouter} from 'react-router-dom'
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index'
-// import validateEmails from '../../utils/validateEmails';
-class UserAuth extends Component{
 
- onSubmit=(values)=>{
-   const {email, password} = values
-	this.props.auth(email, password, !this.props.signIn)
-}
+const UserAuth =(props)=>{
+	const context = useContext(DailyJournalContext);
+	const {signIn} = props
+	let authFields = signIn ? signInFields : signUpFields;
+	const {register, handleSubmit, watch, errors} = useForm()
+	const onSubmit=(values)=>{
+	const {email, password} = values
+		console.log(values);
+		context.auth(email, password, !signIn)
+	}
 
- renderInput = (authFields) => {
-   return authFields.map(({ label, name, type }) => {
-	   let error = null
-	   const validate= [required()]
-	   if(this.props.errors){
-		   error= this.props.errors[name] 
-	   }
-	   if(name==='password2'){
-		   validate.push(confirmation({field: 'password', fieldLabel: 'password'}))
-	   }
-	   if(name ==='email'){
-		   validate.push(email())
-	   }
+ const renderInput = authFields.map(({ label, name, type }) => {
 	   return (
-		   <Field
+		   <Input
 			   key={name}
-			   component={Input}
 			   type={type}
 			   placeholder={label}
 			   name={name}
-			   validate={validate}
-			   error={error}
+			   register={register}
+			   error={errors[`${name}`]}
 		   />
 	   );
    });
-}
-	render(){
-		let btnText = this.props.signIn ? 'Sign In' :'Register';
-		let authFields = this.props.signIn ? signInFields : signUpFields;
+
+	
+		let btnText = signIn ? 'Sign In' :'Register';
+		
 
 		return (
 				<div className={classes.authPage}>
-					<form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-						{this.renderInput(authFields)}
+					<form onSubmit={handleSubmit(onSubmit)}>
+						{renderInput}
 						<Button type='submit' btnType="Success">{btnText}</Button>
 					</form>
 				</div>
 			
 		);
-	}
 
 }
 
@@ -65,7 +55,4 @@ const mapStateToProps = ({auth, err}) => ({
 	errors: err
 })
 
-export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'authForm',
-	destroyOnUnmount: false,
-})(withRouter(UserAuth)));
+export default connect(mapStateToProps, actions)(withRouter(UserAuth));

@@ -1,22 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 
 const initialState = {
-  foodSelected: null,
-  quantity: null,
-  unit: null,
-  calGoal: 2000,
-  totalCal: 0,
-  nutritionFacts: {},
-  breakfast: [],
-  lunch: [],
-  dinner: [],
-  snack: [],
-  error: false,
-  entryDelete: false,
-  curEntry: {}, 
-  breakdown: false,
-  nutritionBreakDown: null, 
-  hint: []
+  
 };
 
 const reducer = (state = initialState, action) => {

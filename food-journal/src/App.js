@@ -1,22 +1,25 @@
-import React, { Component } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import { connect } from "react-redux";
 import Layout from "./hoc/Layout/Layout";
-import Dashboard from "../src/containers/Dashboard/Dashboard";
+import DailyJournal from "../src/containers/DailyJournal/DailyJournal";
 import Records from "./containers/Records/Records";
+import DailyJournalContext from './context/daily-journal-context'
 import UserInfo from "./containers/UserInfo/UserInfo";
 import Auth from "./containers/Auth/Auth";
 import Logout from "./containers/Auth/Logout/Logout";
 import Landing from './components/Landing/Landing'
-// import Login from './hoc/Layout/Login/Login'
-import * as actions from "./store/actions/index";
 
 
-class App extends Component {
-  componentDidMount() {
-    this.props.onTryAutoSignup();
-  }
-  render() {
+
+
+const App =()=> {
+
+  const context = useContext(DailyJournalContext)
+
+  useEffect(()=>{
+    context.authCheckState();
+  },[]) 
+  
     let routes = (
       <Switch>
         <Route path='/' exact component={Landing} />
@@ -24,13 +27,13 @@ class App extends Component {
         <Redirect to="/auth" />
       </Switch>
     );
-    if (this.props.isAuthenticated) {
+    if (context.token) {
       routes = (
         <Switch>
           <Layout>
           <Route
             path="/dashboard"
-            component={Dashboard}
+            component={DailyJournal}
           />
           <Route path="/records" component={Records} />
           {/* <Route path="/user-info" component={UserInfo} /> */}
@@ -41,25 +44,25 @@ class App extends Component {
       );
     }
     return (
-      <BrowserRouter>
-        {/* <Layout> */}
-          {routes}
-          {/* </Layout> */}
-      </BrowserRouter>
+      
+        <BrowserRouter>
+            {routes}
+        </BrowserRouter>
+     
     );
-  }
+  
 }
 
-const mapStateToProps = (state) => {
-  return {
-    isAuthenticated: state.auth.token !== null,
-  };
-};
+// const mapStateToProps = (state) => {
+//   return {
+//     isAuthenticated: state.auth.token !== null,
+//   };
+// };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onTryAutoSignup: () => dispatch(actions.authCheckState()),
-  };
-};
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     onTryAutoSignup: () => dispatch(actions.),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;
