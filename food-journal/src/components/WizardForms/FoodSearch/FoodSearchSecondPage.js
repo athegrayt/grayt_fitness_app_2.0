@@ -7,7 +7,7 @@ import * as classes from './FoodSearchPages.module.css';
 
 const FoodSearchSecondPage = (props) => {
 	const { food, qty, unit, previousPage, onSubmit } = props;
-	const { register, handleSubmit, watch, errors } = useForm();
+	const { register, handleSubmit, errors } = useForm();
 
 	return (
 		<div className={classes.foodSearchSecondPage}>

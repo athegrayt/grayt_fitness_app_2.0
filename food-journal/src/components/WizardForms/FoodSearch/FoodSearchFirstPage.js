@@ -8,7 +8,7 @@ import useAutoSuggestions from '../../../hooks/useAutoSuggestions';
 
 const FoodSearchFirstPage = (props) => {
 	const { previousPage } = props;
-	const {register, handleSubmit, reset, watch, errors} = useForm()
+	const {register, handleSubmit, reset, watch} = useForm()
 	const watchFoodName = watch('food_name');
 	let hints = useAutoSuggestions(watchFoodName)
 	

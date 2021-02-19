@@ -24,13 +24,13 @@ const FoodSearch =(props)=> {
 				}
 			}
 			updatedFoodSearch.serving_qty = +values.serving_qty;
-			updatedFoodSearch.userId=props.userId
+			updatedFoodSearch.userId=context.userId
 			const entry = updatedFoodSearch
 			const {token} = context
 			const {meal} = props;
-			props.addEntry(meal, entry, token);
+			context.addEntry(meal, entry, token);
 			props.previousPage('jrlEntry');
-			props.setHint([])
+			// props.setHint([])
 	};
 
 		return (

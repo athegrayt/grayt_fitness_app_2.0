@@ -1,22 +1,32 @@
-import React, {createContext} from 'react'
+import {createContext} from 'react'
 
 export default createContext({
-	foodSelected: false,
-	quantity: 0,
-	unit: null,
-	calGoal: 2000,
-	totalCal: 0,
-	nutritionFacts: {},
-    meals:{
-        breakfast: [],
-        lunch: [],
-        dinner: [],
-        snack: [],
+	 breakfast: {
+        name: 'breakfast', 
+        entries:[]
     },
-	error: false,
-	entryDelete: false,
-	curEntry: {},
-	breakdown: false,
-	nutritionBreakDown: null,
-	hint: [],
+     lunch : {
+			name: 'lunch',
+			entries: [],
+		},
+     dinner : {
+			name: 'dinner',
+			entries: [],
+		},
+     snack : {
+			name: 'snack',
+			entries: [],
+		},
+	 token : null,
+	 userId : null,
+     nutritionBreakdown : {} ,
+	 modal : false,
+	 loading : false ,  
+     error : false,
+	setEntries: ()=>{},
+	setNutritionBreakdown: ()=>{},
+	auth: ()=>{},
+	authCheckState: ()=>{},
+	setModalStatus: ()=>{},
+	addEntry: ()=>{},
 });

@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import CalorieMeter from '../CalorieMeter/CalorieMeter'
+// import CalorieMeter from '../CalorieMeter/CalorieMeter'
 import Graphic from '../Graphic/Graphic'
-import NutritionFact from '../NutritionFact/NutritionFact';
+// import NutritionFact from '../NutritionFact/NutritionFact';
 import {calCount} from '../../shared/utility'
 import classes from './RecordSummary.module.css';
 import * as actions from '../../store/actions'

@@ -70,7 +70,6 @@ export const calCount = (meal) => {
 					fat: Math.round(total.fat + cur.fat),
 				};
 			});
-		console.log(mealNutritionTotal);
 		return mealNutritionTotal;
 	}
 	return {

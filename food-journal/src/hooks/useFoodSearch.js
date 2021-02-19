@@ -39,7 +39,7 @@ const useFoodSearch = (food)=>{
                                 }),
                                 {}
                             );
-                        nf.consumed_at = new Date();
+                        nf.consumed_at = new Date(); 
                         return nf;
                     })
                     .then((res) =>{

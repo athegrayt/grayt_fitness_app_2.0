@@ -1,25 +1,33 @@
-import React from "react";
-import {connect} from 'react-redux'
+import React, {useContext} from "react";
 import { FaAngleLeft } from 'react-icons/fa';
 import { RiDeleteBin2Line } from 'react-icons/ri';
 import Button from '../UI/Button/Button'
 import CalorieMeter from '../CalorieMeter/CalorieMeter'
 import NutritionFact from "../NutritionFact/NutritionFact";
-import * as actions from '../../store/actions'
+import useNutritionTotal from '../../hooks/useNutritionTotal'
+import DailyJournalContext from '../../context/daily-journal-context'
 import classes from "./NutritionSummary.module.css";
 
 
 const NutritionSummary = (props) => {
-	const { nutritionBreakdown, calGoal, entry, token, userId, meal } = props;
-	let { serving_qty, serving_unit, food_name} = entry;
+	const context = useContext(DailyJournalContext);
+	const { breakfast, lunch, dinner, snack, token, userId } = context;
+	const meals = [breakfast, lunch, dinner, snack];
+	const { calGoal, food,  meal } = props;
+	let { serving_qty, serving_unit, food_name} = food;
+	const [nutritionBreakdown, curTotalCal] = useNutritionTotal(
+		meals,
+		meal,
+		food, 
+		'NutritionSummary'
+	);
 	const deleteHandler = () => {
-		console.log(entry);
 		props.deleteEntry(
 			token,
-			entry.docID,
+			food.docID,
 			userId,
 			meal,
-			new Date(entry.consumed_at.seconds*1000).toISOString().slice(0, 10)
+			new Date(food.consumed_at.seconds*1000).toISOString().slice(0, 10)
 		);
 		props.updateMealEntries(meal, token, userId);
 	props.previousPage('jrlEntry');
@@ -29,8 +37,8 @@ const NutritionSummary = (props) => {
   let facts = [];
   let empty = false
   if (nutritionBreakdown === null ) {
-	if(entry.nf_calories>0){
-		for (let name in entry) {
+	if(food.nf_calories>0){
+		for (let name in food) {
 				if (
 					name.match(/nf_total_carbohydrate/) ||
 					name.match(/nf_total_calories/) ||
@@ -40,12 +48,12 @@ const NutritionSummary = (props) => {
 					let title = name.includes('total')
 						? name.replace(/nf_total|_/g, '')
 						: name.replace(/nf_|_/g, '');
-					let value = Math.round(entry[name] * serving_qty);
+					let value = Math.round(food[name] * serving_qty);
 					if (title === 'carbohydrate') {
 						title = 'carbs';
 					}
-					if (entry[name] === 'nf_serving_qty') {
-						value = entry[name];
+					if (food[name] === 'nf_serving_qty') {
+						value = food[name];
 					}
 					facts.push({ title, value });
 				}
@@ -78,11 +86,11 @@ const NutritionSummary = (props) => {
 			}
 		}
 	}
-  facts = facts.map((entry,i) => {
+  facts = facts.map((food,i) => {
     return(<NutritionFact
 				  key={i}
-				  name={entry.title}
-				  data={entry.value}
+				  name={food.title}
+				  data={food.value}
 				/>)
   })
   let description =
@@ -92,7 +100,7 @@ const NutritionSummary = (props) => {
   if (food_name === serving_unit && !props.breakdown) {
 		description = `${serving_qty} ${food_name}`;
 	}
-  let calDenominator = props.meal ? props.totalCal : calGoal;
+  let calDenominator = props.meal ? curTotalCal : calGoal;
 	let content = empty ? (
 		empty
 	) : (
@@ -118,11 +126,12 @@ const NutritionSummary = (props) => {
 			<div
 				onClick={() => {
 					if(props.meal){
-						props.previousPage('jrlEntry')
+						props.setPage('jrlEntry')
 					}else{
-						props.setTabStatus(false);
+						props.setCurStatus(false);
 					}
-					props.setBreakdown(null, false)
+					props.setBreakdown(false)
+					props.setFood(null)
 				}}
 				className={classes.icon}>
 				<FaAngleLeft color='#9b9b9b' size='2rem' />
@@ -132,17 +141,5 @@ const NutritionSummary = (props) => {
 	);
 };
 
-const mapStateToProps = state => {
-  return {
-		totalCal: state.journalEntries.totalCal,
-		calGoal: state.journalEntries.calGoal,
-		breakdown: state.journalEntries.breakdown,
-		nutritionBreakdown: state.journalEntries.nutritionBreakDown,
-		meal: state.tabBar.meal,
-		entry: state.journalEntries.curEntry,
-		token: state.auth.token,
-		userId: state.auth.userId,
-	};
-}
-
-export default connect(mapStateToProps, actions)(NutritionSummary);
+// 
+export default NutritionSummary;

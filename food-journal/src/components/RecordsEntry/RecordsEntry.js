@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import Modal from '../UI/Modal/Modal';
 import RecordSummary from '../RecordSummary/RecordSummary';
-import * as classes from './RecordsEntry.module.css'
+// import * as classes from './RecordsEntry.module.css'
 import * as actions from '../../store/actions'
     
 const RecordsEntry = (props) =>{

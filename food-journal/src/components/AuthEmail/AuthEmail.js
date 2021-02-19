@@ -14,7 +14,7 @@ const UserAuth =(props)=>{
 	const context = useContext(DailyJournalContext);
 	const {signIn} = props
 	let authFields = signIn ? signInFields : signUpFields;
-	const {register, handleSubmit, watch, errors} = useForm()
+	const {register, handleSubmit, errors} = useForm()
 	const onSubmit=(values)=>{
 	const {email, password} = values
 		console.log(values);

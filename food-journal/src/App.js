@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Layout from "./hoc/Layout/Layout";
 import DailyJournal from "../src/containers/DailyJournal/DailyJournal";
 import Records from "./containers/Records/Records";
 import DailyJournalContext from './context/daily-journal-context'
-import UserInfo from "./containers/UserInfo/UserInfo";
 import Auth from "./containers/Auth/Auth";
 import Logout from "./containers/Auth/Logout/Logout";
 import Landing from './components/Landing/Landing'

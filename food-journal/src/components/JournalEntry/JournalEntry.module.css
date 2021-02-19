@@ -1,14 +1,6 @@
 .JournalEntry {
-  display: flex;
-  font-size: inherit;
-  background: transparent;
-  color: #fff;
-  justify-content: space-around;
-  border-radius: 15px;
-  text-align: center;
+  width: 80vw;
+  margin-block-start: 3vh;
+
 }
 
-.JournalEntry p{
-  margin-block-end: 0%;
-  margin-block-start: 0%;
-}

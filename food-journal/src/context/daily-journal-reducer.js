@@ -1,30 +1,38 @@
-import {FOOD_SEARCH,
-ADD_BREAKFAST_ENTRY,
-ADD_LUNCH_ENTRY,
-ADD_DINNER_ENTRY,
-ADD_SNACK_ENTRY,
-DELETE_ENTRY,
-SET_BREAKDOWN,
-SET_BREAKFAST,
-SET_LUNCH,
-SET_DINNER,
-SET_SNACK,
-SET_HINT,
-SET_ENTRY,
-FETCH_ENTRIES_FAILED,
-SET_CAL_GOAL,
-SET_TOTAL_CAL,
-AUTH_START,
-AUTH_SUCCESS,
-AUTH_FAIL,
-AUTH_LOGOUT,
-SET_MODAL_STATUS} from '../store/actions/actionTypes'
+import {
+	FOOD_SEARCH,
+	ADD_BREAKFAST_ENTRY,
+	ADD_LUNCH_ENTRY,
+	ADD_DINNER_ENTRY,
+	ADD_SNACK_ENTRY,
+	DELETE_ENTRY,
+	SET_BREAKDOWN,
+	SET_BREAKFAST,
+	SET_LUNCH,
+	SET_DINNER,
+	SET_SNACK,
+	SET_HINT,
+	SET_ENTRY,
+	FETCH_ENTRIES_FAILED,
+	SET_CAL_GOAL,
+	SET_TOTAL_CAL,
+	AUTH_START,
+	AUTH_SUCCESS,
+	AUTH_FAIL,
+	AUTH_LOGOUT,
+	SET_MODAL_STATUS,
+	INIT_ENTRIES,
+} from '../store/actions/actionTypes';
 
 import {
+	initEntries,
 	setBreakfast,
 	setLunch,
 	setDinner,
 	setSnack,
+	addBreakfast,
+	addLunch,
+	addDinner,
+	addSnack,
 	setNutritionBreakdown,
 	authStart,
 	authSuccess,
@@ -43,26 +51,6 @@ const dailyJournalReducer = (state, action) => {
 				unit: action.unit,
 				nutritionFacts: action.nutritionFacts,
 			};
-		case ADD_BREAKFAST_ENTRY:
-			return {
-				...state,
-				breakfast: state.breakfast.concat(action.entry),
-			};
-		case ADD_LUNCH_ENTRY:
-			return {
-				...state,
-				lunch: state.lunch.concat(action.entry),
-			};
-		case ADD_DINNER_ENTRY:
-			return {
-				...state,
-				dinner: state.dinner.concat(action.entry),
-			};
-		case ADD_SNACK_ENTRY:
-			return {
-				...state,
-				snack: state.snack.concat(action.entry),
-			};
 		case DELETE_ENTRY:
 			return {
 				...state,
@@ -75,12 +63,23 @@ const dailyJournalReducer = (state, action) => {
 			return setNutritionBreakdown(action.nutritionBreakDown, state);
 		case SET_BREAKFAST:
 			return setBreakfast(action.mealEntries, state);
+		case INIT_ENTRIES:
+			console.log(action.mealEntries)
+			return initEntries(action.mealEntries, state);
 		case SET_LUNCH:
 			return setLunch(action.mealEntries, state);
 		case SET_DINNER:
 			return setDinner(action.mealEntries, state);
 		case SET_SNACK:
 			return setSnack(action.mealEntries, state);
+		case ADD_BREAKFAST_ENTRY:
+			return addBreakfast(action.entry, state);
+		case ADD_LUNCH_ENTRY:
+			return addLunch(action.entry, state);
+		case ADD_DINNER_ENTRY:
+			return addDinner(action.entry, state);
+		case ADD_SNACK_ENTRY:
+			return addSnack(action.entry, state);
 		case AUTH_START:
 			return authStart(state);
 		case AUTH_SUCCESS:
@@ -90,7 +89,7 @@ const dailyJournalReducer = (state, action) => {
 		case AUTH_LOGOUT:
 			return authLogout(state);
 		case SET_MODAL_STATUS:
-			return setModalStatus(action.status,state);
+			return setModalStatus(action.status, state);
 		case SET_HINT:
 			return {
 				...state,

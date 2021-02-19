@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axios-journalEntries';
+// import axios from '../../axios-journalEntries';
 import * as firebase from '../../dataBase/fireBase';
 
 // export const entryDelete = (id) => {
