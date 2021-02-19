@@ -62,7 +62,7 @@ export const addSnack = (entry, state) => {
 	};
 };
 export const initEntries = (mealEntries, state)=> {
-	console.log(mealEntries);
+	console.log('setting the current state to:', mealEntries, mealEntries[0]);
 	return {
 		...state,
 		breakfast: { name: 'breakfast', entries: mealEntries[0] },

@@ -1,48 +1,41 @@
-import {useState, useEffect} from 'react'
-import { calCount } from '../shared/utility'; 
+import { useState, useEffect, } from 'react';
+import {
+	noMealNoFood,
+	noFood,
+	noMeal,
+} from '../shared/nutritionTotalFunctions';
 
-const useNutritionTotal = (meals, meal, food, parent)=>{
-  console.log(parent);  
-  const [nutritionTotal, setNutritionTotal]=useState({})
-    const [curTotalCal, setCurTotalCal]=useState(0)
-    useEffect(() => {
-      let curNutrition = null
-      if(meals && !meal && !food){
-         console.log('meals && !meal && !food');
-          curNutrition = meals
-            .map((meal) => {
-                return calCount(meal.entries);
-            })
-            .reduce((total, cur) => {        
-                      return {
-                              calories: Math.round(total.calories + cur.calories),
-                carbs: Math.round(total.carbs + cur.carbs),
-                protein: Math.round(total.protein + cur.protein),
-                fat: Math.round(total.fat + cur.fat),
-              };
-            });
-          setNutritionTotal(curNutrition)
-          setCurTotalCal(curNutrition.calories)
-      }else if(meals && meal && !food){
-          console.log('meals && meal && !food');
-          curNutrition = meals
-            .filter((meal) => meal.name === meal)
-            .map((meal) => calCount(meal.entries))[0];
-            setNutritionTotal(curNutrition)
-      }else if (meals && !meal && food){
-          console.log('meals && !meal && food');
-          curNutrition = {
-              calories: food.nf_calories,
-              carbs: food.nf_total_carbohydrate,
-              protein: food.nf_protein,
-              fat: food.nf_total_fat,
-          };
-          setNutritionTotal(curNutrition)
-        }
-      },[meal,food])
-		
-console.log([nutritionTotal, curTotalCal]);    
-return [nutritionTotal, curTotalCal];
-}
+const useNutritionTotal = (
+	breakfast,
+	lunch,
+	dinner,
+	snack,
+	meal,
+	food,
+	parent
+) => {
+	const [nutritionTotal, setNutritionTotal] = useState({});
+	const [curTotalCal, setCurTotalCal] = useState(0)
+	
+
+	useEffect(() => {
+		const meals = [breakfast, lunch, dinner, snack];
+		if (meals && !meal && !food) {
+			const curNutritionTotal = noMealNoFood(meals);
+			setNutritionTotal(curNutritionTotal);
+			setCurTotalCal(curNutritionTotal.calories);
+		} else if (meals && meal && !food) {
+			const curNutritionMeal = noFood(meals, meal);
+			setNutritionTotal(curNutritionMeal);
+		} else if (meals && !meal && food) {
+			const curNutritionFood = noMeal(food);
+			setNutritionTotal(curNutritionFood);
+		}
+	}, [breakfast, lunch, dinner, snack, meal, food]);
+	
+	return [nutritionTotal, curTotalCal];
+
+	
+};
 
 export default useNutritionTotal;

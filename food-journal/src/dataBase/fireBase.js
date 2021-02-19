@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 
 const firebaseConfig = {
-	apiKey: 'AIzaSyDtXLOZ5fXg0_2QelqspVTDErGBf3OzPjM',
+	apiKey: process.env.REACT_APP_API_KEY3,
 	authDomain: 'grayt-fitness.firebaseapp.com',
 	databaseURL: 'https://grayt-fitness.firebaseio.com',
 	projectId: 'grayt-fitness',
@@ -39,6 +39,7 @@ export const deleteEntry = async (meal, docID, date) => {
 	}
 };
 export const getEntry = async (meal, date, userID) => {
+	console.log('getEntry', meal, date, userID);
 	try {
 		const docRef = firestore
 			.collection('journalEntries')
@@ -46,13 +47,15 @@ export const getEntry = async (meal, date, userID) => {
 			.collection(`${date}`);
 		const mealEntries = await docRef.where('userId', '==', `${userID}`).get();
 		if (mealEntries.empty) {
+			console.log('mealEntries is empty')
 			return [];
 		}
-		const res = [];
+		const res = [] 
 		mealEntries.forEach((doc) => {
 			let entry = doc.data();
-			entry.docID = doc.id
-			res.push(entry)
+			entry.docID = doc.id;
+			console.log('entry from doc', entry, meal, date, userID)
+			res.push(entry); 
 		});
 		return res;
 	} catch (err) {

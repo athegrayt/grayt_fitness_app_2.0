@@ -4,13 +4,13 @@ import dailyJournalReducer from './daily-journal-reducer'
 import * as firebase from '../dataBase/fireBase';
 import DailyJournalContext from './daily-journal-context'
 import {
-	INIT_ENTRIES,
 	AUTH_SUCCESS,
 	SET_BREAKDOWN,
 	AUTH_START,
 	AUTH_FAIL,
 	AUTH_LOGOUT,
 	SET_MODAL_STATUS,
+	INIT_ENTRIES,
 } from '../store/actions/actionTypes';
 
 const GlobalState = (props)=>{
@@ -53,26 +53,32 @@ const GlobalState = (props)=>{
      const curDate = new Date().toISOString().slice(0, 10);
      let meals = meal ?[`${meal}`] : ['breakfast', 'lunch', 'dinner', 'snack'];
 	try {
-		if(meal){
 			meals.forEach(async (meal) => {
-					const mealEntries = await firebase.getEntry(meal, curDate, userId);
-					return dispatch({type: `SET_${meal.toUpperCase()}`,
-				mealEntries});
-				});
-			}else{
-				const mealEntries = []
-			meals.forEach(async (meal) => {
-					const entries = await firebase.getEntry(meal, curDate, userId);
-					mealEntries.push(entries)
-				});
-				return dispatch({type: INIT_ENTRIES,
+				const mealEntries = await firebase.getEntry(meal, curDate, userId);
+				return dispatch({type: `SET_${meal.toUpperCase()}`,
 			mealEntries});
-
-		}	
+			});
 	} catch (err) {
 		console.log(err);
 	}
 };
+
+const initEntries = async(token, userId)=>{
+	const curDate = new Date().toISOString().slice(0, 10);
+	let meals = ['breakfast', 'lunch', 'dinner', 'snack']
+	try {
+		const mealEntries = [];
+		for(const meal of meals){
+			const entries = await firebase.getEntry(meal, curDate, userId);
+			console.log(entries);
+			mealEntries.push(entries)
+		}
+		console.log('Meal entries from Firebase', mealEntries);
+		dispatch({ type: INIT_ENTRIES, mealEntries });
+	} catch (err) {
+		console.log(err);
+	}
+}
 
  const addEntry = async (meal, entry, token) => {
 	console.log(entry);
@@ -107,7 +113,7 @@ const auth = (email, password, isSignup) => {
 				localStorage.setItem('expirationDate', expirationDate);
 				localStorage.setItem('userId', response.data.localId);
 				dispatch({type: AUTH_SUCCESS,token: response.data.idToken, userId: response.data.localId, });
-				setEntries(response.data.idToken, response.data.localId);
+				initEntries(response.data.idToken, response.data.localId);
 				checkAuthTimeout(response.data.expiresIn);
 			})
 			.catch((err) => {
@@ -126,7 +132,7 @@ const authCheckState = () => {
 			} else {
 				const userId = localStorage.getItem('userId');
 				dispatch({type: AUTH_SUCCESS,token, userId});
-				setEntries(token, userId);
+				initEntries(token, userId);
 				checkAuthTimeout(
 						(expirationDate.getTime() - new Date().getTime()) / 1000
 					)

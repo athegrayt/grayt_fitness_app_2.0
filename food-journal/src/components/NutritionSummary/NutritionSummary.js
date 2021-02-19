@@ -12,11 +12,10 @@ import classes from "./NutritionSummary.module.css";
 const NutritionSummary = (props) => {
 	const context = useContext(DailyJournalContext);
 	const { breakfast, lunch, dinner, snack, token, userId } = context;
-	const meals = [breakfast, lunch, dinner, snack];
 	const { calGoal, food,  meal } = props;
 	let { serving_qty, serving_unit, food_name} = food;
-	const [nutritionBreakdown, curTotalCal] = useNutritionTotal(
-		meals,
+	const [nutritionTotal, curTotalCal] = useNutritionTotal(
+		breakfast, lunch, dinner, snack,
 		meal,
 		food, 
 		'NutritionSummary'

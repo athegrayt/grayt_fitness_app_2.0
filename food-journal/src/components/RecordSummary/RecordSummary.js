@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 // import CalorieMeter from '../CalorieMeter/CalorieMeter'
 import Graphic from '../Graphic/Graphic'
 // import NutritionFact from '../NutritionFact/NutritionFact';
-import {calCount} from '../../shared/utility'
+import {calCount} from '../../shared/nutritionTotalFunctions'
 import classes from './RecordSummary.module.css';
 import * as actions from '../../store/actions'
     

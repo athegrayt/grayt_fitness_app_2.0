@@ -3,10 +3,10 @@ import Button from '..//UI/Button/Button';
 import classes from "./JournalEntry.module.css";
 
 const JournalEntry = (props) => {
-  const {meal} = props
+  const {curMeal} = props
   return(
     <div className={classes.JournalEntry}>
-      {meal[0].entries.map((entry, i) => {
+      {curMeal[0].entries.map((entry, i) => {
         return (
           <Button
             style={{ margin: '1vh 0' }}

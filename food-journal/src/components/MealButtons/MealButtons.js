@@ -5,6 +5,7 @@ import * as classes from './MealButtons.module.css'
 const MealButtons = (props) =>{
    	const meals = ['breakfast', 'lunch', 'snack', 'dinner']
 	const mealSelectHandler = (meal, page) => {
+		console.log(meal)
 		props.setMeal(meal)
 		props.setPage(page);
 		props.setStatus(true);
@@ -18,7 +19,7 @@ const MealButtons = (props) =>{
 							key={`${meal.name}${i}`}
 							type='text'
 							btnType='Dashboard'
-							clicked={() => mealSelectHandler(meal.name, 'jrlEntry')}>
+							clicked={() => mealSelectHandler(meal, 'jrlEntry')}>
 							{upperCaseName}
 						</Button>
 					);

@@ -23,6 +23,7 @@ const DailyJournal = (props) => {
 	// }, [])
 
     const tabHandler = (status) => {
+		setPage(null)
 		setCurStatus(status);
 		((status === null && curStatus) && setMeal(null))
 		setBreakdown(null);
@@ -41,6 +42,7 @@ const DailyJournal = (props) => {
 						status === null ? setBreakdown(!breakdown) : setBreakdown(status);
 					}}
 					tabHandler={(status) => tabHandler(status)}
+					setPage={(page) => setPage(page)}
 					meal={meal}
 					food={food}
 				/>

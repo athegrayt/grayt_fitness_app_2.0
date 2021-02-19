@@ -1,27 +1,25 @@
 import React, { useContext } from 'react';
 import Graphic from '../../components/Graphic/Graphic';
 import useNutritionTotal from '../../hooks/useNutritionTotal';
-import DailyJournalContext from '../../context/daily-journal-context'
+import DailyJournalContext from '../../context/daily-journal-context';
 import * as classes from './Cockpit.module.css';
 
 const Cockpit = (props) => {
 	const context = useContext(DailyJournalContext);
 	const { breakfast, lunch, dinner, snack } = context;
-	const meals = [breakfast, lunch, dinner, snack];
-	const {
-		food,
+	const { food, meal, breakdown, setBreakdown, tabHandler, setPage } = props;
+	const [nutritionTotal, curTotalCal] = useNutritionTotal(
+		breakfast,
+		lunch,
+		dinner,
+		snack,
 		meal,
-		breakdown,
-		setBreakdown,
-		tabHandler,
-		setPage,
-	} = props;
-	// const [nutritionTotal] = useNutritionTotal(meals, meal, food, 'cockpit');
-	const nutritionTotal = { calories: 0, carbs: 0, protein: 0, fat: 0 };
-	
+		food,
+		'cockpit'
+	);
 	
 	const clicked = (calories, meal) => {
-		console.log('clicked')
+		console.log('clicked');
 		if (calories > 0) {
 			setBreakdown(null);
 			breakdown ? tabHandler(null) : tabHandler(true);
@@ -33,18 +31,17 @@ const Cockpit = (props) => {
 	};
 
 	let newCalGoal = 2000;
-	let perOfGoal = Math.round(100 * (nutritionTotal.calories / newCalGoal));
+	let perOfGoal = Math.round(100 * (curTotalCal / newCalGoal));
 
 	let mealTitle = meal
 		? meal.charAt(0).toUpperCase() + meal.slice(1)
 		: 'Current';
 	let label = breakdown ? `${nutritionTotal.calories} cal` : `of caloric goal`;
-
+	console.log('NutritionTotal',nutritionTotal);
 	return (
 		<div
 			className={classes.cockpit}
-			onClick={()=>clicked(nutritionTotal.calories, meal)}
-			>
+			onClick={() => clicked(nutritionTotal.calories, meal)}>
 			<Graphic
 				perOfGoal={perOfGoal}
 				breakdown={breakdown}
