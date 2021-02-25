@@ -48,3 +48,7 @@ max-height: 37vh;
 .info h3{
   color: black
 }
+
+.error{
+  color: red
+}

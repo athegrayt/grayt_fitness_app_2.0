@@ -29,35 +29,57 @@ export const addEntry = async (meal, entry, date) => {
 export const deleteEntry = async (meal, docID, date) => {
 	try {
 		const docRef = firestore
-			.collection('journalEntries')
-			.doc(`${meal}`)
-			.collection(`${date}`)
-			.doc(`${docID}`);
+		.collection('journalEntries')
+		.doc(`${meal}`)
+		.collection(`${date}`)
+		.doc(`${docID}`);
 		await docRef.delete();
 	} catch (err) {
 		console.log(err);
 	}
 };
 export const getEntry = async (meal, date, userID) => {
-	console.log('getEntry', meal, date, userID);
 	try {
 		const docRef = firestore
-			.collection('journalEntries')
-			.doc(`${meal}`)
-			.collection(`${date}`);
+		.collection('journalEntries')
+		.doc(`${meal}`)
+		.collection(`${date}`);
 		const mealEntries = await docRef.where('userId', '==', `${userID}`).get();
 		if (mealEntries.empty) {
-			console.log('mealEntries is empty')
 			return [];
 		}
 		const res = [] 
 		mealEntries.forEach((doc) => {
 			let entry = doc.data();
 			entry.docID = doc.id;
-			console.log('entry from doc', entry, meal, date, userID)
 			res.push(entry); 
 		});
 		return res;
+	} catch (err) {
+		console.log(err);
+	}
+};
+export const addUser = async (info) => {
+	try {
+		const docRef = firestore
+			.collection('users')
+			.doc()
+		await docRef.set(info);
+	} catch (err) {
+		console.log(err);
+	}
+};
+export const getUser = async (userID) => {
+	try {
+		const docRef = firestore.collection('users');
+		const user = await docRef.where('userId', '==', `${userID}`).get()
+		if (user.empty) {
+			return {};
+		}else{
+			const res=[]
+			user.forEach(doc=>res.push(doc.data()))
+			return res
+		}
 	} catch (err) {
 		console.log(err);
 	}

@@ -2,7 +2,7 @@ import React from 'react'
 import * as classes from './CalorieMeter.module.css'
     
 const CalorieMeter = ({percent}) =>{
-   let meterColor = '#CB5B6F';
+	let meterColor = '#CB5B6F';
 		if (percent > 25 && percent <= 75) {
 			meterColor = '#F2E467';
 		} else if (percent > 75 && percent <= 100) {

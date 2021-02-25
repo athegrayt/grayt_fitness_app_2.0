@@ -1,5 +1,4 @@
 import {
-	FOOD_SEARCH,
 	ADD_BREAKFAST_ENTRY,
 	ADD_LUNCH_ENTRY,
 	ADD_DINNER_ENTRY,
@@ -10,17 +9,14 @@ import {
 	SET_LUNCH,
 	SET_DINNER,
 	SET_SNACK,
-	SET_HINT,
-	SET_ENTRY,
-	FETCH_ENTRIES_FAILED,
-	SET_CAL_GOAL,
-	SET_TOTAL_CAL,
 	AUTH_START,
 	AUTH_SUCCESS,
 	AUTH_FAIL,
 	AUTH_LOGOUT,
 	SET_MODAL_STATUS,
 	INIT_ENTRIES,
+	UPDATE_CUR_TAB,
+	SET_USER_SUCCESS,
 } from '../store/actions/actionTypes';
 
 import {
@@ -39,26 +35,21 @@ import {
 	authFail,
 	authLogout,
 	setModalStatus,
+	deleteEntry,
+	updateCurTab,
+	setUser,
 } from './daily-journal-actions';
 
 const dailyJournalReducer = (state, action) => {
 	switch (action.type) {
-		case FOOD_SEARCH:
-			return {
-				...state,
-				foodSelected: action.foodSelected,
-				quantity: action.quantity,
-				unit: action.unit,
-				nutritionFacts: action.nutritionFacts,
-			};
-		case DELETE_ENTRY:
-			return {
-				...state,
-				journalEntries: state.journalEntries.filter(
-					(entry, i) => entry.consumed_at !== action.entryID
-				),
-				entryDelete: true,
-			};
+		case SET_USER_SUCCESS:
+			return setUser(
+				action.weight,
+				action.goalWeight,
+				action.calGoal,
+				action.name,
+				state
+			);
 		case SET_BREAKDOWN:
 			return setNutritionBreakdown(action.nutritionBreakDown, state);
 		case SET_BREAKFAST:
@@ -83,41 +74,17 @@ const dailyJournalReducer = (state, action) => {
 		case AUTH_START:
 			return authStart(state);
 		case AUTH_SUCCESS:
-			return authSuccess(action.token, action.userId, state);
+			return authSuccess(action.token, action.userId, action.registered, state);
 		case AUTH_FAIL:
 			return authFail(action.error, state);
 		case AUTH_LOGOUT:
 			return authLogout(state);
 		case SET_MODAL_STATUS:
 			return setModalStatus(action.status, state);
-		case SET_HINT:
-			return {
-				...state,
-				hint: action.hint,
-				error: false,
-			};
-		case SET_ENTRY:
-			return {
-				...state,
-				curEntry: action.entries,
-				error: false,
-			};
-
-		case FETCH_ENTRIES_FAILED:
-			return {
-				...state,
-				error: true,
-			};
-		case SET_CAL_GOAL:
-			return {
-				...state,
-				calGoal: action.calGoal,
-			};
-		case SET_TOTAL_CAL:
-			return {
-				...state,
-				totalCal: action.totalCal,
-			};
+		case DELETE_ENTRY:
+			return deleteEntry(action.meal,action.entry,state);
+		case UPDATE_CUR_TAB:
+			return updateCurTab(action.tab,state);
 		default:
 			return state;
 	}

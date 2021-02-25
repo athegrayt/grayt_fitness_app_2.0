@@ -30,9 +30,12 @@ const FoodSearchSecondPage = (props) => {
 							name='serving_qty'
 							type='number'
 							placeholder='Ex. 1'
-							register={register}
+							register={register({
+								required:true,
+								min: 1
+							})}
 							defaultValue={qty}
-							min='0'
+							min='1'
 							error={errors['serving_qty']}
 						/>
 					</div>

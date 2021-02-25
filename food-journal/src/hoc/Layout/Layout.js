@@ -1,19 +1,20 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
+import DailyJournalContext from '../../context/daily-journal-context'
 import logo from '../../assets/images/logo2.png';
 import HomeIcon from '../../components/UI/HomeIcon/HomeIcon'
 import { FaClipboard, FaUser } from 'react-icons/fa';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as classes from './Layout.module.css';
-import * as actions from '../../store/actions'
 
-class TabBar extends Component { 
-    render() {
-		let homeIconClass = this.props.homeIcon ? '#44C9B0' : ' #fff';
-		let recordIconClass = this.props.recordIcon
+
+const TabBar =(props)=> { 
+	const context = useContext(DailyJournalContext)	
+	const {curTab, updateCurTab}=context
+	let homeIconClass = curTab === 'home' ? '#44C9B0' : ' #fff';
+	let recordIconClass = curTab === 'records'
 			? classes.selected
 			: classes.unselected;
-		let settingsIconClass = this.props.settingsIcon
+	let settingsIconClass = curTab === 'settings'
 			? classes.selected
 			: classes.unselected;
 		return (
@@ -25,7 +26,7 @@ class TabBar extends Component {
 					}}>
 					<img className={classes.logo} src={logo} alt='logo'></img>
 				</Link>
-				<main className={classes.content}>{this.props.children}</main>
+				<main className={classes.content}>{props.children}</main>
 				<div className={classes.tabBar}>
 					<div className={classes.icons}>
 						<Link
@@ -34,7 +35,7 @@ class TabBar extends Component {
 								icon: 'records',
 							}}
 							onClick={() =>
-								this.props.updateCurTab(this.props.location.icon || 'records')
+								updateCurTab(props.location.icon || 'records')
 							}>
 							<FaClipboard className={recordIconClass} />
 						</Link>
@@ -45,7 +46,7 @@ class TabBar extends Component {
 									icon: 'home',
 								}}
 								onClick={() =>
-									this.props.updateCurTab(this.props.location.icon || 'home')
+									updateCurTab(props.location.icon || 'home')
 								}>
 								<HomeIcon
 									fill={homeIconClass}
@@ -60,7 +61,7 @@ class TabBar extends Component {
 								icon: 'settings',
 							}}
 							onClick={() =>
-								this.props.updateCurTab(this.props.location.icon || 'settings')
+								updateCurTab(props.location.icon || 'settings')
 							}>
 							<FaUser className={settingsIconClass} />
 						</Link>
@@ -68,15 +69,7 @@ class TabBar extends Component {
 				</div>
 			</div>
 		);
-	}
+	
 }
 
-const mapStateToProps = (state) => {
-	return {
-		homeIcon: state.tabBar.icons.home,
-		recordIcon: state.tabBar.icons.records,
-		settingsIcon: state.tabBar.icons.settings,
-		jeop: state.tabBar.jeopardy,
-	};
-};
-export default connect(mapStateToProps, actions)(TabBar);
+export default TabBar;

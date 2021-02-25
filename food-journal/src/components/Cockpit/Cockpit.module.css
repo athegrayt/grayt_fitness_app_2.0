@@ -1,0 +1,27 @@
+.cockpit-dailyJournal {
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  flex-direction: column;
+  margin: 5vh auto;
+  box-shadow: 5px 5px 10px gray;
+  border-radius: 10px;
+}
+.cockpit-records {
+  text-align: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  box-shadow: 5px 5px 10px gray;
+  border-radius: 10px;
+}
+
+.cockpit-dailyJournal h3{
+    color: #000
+}
+.cockpit-records h3{
+    color: #000
+}

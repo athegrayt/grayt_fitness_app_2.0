@@ -1,30 +1,33 @@
 import React from 'react'
-import { connect } from 'react-redux';
 import Modal from '../UI/Modal/Modal';
-import RecordSummary from '../RecordSummary/RecordSummary';
+import Cockpit from '../../containers/Cockpit/Cockpit'
+// import RecordSummary from '../RecordSummary/RecordSummary';
 // import * as classes from './RecordsEntry.module.css'
 import * as actions from '../../store/actions'
     
 const RecordsEntry = (props) =>{
-   
+   const {curStatus, setCurStatus} = props
 	return (
-			<Modal
-				status={props.status}
-				records={true}
-				clicked={() => props.setTabStatus(null)}>
-				<RecordSummary />
-                
-			</Modal>
-		);
+		<Modal
+			status={curStatus}
+			records={true}
+			clicked={() => setCurStatus(false)}>
+			<Cockpit
+				breakdown={breakdown}
+				curStatus={curStatus}
+				nutritionTotal={nutritionTotal}
+				curTotalCal={curTotalCal}
+				percentage={percentage}
+				setBreakdown={(status) => setBreakdown(status)}
+				setCurStatus={(status) => setCurStatus(status)}
+				setPage={(page) => setPage(page)}
+				meal={meal}
+				food={food}
+				page={page}
+			/>
+		</Modal>
+	);
     
 };
-const mapStateToProps = (state) => {
-	return {
-		breakdown: state.journalEntries.breakdown,
-		status: state.tabBar.modalOpen,
-		page: state.tabBar.page,
-		token: state.auth.token,
-		userId: state.auth.userId,
-	};
-};
-export default connect(mapStateToProps, actions)(RecordsEntry)
+
+export default RecordsEntry

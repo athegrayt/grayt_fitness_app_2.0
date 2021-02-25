@@ -5,31 +5,31 @@ import * as classes from './Graphic.module.css'
 const Graphic = (props) =>{
    const { protein, carbs, fat, calories} = props.nutritionTotal
    const calorieBreakDown={
+	   carbs: Math.floor(((carbs*4)/calories)*100), 
+	   fat: Math.floor(((fat*9)/calories)*100),
        protein: Math.floor(((protein*4)/calories)*100), 
-       carbs: Math.floor(((carbs*4)/calories)*100), 
-       fat: Math.floor(((fat*9)/calories)*100),
     }
-    let center = !props.breakdown && `${props.perOfGoal}%`
+    let center = !props.breakdown && `${props.percentage}%`
    let doughnutColor = '#CB5B6F';
-		if (props.perOfGoal > 25 && props.perOfGoal <= 75) {
+		if (props.percentage > 25 && props.percentage <= 75) {
 			doughnutColor = '#F2E467';
-		} else if (props.perOfGoal > 75 && props.perOfGoal <= 100) {
+		} else if (props.percentage > 75 && props.percentage <= 100) {
 			doughnutColor = '#5BCBAC';
 		}
 
 		let state = props.breakdown
 			? {
-					labels: ['% of Protein', '% of Carbs', '% of Fat'],
+					labels: ['% of Fat', '% of Carbs', '% of Protein'],
 					datasets: [
 						{
 							label: `Caloric Breakdown`,
-							backgroundColor: ['#CB5B6F', ' #F2E467', '#5BCBAC'],
-							hoverBackgroundColor: ['#CB5B6F', '#F2E467', '#5BCBAC'],
+							backgroundColor: ['#CB5B6F', '#5BCBAC',' #F2E467' ],
+							hoverBackgroundColor: ['#CB5B6F','#5BCBAC', '#F2E467' ],
 							data: [
-								calorieBreakDown.protein,
-								calorieBreakDown.carbs,
 								calorieBreakDown.fat,
-                            ],
+								calorieBreakDown.carbs,
+								calorieBreakDown.protein,
+							],
 						},
 					],
 			  }
@@ -40,7 +40,10 @@ const Graphic = (props) =>{
 							label: 'Daily Calories',
 							backgroundColor: [doughnutColor],
 							hoverBackgroundColor: [doughnutColor],
-							data: [props.perOfGoal, (100 - props.perOfGoal)>0 ? 100 - props.perOfGoal: 0],
+							data: [
+								props.percentage,
+								100 - props.percentage > 0 ? 100 - props.percentage : 0,
+							],
 						},
 					],
 			  };

@@ -1,4 +1,5 @@
-import React, {useState} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
+import DailyJournalContext from '../../context/daily-journal-context'
 import AuthTypeBTNs from '../../components/AuthtypeBTNs/AuthTypeBTNs'
 import AuthEmail from '../../components/AuthEmail/AuthEmail';
 import {signInCopy, signUpCopy} from './authTypeCopy.js'
@@ -9,7 +10,8 @@ import * as classes from './Auth.module.css'
 import {useHistory} from 'react-router-dom'
     
 const Auth =(props)=>{
-	
+	const context = useContext(DailyJournalContext);
+	const {error, auth} = context
    const [authType, setAuthType] = useState(true)
    const [signIn, setSignIn] = useState(true)
    const [curStatus, setCurStatus] = useState(true)
@@ -22,7 +24,11 @@ const Auth =(props)=>{
 	  history.push('/')
 	  
    }
-	
+	const onSubmit = (values) => {
+		const { email, password } = values;
+		console.log(values);
+		auth(email, password, !signIn);
+	};	
        
       let authContent = authType ? (
 				<AuthTypeBTNs
@@ -30,7 +36,7 @@ const Auth =(props)=>{
 					setAuthType={() => setAuthType(!authType)}
 				/>
 			) : (
-				<AuthEmail signIn={signIn} />
+				<AuthEmail signIn={signIn} onSubmit={(values)=>onSubmit(values)} error={error} />
 			);
        return (
 					<Login blur={status}>

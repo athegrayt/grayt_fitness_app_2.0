@@ -38,6 +38,9 @@ height: 37vh;
 }
 .records{
 height: 73vh;
+display: flex;
+    flex-flow: column;
+    justify-content: space-around;
 }
 
 .open{

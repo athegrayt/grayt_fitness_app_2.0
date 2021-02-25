@@ -1,0 +1,29 @@
+.OnboardingPages{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    text-align: center;
+    justify-content: space-around;
+    height: 75vh;
+    /* width: 80%; */
+}
+.btns{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    margin: auto;
+    cursor: grab;
+}
+.question{
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    margin: auto;
+}
+.OnboardingPages h3{
+    color: black;
+}

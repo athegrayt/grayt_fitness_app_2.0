@@ -22,14 +22,19 @@
 
 .JournalEntries h3{
   color: #000000;
+  margin-top: 0;
 }
 .entries{
   width: 80vw;
   margin-block-start: 3vh;
 
 }
-.icon{
+.icon-dailyJournal{
   position: absolute;
   top: 5%;
+  left: 5%;
+}
+.icon-records{
+  position: absolute;
   left: 5%;
 }

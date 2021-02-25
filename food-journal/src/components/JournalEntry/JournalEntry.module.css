@@ -1,6 +1,8 @@
-.JournalEntry {
+.JournalEntry-dailyJournal {
   width: 80vw;
   margin-block-start: 3vh;
-
+}
+.JournalEntry-records {
+  width: 80vw;
 }
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Layout from "./hoc/Layout/Layout";
+import Onboarding from './containers/Onboarding/Onboarding'
 import DailyJournal from "../src/containers/DailyJournal/DailyJournal";
 import Records from "./containers/Records/Records";
 import DailyJournalContext from './context/daily-journal-context'
@@ -17,7 +18,7 @@ const App =()=> {
 
   useEffect(()=>{
     context.authCheckState();
-  },[]) 
+  },[context.registered]) 
   
     let routes = (
       <Switch>
@@ -26,7 +27,7 @@ const App =()=> {
         <Redirect to="/auth" />
       </Switch>
     );
-    if (context.token) {
+    if (context.token && context.registered) {
       routes = (
         <Switch>
           <Layout>
@@ -35,11 +36,18 @@ const App =()=> {
             component={DailyJournal}
           />
           <Route path="/records" component={Records} />
-          {/* <Route path="/user-info" component={UserInfo} /> */}
           <Route path="/logout" component={Logout} />
           <Redirect to="/dashboard" />
           </Layout>
         </Switch>
+      );
+    }
+    if(context.token && !context.registered){
+      routes = (
+      <Switch>
+        <Route path='/onboarding' component={Onboarding} />
+        <Redirect to="/onboarding" />
+      </Switch>
       );
     }
     return (

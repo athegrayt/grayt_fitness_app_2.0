@@ -9,7 +9,7 @@ const Landing = (props) => {
 			<div className={classes.content}>
 				<h5>A healthier YOU starts with what you EAT!</h5>
 				<Button btnType="Success" clicked={() => props.history.push('/auth')} style={{marginBottom: '10vh'}}>
-					Let's Play
+					Let's Begin
 				</Button>
 			</div>
 		</Login>

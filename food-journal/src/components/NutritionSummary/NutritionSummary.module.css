@@ -12,12 +12,22 @@
   justify-content: center;
  
 }
+.description-records{
+  text-align: center;
+    width: 70%;
+    margin: 0 auto;
+}
+
 .nutritionSummary h3 {
   color: black;
 }
-.icon{
+.icon-dailyJournal{
   position: absolute;
   top: 5%;
+  left: 5%;
+}
+.icon-records{
+  position: absolute;
   left: 5%;
 }
 .btn{

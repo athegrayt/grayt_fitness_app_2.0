@@ -3,9 +3,9 @@ import Button from '..//UI/Button/Button';
 import classes from "./JournalEntry.module.css";
 
 const JournalEntry = (props) => {
-  const {curMeal} = props
+  const {curMeal, parent} = props
   return(
-    <div className={classes.JournalEntry}>
+    <div className={classes[`JournalEntry-${parent}`]}>
       {curMeal[0].entries.map((entry, i) => {
         return (
           <Button
@@ -18,6 +18,8 @@ const JournalEntry = (props) => {
               props.setPage('nutriFacts');
               props.setFood(entry);
               props.setMeal(null);
+              props.setBreakdown(true)
+              props.setEntryMeal(curMeal[0].name)
             }}>
             {entry.food_name}
           </Button>

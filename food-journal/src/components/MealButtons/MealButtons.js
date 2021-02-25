@@ -3,7 +3,7 @@ import Button from '../UI/Button/Button'
 import * as classes from './MealButtons.module.css'
 
 const MealButtons = (props) =>{
-   	const meals = ['breakfast', 'lunch', 'snack', 'dinner']
+   	const meals = ['breakfast', 'lunch', 'dinner','snack']
 	const mealSelectHandler = (meal, page) => {
 		console.log(meal)
 		props.setMeal(meal)
