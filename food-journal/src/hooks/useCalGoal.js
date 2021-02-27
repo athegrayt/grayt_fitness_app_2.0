@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 		if (weight && height && age && goalWeight && activity && sex) {
 			userInfo = { weight, height, age, goalWeight, activity, sex };
 		}
-		console.log({ weight, height, age, goalWeight, activity, sex }, userInfo);
 		useEffect(() => {
 			let curCalIntake = 0;
 			let activityNum = 1.25;
@@ -32,11 +31,11 @@ import { useEffect, useState } from 'react';
 					activityNum;
 			}
 			if (userInfo.weight > userInfo.goalWeight) {
-				setCalGoal(curCalIntake - 500);
+				setCalGoal(Math.round(curCalIntake - 500));
 			} else if (userInfo.weight < userInfo.goalWeight) {
-				setCalGoal(curCalIntake + 500);
+				setCalGoal(Math.round(curCalIntake + 500));
 			} else {
-				setCalGoal(curCalIntake);
+				setCalGoal(Math.round(curCalIntake));
 			}
 		}, [userInfo]);
 		return calGoal;

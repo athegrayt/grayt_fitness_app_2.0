@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react'
-import DailyJournalContext from '../../context/daily-journal-context'
+import DailyJournalContext from '../../context/global-state-context'
 import FoodSearchFirstPage from '../WizardForms/FoodSearch/FoodSearchFirstPage'
 import FoodSearchSecondPage from '../WizardForms/FoodSearch/FoodSearchSecondPage'
 import * as classes from './FoodSearch.module.css'
@@ -28,6 +28,7 @@ const FoodSearch =(props)=> {
 			const entry = updatedFoodSearch
 			const {token} = context
 			const {meal} = props;
+			console.log({entry})
 			context.addEntry(meal, entry, token);
 			props.previousPage('jrlEntry');
 			// props.setHint([])

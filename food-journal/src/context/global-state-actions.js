@@ -7,7 +7,6 @@ export const setBreakfast = (breakfast, state) => {
 	};
 };
 export const addBreakfast = (entry, state) => {
-	console.log(state);
 	const updatedBreakfast = [...state.breakfast.entries].concat(entry);
 	return {
 		...state,
@@ -16,7 +15,6 @@ export const addBreakfast = (entry, state) => {
 	};
 };
 export const setLunch = (lunch, state) => {
-	console.log('setLunch');
 	return {
 		...state,
 		lunch: { name: 'lunch', entries: lunch },
@@ -31,7 +29,6 @@ export const addLunch = (entry, state) => {
 	};
 };
 export const setDinner = (dinner, state) => {
-	console.log('setDinner');
 	return {
 		...state,
 		dinner: { name: 'dinner', entries: dinner },
@@ -46,7 +43,6 @@ export const addDinner = (entry, state) => {
 	};
 };
 export const setSnack = (snack, state) => {
-	console.log('setSnack');
 	return {
 		...state,
 		snack: { name: 'snack', entries: snack },
@@ -61,7 +57,6 @@ export const addSnack = (entry, state) => {
 	};
 };
 export const initEntries = (mealEntries, state) => {
-	console.log('setting the current state to:', mealEntries, mealEntries[0]);
 	return {
 		...state,
 		breakfast: { name: 'breakfast', entries: mealEntries[0] },
@@ -69,6 +64,7 @@ export const initEntries = (mealEntries, state) => {
 		dinner: { name: 'dinner', entries: mealEntries[2] },
 		snack: { name: 'snack', entries: mealEntries[3] },
 		error: false,
+		loading: false
 	};
 };
 
@@ -89,22 +85,22 @@ export const authStart = (state) => {
 };
 
 export const authSuccess = (token, userId, registered, state) => {
-	console.log({ token, userId, registered });
+	const registeredUser = JSON.parse(`${registered}`.toLowerCase());
 	return {
 		...state,
 		token,
 		userId,
 		error: null,
 		loading: false,
-		registered,
+		registered: registeredUser,
 	};
 };
 
 export const authFail = (error, state) => {
-	console.log(error, error.error.message);
 	return {
 		...state,
 		error: error.error.message,
+		loading: false,
 	};
 };
 export const authLogout = (state) => {
@@ -112,6 +108,7 @@ export const authLogout = (state) => {
 		...state,
 		token: null,
 		userId: null,
+		loading: false
 	};
 };
 
@@ -124,15 +121,19 @@ export const setModalStatus = (status, state) => {
 };
 
 export const deleteEntry = (meal, entry, state) => {
+	console.log({ meal, entry });
 	const updatedState = { ...state };
-	const updateMealEntries = [...state[`${meal}`].entries].filter(
-		(item) => item.consumed_at !== entry.consumed_at
+	console.log(updatedState[`${meal}`].entries);
+	const updateMealEntries = [...updatedState[`${meal}`].entries].filter(
+		(item) => {
+			console.log(item, item.consumed_at, entry.consumed_at);
+			return item.consumed_at !== entry.consumed_at
+		}
 	);
-	updatedState[`${meal}`] = updateMealEntries;
+	updatedState[`${meal}`] = {name: `${meal}`, entries: updateMealEntries};
 	console.log(updatedState);
-	return {
-		updatedState,
-	};
+	return updatedState
+	
 };
 export const updateCurTab = (tab, state) => {
 	return {
@@ -141,12 +142,44 @@ export const updateCurTab = (tab, state) => {
 	};
 };
 
-export const setUser = (weight, goalWeight, calGoal, name, state) => {
+export const setUser = (
+	weight,
+	goalWeight,
+	calGoal,
+	name,
+	height,
+	age,
+	activity,
+	sex,
+	docID,
+	state
+) => {
 	return {
 		...state,
-		name,
 		weight,
 		goalWeight,
 		calGoal,
+		name,
+		height,
+		age,
+		activity,
+		sex,
+		docID,
+		registered: true,
+		loading: false
 	};
 };
+
+export const updateUser = (updatedWeigthGoal, updatedWeight, state)=>{
+	return {
+		...state,
+		goalWeight: updatedWeigthGoal,
+		weight: updatedWeight,
+	};
+};
+export const setName = (displayName, state) => {
+	return{
+		...state, 
+		name: displayName
+	}
+}

@@ -39,7 +39,8 @@ const useFoodSearch = (food)=>{
                                 }),
                                 {}
                             );
-                        nf.consumed_at = new Date(); 
+                        nf.consumed_at = new Date().getTime(); 
+                        console.log(nf.consumed_at);
                         return nf;
                     })
                     .then((res) =>{

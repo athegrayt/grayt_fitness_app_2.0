@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
-import DailyJournalContext from '../../context/daily-journal-context'
-import logo from '../../assets/images/logo2.png';
-import HomeIcon from '../../components/UI/HomeIcon/HomeIcon'
+import DailyJournalContext from '../../../context/global-state-context'
+import logo from '../../../assets/images/logo2.png';
+import HomeIcon from '../../../components/UI/HomeIcon/HomeIcon'
 import { FaClipboard, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import * as classes from './Layout.module.css';
+import * as classes from './Graytfitness.module.css';
 
 
-const TabBar =(props)=> { 
+const GraytFitness =(props)=> { 
 	const context = useContext(DailyJournalContext)	
 	const {curTab, updateCurTab}=context
 	let homeIconClass = curTab === 'home' ? '#44C9B0' : ' #fff';
@@ -35,7 +35,7 @@ const TabBar =(props)=> {
 								icon: 'records',
 							}}
 							onClick={() =>
-								updateCurTab(props.location.icon || 'records')
+								updateCurTab('records')
 							}>
 							<FaClipboard className={recordIconClass} />
 						</Link>
@@ -46,7 +46,7 @@ const TabBar =(props)=> {
 									icon: 'home',
 								}}
 								onClick={() =>
-									updateCurTab(props.location.icon || 'home')
+									updateCurTab('home')
 								}>
 								<HomeIcon
 									fill={homeIconClass}
@@ -57,11 +57,11 @@ const TabBar =(props)=> {
 						</div>
 						<Link
 							to={{
-								pathname: '/user-settings',
+								pathname: '/profile',
 								icon: 'settings',
 							}}
 							onClick={() =>
-								updateCurTab(props.location.icon || 'settings')
+								updateCurTab('settings')
 							}>
 							<FaUser className={settingsIconClass} />
 						</Link>
@@ -72,4 +72,4 @@ const TabBar =(props)=> {
 	
 }
 
-export default TabBar;
+export default GraytFitness;

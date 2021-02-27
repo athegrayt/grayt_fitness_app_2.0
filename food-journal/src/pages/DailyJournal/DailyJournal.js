@@ -1,12 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import {useHistory} from 'react-router-dom'
 import Cockpit from '../../components/Cockpit/Cockpit';
 import JournalEntries from '../../components/JournalEntries/JournalEntries';
 import FoodSearch from '../../components/FoodSearch/FoodSearch';
+import Loading from '../../components/Loading/Loading';
 import NutritionSummary from '../../components/NutritionSummary/NutritionSummary';
 import MealButtons from '../../components/MealButtons/MealButtons';
 import useNutritionTotal from '../../hooks/useNutritionTotal';
-import DailyJournalContext from '../../context/daily-journal-context';
+import useCalGoal from '../../hooks/useCalGoal';
+import DailyJournalContext from '../../context/global-state-context';
 import Modal from '../../components/UI/Modal/Modal';
 import useModal from '../../hooks/useModal';
 import * as classes from './DailyJournal.module.css';
@@ -14,7 +15,6 @@ import * as classes from './DailyJournal.module.css';
 const DailyJournal = (props) => {
 	const context = useContext(DailyJournalContext);
 	const {
-		registered,
 		token,
 		userId,
 		breakfast,
@@ -23,9 +23,16 @@ const DailyJournal = (props) => {
 		snack,
 		deleteEntry,
 		initEntries,
+		weight,
+		height,
+		age,
+		goalWeight,
+		activity,
+		sex,
+		loading
 	} = context;
-	let history = useHistory() 
 	const parent = 'dailyJournal'
+	const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
 	const [page, setPage] = useState();
 	const [meal, setMeal] = useState();
 	const [entryMeal, setEntryMeal] = useState();
@@ -40,7 +47,7 @@ const DailyJournal = (props) => {
 		snack,
 		meal,
 		food,
-		2000
+		calGoal
 	);
 
 	useEffect(()=>{
@@ -64,8 +71,7 @@ const DailyJournal = (props) => {
 		status && classes.none,
 	].join(' ');
 	
-	return (
-		<div className={cssClassesDailyJournal}>
+	const content = loading ? <Loading/> : (<div className={cssClassesDailyJournal}>
 			<Cockpit
 				parent={parent}
 				breakdown={breakdown}
@@ -129,8 +135,10 @@ const DailyJournal = (props) => {
 					/>
 				)}
 			</Modal>
-		</div>
-	);
+		</div>)
+
+	return content
+		
 };
 
 export default DailyJournal;

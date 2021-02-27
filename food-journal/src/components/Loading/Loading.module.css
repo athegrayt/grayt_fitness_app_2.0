@@ -1,0 +1,13 @@
+.loading{
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+}
+.logo{
+    width: 300px;
+}
+
+.loading h3{
+    color: black
+}

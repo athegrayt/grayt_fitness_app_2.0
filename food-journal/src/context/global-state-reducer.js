@@ -17,6 +17,9 @@ import {
 	INIT_ENTRIES,
 	UPDATE_CUR_TAB,
 	SET_USER_SUCCESS,
+	UPDATE_USER,
+	SET_NAME
+
 } from '../store/actions/actionTypes';
 
 import {
@@ -38,7 +41,9 @@ import {
 	deleteEntry,
 	updateCurTab,
 	setUser,
-} from './daily-journal-actions';
+	updateUser, 
+	setName
+} from './global-state-actions';
 
 const dailyJournalReducer = (state, action) => {
 	switch (action.type) {
@@ -48,14 +53,23 @@ const dailyJournalReducer = (state, action) => {
 				action.goalWeight,
 				action.calGoal,
 				action.name,
+				action.height,
+				action.age,
+				action.activity,
+				action.sex,
+				action.docID,
 				state
 			);
+		case UPDATE_USER:
+			return updateUser(action.updatedWeigthGoal, action.updatedWeight, state);
+		case SET_NAME:
+			return setName(action.displayName, state);
 		case SET_BREAKDOWN:
 			return setNutritionBreakdown(action.nutritionBreakDown, state);
 		case SET_BREAKFAST:
 			return setBreakfast(action.mealEntries, state);
 		case INIT_ENTRIES:
-			console.log(action.mealEntries)
+			console.log(action.mealEntries);
 			return initEntries(action.mealEntries, state);
 		case SET_LUNCH:
 			return setLunch(action.mealEntries, state);
@@ -82,9 +96,9 @@ const dailyJournalReducer = (state, action) => {
 		case SET_MODAL_STATUS:
 			return setModalStatus(action.status, state);
 		case DELETE_ENTRY:
-			return deleteEntry(action.meal,action.entry,state);
+			return deleteEntry(action.meal, action.entry, state);
 		case UPDATE_CUR_TAB:
-			return updateCurTab(action.tab,state);
+			return updateCurTab(action.tab, state);
 		default:
 			return state;
 	}

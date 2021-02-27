@@ -72,7 +72,9 @@ const JournalEntries = (props) => {
 				</div>
 			)}
 			<h3>{meal}</h3>
+			<div className={classes.entries}>
 			{jrlEntries}
+			</div>
 		</div>
 	);
 };

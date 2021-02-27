@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: scroll;
+  /* overflow: scroll; */
   height: 33vh;
   justify-content: flex-start;
   margin-top: 1rem;
@@ -26,7 +26,13 @@
 }
 .entries{
   width: 80vw;
-  margin-block-start: 3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: scroll;
+  height: 33vh;
+  justify-content: flex-start;
+  text-align: center
 
 }
 .icon-dailyJournal{

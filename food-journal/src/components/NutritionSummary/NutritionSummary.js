@@ -5,7 +5,7 @@ import Button from '../UI/Button/Button';
 import CalorieMeter from '../CalorieMeter/CalorieMeter';
 import NutritionFact from '../NutritionFact/NutritionFact';
 import useNutritionTotal from '../../hooks/useNutritionTotal';
-import DailyJournalContext from '../../context/daily-journal-context';
+import DailyJournalContext from '../../context/global-state-context';
 import classes from './NutritionSummary.module.css';
 
 const NutritionSummary = (props) => {
@@ -18,8 +18,6 @@ const NutritionSummary = (props) => {
 		nutritionTotal,
 		curTotalCal,
 		parent,
-		token,
-		userId,
 		percentage,
 		setMeal,
 		setPage,
@@ -30,12 +28,11 @@ const NutritionSummary = (props) => {
 	// let { serving_qty, serving_unit, food_name} = food;
 
 	const deleteHandler = () => {
-		console.log('delete')
 		deleteEntry(
 			food,
 			food.docID,
-			meal,
-			new Date(food.consumed_at.seconds * 1000).toISOString().slice(0, 10)
+			entryMeal,
+			new Date(food.consumed_at).toISOString().slice(0, 10)
 		);
 		setFood(null)
 		setMeal(entryMeal)
@@ -69,7 +66,7 @@ const NutritionSummary = (props) => {
 	// let description = `curMeal=${meal}, curFood=${food}, breakDown=${breakdown}, totalCal=${nutritionTotal.calories}`;
 	let description = curTotalCal>0 && 'Total % of caloric goal:';
 	if (meal && !food) {
-		description = `${meal} % of current calories:`;
+		description = `${meal} % of consumed calories:`;
 	} else if (food) {
 		description = `${food.serving_qty} ${food.serving_unit} of ${food.food_name}`;
 		if (food.food_name === food.serving_unit && !breakdown) {
@@ -109,7 +106,7 @@ const NutritionSummary = (props) => {
 				<h3>{description}</h3>
 				</div>
 
-				{breakdown && !food && !meal && curTotalCal > 0 && (
+				{((breakdown && !food && !meal && curTotalCal > 0) ||(breakdown && !food && meal && curTotalCal > 0)) && (
 					<CalorieMeter percent={percentage} />
 				)}
 				<div className={classes.nutritionFacts}>{facts}</div>

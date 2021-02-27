@@ -8,9 +8,9 @@ const OnboardingPage7 = (props) => {
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>What is you daily activity level?</h2>
+				<h2>What is your daily activity level?</h2>
 				<p>
-					Let's see many caloires you are already 
+					Let's see how many calories you are already 
 					burning on a daily basis.
 				</p>
 			</div>

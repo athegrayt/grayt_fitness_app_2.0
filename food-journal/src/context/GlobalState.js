@@ -1,8 +1,8 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import dailyJournalReducer from './daily-journal-reducer';
+import dailyJournalReducer from './global-state-reducer';
 import * as firebase from '../dataBase/fireBase';
-import DailyJournalContext from './daily-journal-context';
+import DailyJournalContext from './global-state-context';
 import {
 	AUTH_SUCCESS,
 	UPDATE_CUR_TAB,
@@ -12,6 +12,8 @@ import {
 	INIT_ENTRIES,
 	DELETE_ENTRY,
 	SET_USER_SUCCESS,
+	UPDATE_USER,
+	SET_NAME
 } from '../store/actions/actionTypes';
 
 const GlobalState = (props) => {
@@ -32,6 +34,11 @@ const GlobalState = (props) => {
 		entries: [],
 	};
 	const name = null;
+	const docID = null;
+	const height = null;
+	const age = null;
+	const activity = null;
+	const sex = null;
 	const weight = null;
 	const calGoal = null;
 	const goalWeight = null;
@@ -56,9 +63,14 @@ const GlobalState = (props) => {
 		error,
 		curTab,
 		name,
+		height,
+		age,
+		activity,
+		sex,
 		weight,
 		goalWeight,
 		calGoal,
+		docID,
 		registered,
 	});
 
@@ -77,6 +89,7 @@ const GlobalState = (props) => {
 
 	const addUser = async (info, registered) => {
 		try {
+			dispatch({ type: AUTH_START });
 			await firebase.addUser(info);
 			localStorage.setItem('registered', true);
 			dispatch({ type: SET_USER_SUCCESS, info });
@@ -86,16 +99,15 @@ const GlobalState = (props) => {
 	};
 
 	const initEntries = async (token, userId, date) => {
+		dispatch({ type: AUTH_START });
 		const curDate = date.toISOString().slice(0, 10);
 		let meals = ['breakfast', 'lunch', 'dinner', 'snack'];
 		try {
 			const mealEntries = [];
 			for (const meal of meals) {
 				const entries = await firebase.getEntry(meal, curDate, userId);
-				console.log(entries);
 				mealEntries.push(entries);
 			}
-			console.log('Meal entries from Firebase', mealEntries);
 			dispatch({ type: INIT_ENTRIES, mealEntries });
 		} catch (err) {
 			console.log(err);
@@ -103,7 +115,6 @@ const GlobalState = (props) => {
 	};
 
 	const addEntry = async (meal, entry, token) => {
-		console.log(entry);
 		const addDate = new Date().toISOString().slice(0, 10);
 		try {
 			firebase.addEntry(meal, entry, addDate);
@@ -114,7 +125,8 @@ const GlobalState = (props) => {
 		}
 	};
 
-	const deleteEntry = (entry, docID, meal, date) => async (dispatch) => {
+	const deleteEntry = async (entry, docID, meal, date) => {
+		console.log({ entry, docID, meal, date });
 		try {
 			await firebase.deleteEntry(meal, docID, date);
 			dispatch({ type: DELETE_ENTRY, meal, entry });
@@ -122,8 +134,26 @@ const GlobalState = (props) => {
 			console.log(err);
 		}
 	};
-
-	const auth = async (email, password, isSignup) => {
+	const googleAuth = async () => {
+		try {
+			const res = await firebase.googleAuth();
+			console.log(res);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	const googleAuthData = async () => {
+		try {
+			const data = await firebase.retrieveGoogleAuth();
+			console.log(data);
+			if (data) {
+				auth('', '', '', data);
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	const auth = async (email, password, isSignup, google) => {
 		dispatch({ type: AUTH_START });
 		const authData = {
 			email,
@@ -135,15 +165,30 @@ const GlobalState = (props) => {
 			url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY3}`;
 		}
 		try {
-			const response = await axios.post(url, authData);
-			const expirationDate = new Date(
-				new Date().getTime() + response.data.expiresIn * 1000
-			);
-			localStorage.setItem('token', response.data.idToken);
-			localStorage.setItem('expirationDate', expirationDate);
-			localStorage.setItem('userId', response.data.localId);
-			const user = await firebase.getUser(response.data.localId);
-			console.log(user);
+			let userToken = null;
+			let tokenExpirationDate = null;
+			let curUserId = null;
+			if (google) {
+				userToken = google.token;
+				tokenExpirationDate = new Date(
+					new Date().getTime() + google.user.ba.currentUser.i.u + 3600 * 1000
+				);
+				curUserId = google.user.l;
+				const displayName = google.user.displayName
+				dispatch({ type: SET_NAME, displayName });
+			} else {
+				const response = await axios.post(url, authData);
+				tokenExpirationDate = new Date(
+					new Date().getTime() + response.data.expiresIn * 1000
+				);
+				userToken = response.data.idToken;
+				curUserId = response.data.localId;
+			}
+			console.log({ userToken, tokenExpirationDate, curUserId });
+			localStorage.setItem('token', `${userToken}`);
+			localStorage.setItem('expirationDate', `${tokenExpirationDate}`);
+			localStorage.setItem('userId', `${curUserId}`);
+			const user = await firebase.getUser(curUserId);
 			let registered = false;
 			if (Object.keys(user).length !== 0) {
 				localStorage.setItem('registered', true);
@@ -151,7 +196,12 @@ const GlobalState = (props) => {
 					user[0].weight,
 					user[0].goalWeight,
 					user[0].calGoal,
-					user[0].name
+					user[0].name,
+					user[0].height,
+					user[0].age,
+					user[0].activity,
+					user[0].sex,
+					user[0].docID
 				);
 				registered = true;
 			} else {
@@ -159,17 +209,19 @@ const GlobalState = (props) => {
 			}
 			dispatch({
 				type: AUTH_SUCCESS,
-				token: response.data.idToken,
-				userId: response.data.localId,
+				token: userToken,
+				userId: curUserId,
 				registered,
 			});
-			checkAuthTimeout(response.data.expiresIn);
+			checkAuthTimeout(tokenExpirationDate);
 		} catch (err) {
 			console.log(err);
 			dispatch({ type: AUTH_FAIL, error: err.response.data });
 		}
 	};
-	const authCheckState = () => {
+	const authCheckState = async () => {
+		dispatch({ type: AUTH_START });
+
 		const token = localStorage.getItem('token');
 		if (!token) {
 			logout();
@@ -180,6 +232,20 @@ const GlobalState = (props) => {
 			} else {
 				const userId = localStorage.getItem('userId');
 				const registered = localStorage.getItem('registered');
+				const user = await firebase.getUser(userId);
+				if (JSON.parse(`${registered}`.toLowerCase()) === true) {
+					setUserInfo(
+						user[0].weight,
+						user[0].goalWeight,
+						user[0].calGoal,
+						user[0].name,
+						user[0].height,
+						user[0].age,
+						user[0].activity,
+						user[0].sex,
+						user[0].docID
+					);
+				}
 				dispatch({ type: AUTH_SUCCESS, token, userId, registered });
 				checkAuthTimeout(
 					(expirationDate.getTime() - new Date().getTime()) / 1000
@@ -188,20 +254,37 @@ const GlobalState = (props) => {
 		}
 	};
 
-	const setUserInfo = (weight, goalWeight, calGoal, name) => {
+	const setUserInfo = (
+		weight,
+		goalWeight,
+		calGoal,
+		name,
+		height,
+		age,
+		activity,
+		sex,
+		docID
+	) => {
 		return dispatch({
 			type: SET_USER_SUCCESS,
 			weight,
 			goalWeight,
 			calGoal,
 			name,
+			height,
+			age,
+			activity,
+			sex,
+			docID,
 		});
 	};
 
 	const logout = () => {
+		dispatch({ type: AUTH_START });
 		localStorage.removeItem('token');
 		localStorage.removeItem('expirationDate');
 		localStorage.removeItem('userId');
+		localStorage.removeItem('registered');
 		dispatch({
 			type: AUTH_LOGOUT,
 		});
@@ -210,6 +293,11 @@ const GlobalState = (props) => {
 		setTimeout(() => {
 			logout();
 		}, expirationTime * 1000);
+	};
+
+	const updateUser = async (updatedWeigthGoal, updatedWeight, docID) => {
+		await firebase.updateUser(updatedWeigthGoal, updatedWeight, docID);
+		dispatch({ type: UPDATE_USER, updatedWeigthGoal, updatedWeight });
 	};
 
 	const updateCurTab = (tab) => {
@@ -228,18 +316,28 @@ const GlobalState = (props) => {
 		error: dailyJournalState.error,
 		curTab: dailyJournalState.curTab,
 		name: dailyJournalState.name,
+		height: dailyJournalState.height,
+		age: dailyJournalState.age,
+		activity: dailyJournalState.activity,
+		sex: dailyJournalState.sex,
 		weight: dailyJournalState.weight,
 		goalWeight: dailyJournalState.goalWeight,
 		calGoal: dailyJournalState.calGoal,
 		registered: dailyJournalState.registered,
+		docID: dailyJournalState.docID,
+		loading: dailyJournalState.loading,
 		setEntries,
 		auth,
+		googleAuth,
+		googleAuthData,
 		authCheckState,
 		deleteEntry,
 		addEntry,
 		initEntries,
 		updateCurTab,
 		addUser,
+		updateUser,
+		logout,
 	};
 	console.log('GlobalState');
 	return (

@@ -10,3 +10,8 @@
     width: 80%;
     box-shadow: 5px 5px 10px grey;
 }
+
+.pastEntry{
+  display: flex;
+  flex-flow: column;
+}

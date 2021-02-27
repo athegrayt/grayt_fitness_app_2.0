@@ -12,7 +12,7 @@ const OnboardingPage2 = (props) => {
 				<p>We ask this to make your experience personal.</p>
 			</div>
 			<div className={classes.btns}>
-				<Input placeholder='Ex. Bob Marley'  onChange={event=>setName(event.target.value)}/> 
+				<Input placeholder='Ex. Bob Marley' value={name} onChange={event=>setName(event.target.value)}/> 
 			</div>
 		</div>
 	);

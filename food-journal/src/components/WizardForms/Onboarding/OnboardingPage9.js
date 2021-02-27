@@ -14,9 +14,7 @@ goalWeight,setPage}= props
 			<div className={classes.OnboardingPages}>
 				<div className={classes.question}>
 					<h3>Let's review your answers!</h3>
-					<p>
-						If you spot a mistake, click on it to make the correction.
-					</p>
+					<p>If you spot a mistake, click on it to make the correction.</p>
 				</div>
 				<div className={classes.btns}>
 					<Button type='button' btnType='Auth' clicked={() => setPage(2)}>
@@ -26,23 +24,22 @@ goalWeight,setPage}= props
 						Gender: {sex}
 					</Button>
 					<Button type='button' btnType='Auth' clicked={() => setPage(4)}>
-						Height: {height}
+						Height: {Math.floor(height / 12)}ft {height % 12}in
 					</Button>
 					<Button type='button' btnType='Auth' clicked={() => setPage(5)}>
-						Age: {age}
+						Age: {age} yrs
 					</Button>
 					<Button type='button' btnType='Auth' clicked={() => setPage(6)}>
-						Weight: {weight}
+						Weight: {weight} lbs
 					</Button>
 					<Button type='button' btnType='Auth' clicked={() => setPage(7)}>
 						{' '}
 						Daily Activity: {activity}
 					</Button>
 					<Button type='button' btnType='Auth' clicked={() => setPage(8)}>
-						Goal Weight: {goalWeight}
+						Goal Weight: {goalWeight} lbs
 					</Button>
 				</div>
-				
 			</div>
 		);
 }

@@ -61,7 +61,6 @@ const Cockpit = (props) => {
 		label = `of consumed calories`;
 	}
 
-	console.log('NutritionTotal', nutritionTotal, curTotalCal);
 	return (
 		<div className={classes[`cockpit-${parent}`]} onClick={() => clicked(calories, meal)}>
 			<Graphic

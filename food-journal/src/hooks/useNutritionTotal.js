@@ -14,32 +14,39 @@ const useNutritionTotal = (
 	food,
 	calGoal
 ) => {
-	const [nutritionTotal, setNutritionTotal] = useState({});
+	const [nutritionTotal, setNutritionTotal] = useState({
+		calories: 0,
+		carbs: 0,
+		protein: 0,
+		fat: 0,
+	});
 	const [curTotalCal, setCurTotalCal] = useState(0)
 	const [percent, setPercent] = useState(0)
 	
 
 	useEffect(() => {
 		const meals = [breakfast, lunch, dinner, snack];
+		let curNutritionTotal = 0;
+		let percentage = 0
+		let totalCal = 0
 		if (meals && !meal && !food) {
-			const curNutritionTotal = noMealNoFood(meals);
-			const percentage = Math.round(
+			curNutritionTotal = noMealNoFood(meals);
+			 percentage = Math.round(
 				100 * (curNutritionTotal.calories / calGoal)
 			) || 0
-			setPercent(percentage);
-			setNutritionTotal(curNutritionTotal);
-			setCurTotalCal(curNutritionTotal.calories);
+			totalCal = curNutritionTotal.calories;
 		} else if (meals && meal && !food) {
-			const curNutritionMeal = noFood(meals, meal);
-			const percentage = Math.round(
-				100 * (curNutritionMeal.calories / curTotalCal)
-			) || 0
-			setPercent(percentage);
-			setNutritionTotal(curNutritionMeal);
+			curNutritionTotal = noFood(meals, meal);
+			totalCal = noMealNoFood(meals).calories
+			percentage =
+				Math.round(100 * (curNutritionTotal.calories / totalCal)) || 0;
 		} else if (meals && !meal && food) {
-			const curNutritionFood = noMeal(food);
-			setNutritionTotal(curNutritionFood);
+			curNutritionTotal = noMeal(food);
+			totalCal = curNutritionTotal.calories
 		}
+		setPercent(percentage);
+		setCurTotalCal(totalCal);
+		setNutritionTotal(curNutritionTotal);
 	}, [breakfast, lunch, dinner, snack, meal, food, calGoal, curTotalCal]);
 	
 	return [nutritionTotal, curTotalCal, percent];

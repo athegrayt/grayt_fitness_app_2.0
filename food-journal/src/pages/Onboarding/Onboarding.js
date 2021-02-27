@@ -1,4 +1,5 @@
-import React, {useState, useContext}from "react";
+import React, { useState, useContext, useEffect } from 'react';
+import {useHistory} from 'react-router-dom'
 import Registration from '../../hoc/Layout/Registration/Registration';
 import OnboardingPage1 from '../../components/WizardForms/Onboarding/OnboardingPage1';
 import OnboardingPage2 from '../../components/WizardForms/Onboarding/OnboardingPage2';
@@ -9,28 +10,36 @@ import OnboardingPage6 from '../../components/WizardForms/Onboarding/OnboardingP
 import OnboardingPage7 from '../../components/WizardForms/Onboarding/OnboardingPage7';
 import OnboardingPage8 from '../../components/WizardForms/Onboarding/OnboardingPage8';
 import OnboardingPage9 from '../../components/WizardForms/Onboarding/OnboardingPage9';
-import * as classes from "./Onboarding.module.css";
-import useCalGoal from '../../hooks/useCalGoal'
-import dailyJournalContext from "../../context/daily-journal-context";
-import ProgressMeter from "../../components/ProgressMeter/ProgressMeter";
+import * as classes from './Onboarding.module.css';
+import useCalGoal from '../../hooks/useCalGoal';
+import dailyJournalContext from '../../context/global-state-context';
+import ProgressMeter from '../../components/ProgressMeter/ProgressMeter';
+import Loading from '../../components/Loading/Loading';
 
-const Onboarding =(props)=> {
-  const context = useContext(dailyJournalContext)
-  const {userId, addUser} = context
-  const [name, setName] = useState()
-  const [page, setPage] = useState(1)
-  const [age, setAge] = useState(25)
-  const [sex, setSex] = useState()
-  const [height, setHeight] = useState(68)
-  const [weight, setWeight] = useState(150)
-  const [goalWeight, setGoalWeight] = useState(weight)
-  const [activity, setActivity] = useState()
-  const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
-  
-  return (
+const Onboarding = (props) => {
+	const context = useContext(dailyJournalContext);
+	let history = useHistory()
+	const { userId, addUser, registered, loading, name } = context;
+	const [userName, setUserName] = useState(name);
+	const [page, setPage] = useState(1);
+	const [age, setAge] = useState(25);
+	const [sex, setSex] = useState();
+	const [height, setHeight] = useState(68);
+	const [weight, setWeight] = useState(150);
+	const [goalWeight, setGoalWeight] = useState(weight);
+	const [activity, setActivity] = useState();
+	const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
+
+	useEffect(()=>{
+		if(registered){
+			history.push('/')
+		}
+	})
+
+	return (
 		<Registration
 			page={page}
-      name={name}
+			name={userName}
 			setPage={setPage}
 			sex={sex}
 			height={height}
@@ -38,20 +47,27 @@ const Onboarding =(props)=> {
 			weight={weight}
 			activity={activity}
 			goalWeight={goalWeight}
-      submit={()=>addUser({
-			name,
-			weight,
-			goalWeight,
-			calGoal,
-			userId,
-		})}>
-			<div className={classes.onboarding}>
-				{ page !== 9 && <ProgressMeter percent={Math.round(((page-1) / 7) * 100)} />}
-				{page === 1 && (
-					<OnboardingPage1 />
+			submit={() =>{
+				addUser({
+					name,
+					height,
+					age,
+					activity,
+					sex,
+					weight,
+					goalWeight,
+					calGoal,
+					userId,
+				})}
+			}>
+				{loading && <Loading/>}
+			{!loading && <div className={classes.onboarding}>
+				{page !== 9 && (
+					<ProgressMeter percent={Math.round(((page - 1) / 7) * 100)} />
 				)}
+				{page === 1 && <OnboardingPage1 />}
 				{page === 2 && (
-					<OnboardingPage2 name={name} setName={(value) => setName(value)} />
+					<OnboardingPage2 name={userName} setUserName={(value) => setUserName(value)} />
 				)}
 				{page === 3 && (
 					<OnboardingPage3 sex={sex} setSex={(sex) => setSex(sex)} />
@@ -86,8 +102,8 @@ const Onboarding =(props)=> {
 				{page === 9 && (
 					<OnboardingPage9
 						setPage={(value) => setPage(value)}
-						name={name}
-            sex={sex}
+						name={userName}
+						sex={sex}
 						height={height}
 						age={age}
 						weight={weight}
@@ -95,7 +111,7 @@ const Onboarding =(props)=> {
 						goalWeight={goalWeight}
 					/>
 				)}
-			</div>
+			</div>}
 		</Registration>
 	);
 };

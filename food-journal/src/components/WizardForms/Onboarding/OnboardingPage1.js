@@ -6,9 +6,9 @@ const OnboardingPage1 = (props) => {
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>Let's learn alittle about you.</h2>
-				<p>Help up customized your experience! </p>
-                <p>There are only 7 questions!</p>
+				<h1>Let's create your profile.</h1>
+				<p>Help us customize your experience! </p>
+                <h3>There are only 7 questions!</h3>
 			</div>
 		</div>
 	);
