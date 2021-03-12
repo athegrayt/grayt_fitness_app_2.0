@@ -25,14 +25,31 @@ h3{
 
 }
 
-.content{
+.main{
   display: flex;
   flex-flow: column;
   /* justify-content: space-between; */
   align-items: center;
-  height: 100vh;
+  height: 100%;
   width: 100vw;
   z-index: 2;
   position: absolute;
   top:0;
+}
+.content{
+    display: flex;
+    flex-flow: column;
+    align-content: center;
+    justify-content: space-between;
+    height: 80%;
+}
+
+.content h5{
+    margin-top: 40%;
+    max-width: 70%;
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }

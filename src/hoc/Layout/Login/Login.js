@@ -8,9 +8,9 @@ const Login =(props)=>{
 			<div>
 				<div className={cssClasses}></div>
 				<div>
-					<main className={classes.content}>
+					<main className={classes.main}>
 						<img className={classes.logo} src={logo} alt='logo'></img>
-						<div>{props.children}</div>
+						<div className={classes.content}>{props.children}</div>
 					</main>
 				</div>
 			</div>

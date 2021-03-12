@@ -92,7 +92,7 @@ const Profile = (props) => {
 			</div>
 			<div className={classes.horizontalLine}> </div>
 			<div
-				style={{ marginBottom: '5vh' }}
+				style={{ margin: '2vh' }}
 				onClick={() => {
 					setLogoutStatus(true);
 					setStatus(true);

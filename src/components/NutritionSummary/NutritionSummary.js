@@ -78,7 +78,7 @@ const NutritionSummary = (props) => {
 				onClick={() => {
 					if (meal && parent === 'dailyJournal') {
 						setPage('jrlEntry');
-						setMeal(null)
+						// setMeal(null)
 					}else if (meal && parent === `records`){
 						setPage('jrlEntry')
 					} else if (food) {

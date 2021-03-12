@@ -15,7 +15,7 @@
     padding: 0 0 10vh;
     width: -webkit-fill-available;
     z-index: 5;
-    min-height: 40vh;
+    min-height: 40%;
 }
 
 .tab{
@@ -34,10 +34,10 @@
 }
 
 .dailyJournal{
-height: 37vh;
+height: 30%;
 }
 .records{
-height: 73vh;
+height: 70vh;
 display: flex;
     flex-flow: column;
     justify-content: space-around;
