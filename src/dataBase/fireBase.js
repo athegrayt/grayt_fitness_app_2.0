@@ -16,6 +16,7 @@ firebase.initializeApp(firebaseConfig);
 const firestore = firebase.firestore();
 
 const provider = new firebase.auth.GoogleAuthProvider();
+
 export const googleAuth = () => {
 	firebase.auth().signInWithRedirect(provider);
 };
@@ -46,6 +47,45 @@ export const retrieveGoogleAuth = async () => {
 			console.log({ errorCode, errorMessage, email, credential });
 		};
 };
+
+export const newEmailAuth = async(email, password)=>{
+	try{
+		const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password)
+		const user = userCredential.user;
+		console.log(user)
+	}catch(error){
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode,
+errorMessage)
+  }
+}
+export const loginEmailAuth = async(email, password)=>{
+	try{
+		const userCredential = await firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password);
+		const user = userCredential.user;
+		return user
+	}catch(error){
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode,
+errorMessage)
+  }
+}
+
+export const signOut = ()=>{
+	firebase
+		.auth()
+		.signOut()
+		.then(() => {
+			console.log('signed out')
+		})
+		.catch((error) => {
+			console.log(error)
+		});
+}
 
 export const addEntry = async (meal, entry, date) => {
 	try {
@@ -101,9 +141,12 @@ export const addUser = async (info) => {
 	}
 };
 export const getUser = async (userID) => {
+	const user = firebase.auth().currentUser;
+	const ID = user ? user.l : userID
+	console.log(ID, user)
 	try {
 		const docRef = firestore.collection('users');
-		const user = await docRef.where('userId', '==', `${userID}`).get();
+		const user = await docRef.where('userId', '==', ID).get();
 		if (user.empty) {
 			return null;
 		} else {

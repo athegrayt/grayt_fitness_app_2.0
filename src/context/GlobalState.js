@@ -157,20 +157,12 @@ const GlobalState = (props) => {
 	};
 	const auth = async (email, password, isSignup, google) => {
 		dispatch({ type: AUTH_START });
-		const authData = {
-			email,
-			password,
-			returnSecureToken: true,
-		};
-		let url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_API_KEY3}`;
-		if (isSignup === false) {
-			url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_API_KEY3}`;
-		}
 		try {
 			let userToken = null;
 			let tokenExpirationDate = null;
 			let curUserId = null;
 			if (google) {
+				console.log(google)
 				userToken = google.token;
 				tokenExpirationDate = new Date(
 					new Date().getTime() + google.user.ba.currentUser.i.u + 3600 * 1000
@@ -179,12 +171,10 @@ const GlobalState = (props) => {
 				const displayName = google.user.displayName;
 				dispatch({ type: SET_NAME, displayName });
 			} else {
-				const response = await axios.post(url, authData);
-				tokenExpirationDate = new Date(
-					new Date().getTime() + response.data.expiresIn * 1000
-				);
-				userToken = response.data.idToken;
-				curUserId = response.data.localId;
+				const response = isSignup ? await firebase.newEmailAuth(email, password): await firebase.loginEmailAuth(email, password);
+					tokenExpirationDate = new Date(new Date().getTime() + 3600000);
+					userToken = response.l;
+					curUserId = response.uid;
 			}
 			const user = await firebase.getUser(curUserId);
 			let registered = false;
@@ -222,10 +212,15 @@ const GlobalState = (props) => {
 		dispatch({ type: AUTH_START });
 		const token = localStorage.getItem('token');
 		if (!token) {
-			logout();
+			console.log('!token')
+			dispatch({
+				type: AUTH_LOGOUT,
+			});
+			// logout();
 		} else {
 			const expirationDate = new Date(localStorage.getItem('expirationDate'));
 			if (expirationDate <= new Date()) {
+				console.log('expirationDate');
 				logout();
 			} else {
 				const userId = localStorage.getItem('userId');
@@ -280,6 +275,7 @@ const GlobalState = (props) => {
 		localStorage.removeItem('expirationDate');
 		localStorage.removeItem('userId');
 		localStorage.removeItem('registered');
+		firebase.signOut()
 		dispatch({
 			type: AUTH_LOGOUT,
 		});
