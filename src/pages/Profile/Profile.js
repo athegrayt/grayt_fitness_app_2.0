@@ -1,11 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { FiSettings } from 'react-icons/fi';
-import Picker from 'react-scrollable-picker';
 import Button from '../../components/UI/Button/Button';
-import {
-	groupValuesWeight,
-	groupValuesGoalWeight,
-} from '../../components/WizardForms/Onboarding/OnbaordingPagesUtilities';
+import { useForm } from 'react-hook-form';
+import Input from '../../components/UI/Forms/Input/Input';
 import Modal from '../../components/UI/Modal/Modal';
 import Loading from '../../components/Loading/Loading';
 import useCalGoal from '../../hooks/useCalGoal';
@@ -29,19 +26,12 @@ const Profile = (props) => {
 		loading
 	} = context;
 	const [goalWeightUpdate, setGoalWeightUpdate] = useState(goalWeight);
+	const { register, handleSubmit, errors } = useForm();
 	const [weightUpdate, setWeightUpdate] = useState(weight);
 	const [status, setStatus] = useState(false);
 	const [changeGoal, setChangeGoal] = useState(false);
 	const [changeWeight, setChangeWeight] = useState(false);
 	const [logoutStatus, setLogoutStatus] = useState(false);
-	const valueGroupsGoalWeight = {
-		goalWeight: goalWeightUpdate,
-	};
-	const valueGroupsWeight = {
-		weight: weightUpdate,
-	};
-	const optionGroupsGoalWeight = groupValuesGoalWeight(400);
-	const optionGroupsWeight = groupValuesWeight(400);
 	const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
 	const updateUserWeight = () => {
 		updateUser(goalWeightUpdate, weightUpdate, docID);
@@ -51,7 +41,7 @@ const Profile = (props) => {
 		setLogoutStatus(false);
 
 	};
-
+	
 	return (
 		<div className={classes.profile}>
 			<h1>{name}</h1>
@@ -106,32 +96,39 @@ const Profile = (props) => {
 					setChangeGoal(false);
 					setLogoutStatus(false);
 				}}>
-				{(changeGoal || changeWeight) && (
-					<div className={classes.update}>
-						<h3>{`Update your ${changeGoal ? 'Goal' : 'Current'} Weight`}</h3>
-						{changeGoal && (
-							<Picker
-								optionGroups={optionGroupsGoalWeight}
-								valueGroups={valueGroupsGoalWeight}
-								onChange={(name, value) => {
-									setGoalWeightUpdate(value);
-								}}
-							/>
-						)}
-						{!changeGoal && (
-							<Picker
-								optionGroups={optionGroupsWeight}
-								valueGroups={valueGroupsWeight}
-								onChange={(name, value) => {
-									setWeightUpdate(value);
-								}}
-							/>
-						)}
-						<Button type='button' btnType='Yield' clicked={updateUserWeight}>
-							Update
-						</Button>
-					</div>
-				)}
+				{(changeGoal || changeWeight) &&
+					(!logoutStatus) &&(
+						<form
+							className={classes.update}
+							onSubmit={handleSubmit((values) => updateUserWeight())}>
+							<h3>{`Update your ${changeGoal ? 'Goal' : 'Current'} Weight`}</h3>
+							<div className={classes.weight}>
+								<Input
+									style={{ textAlign: 'center' }}
+									onInput={(e) =>
+										changeGoal
+											? setGoalWeightUpdate(e.target.value)
+											: setWeightUpdate(e.target.value)
+									}
+									key='weight'
+									name='weight'
+									placeholder='-'
+									defaultValue={changeGoal ? goalWeight : weight}
+									type='tel'
+									min='1'
+									max='1000'
+									register={register({
+										required: true,
+									})}
+								/>
+								<p>lbs</p>
+								{errors.weight?.type === 'required' && 'Please enter weight'}
+							</div>
+							<Button type='submit' btnType='Yield'>
+								Update
+							</Button>
+						</form>
+					)}
 
 				{logoutStatus && (
 					<div>

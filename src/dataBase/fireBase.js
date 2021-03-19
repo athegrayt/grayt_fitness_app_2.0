@@ -21,71 +21,69 @@ export const googleAuth = () => {
 	firebase.auth().signInWithRedirect(provider);
 };
 export const retrieveGoogleAuth = async () => {
-	try{
-		const result =await firebase.auth().getRedirectResult()
-				
+	try {
+		const result = await firebase.auth().getRedirectResult();
+
 		if (result.credential) {
-					/** @type {firebase.auth.OAuthCredential} */
-					const credential = result.credential;
-	
-					// This gives you a Google Access Token. You can use it to access the Google API.
-					const token = credential.accessToken;
-					// ...
-					const user = result.user;
-					return { token, user };
-				}
-				// The signed-in user info.
-	}catch(error){
-			// Handle Errors here.
-			const errorCode = error.code;
-			const errorMessage = error.message;
-			// The email of the user's account used.
-			const email = error.email;
-			// The firebase.auth.AuthCredential type that was used.
-			const credential = error.credential;
+			/** @type {firebase.auth.OAuthCredential} */
+			const credential = result.credential;
+
+			// This gives you a Google Access Token. You can use it to access the Google API.
+			const token = credential.accessToken;
 			// ...
-			console.log({ errorCode, errorMessage, email, credential });
-		};
+			const user = result.user;
+			return { token, user };
+		}
+		// The signed-in user info.
+	} catch (error) {
+		// Handle Errors here.
+		const errorCode = error.code;
+		const errorMessage = error.message;
+		// The email of the user's account used.
+		const email = error.email;
+		// The firebase.auth.AuthCredential type that was used.
+		const credential = error.credential;
+		// ...
+		console.log({ errorCode, errorMessage, email, credential });
+		return { errorCode, errorMessage };
+	}
 };
 
-export const newEmailAuth = async(email, password)=>{
-	try{
-		const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password)
+export const newEmailAuth = async (email, password) => {
+	try {
+		const userCredential = await firebase
+			.auth()
+			.createUserWithEmailAndPassword(email, password);
 		const user = userCredential.user;
-		console.log(user)
-	}catch(error){
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode,
-errorMessage)
-  }
-}
-export const loginEmailAuth = async(email, password)=>{
-	try{
+		return user;
+	} catch (error) {
+		const errorCode = error.code;
+		const errorMessage = error.message;
+		return { errorCode, errorMessage };
+	}
+};
+export const loginEmailAuth = async (email, password) => {
+	try {
 		const userCredential = await firebase
 			.auth()
 			.signInWithEmailAndPassword(email, password);
 		const user = userCredential.user;
-		return user
-	}catch(error){
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorCode,
-errorMessage)
-  }
-}
+		return user;
+	} catch (error) {
+		const errorCode = error.code;
+		const errorMessage = error.message;
+		return { errorCode, errorMessage };
+	}
+};
 
-export const signOut = ()=>{
+export const signOut = () => {
 	firebase
 		.auth()
 		.signOut()
-		.then(() => {
-			console.log('signed out')
-		})
 		.catch((error) => {
-			console.log(error)
+			console.log(error);
 		});
-}
+};
 
 export const addEntry = async (meal, entry, date) => {
 	try {
@@ -101,7 +99,7 @@ export const addEntry = async (meal, entry, date) => {
 };
 export const deleteEntry = async (meal, docID, date) => {
 	try {
-		const docRef = await firestore
+		 await firestore
 			.collection('journalEntries')
 			.doc(`${meal}`)
 			.collection(`${date}`)
@@ -141,9 +139,8 @@ export const addUser = async (info) => {
 	}
 };
 export const getUser = async (userID) => {
-	const user = firebase.auth().currentUser;
-	const ID = user ? user.l : userID
-	console.log(ID, user)
+	const curUser = firebase.auth().uid;
+	const ID = curUser ? curUser.l : userID;
 	try {
 		const docRef = firestore.collection('users');
 		const user = await docRef.where('userId', '==', ID).get();

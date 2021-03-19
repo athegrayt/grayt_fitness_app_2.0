@@ -29,7 +29,7 @@ const FoodSearchFirstPage = (props) => {
 			</option>
 		);
 	});
-
+	console.log(watchFoodName)
 	return (
 		<div>
 			<div onClick={() => previousPage('jrlEntry')} className={classes.icon}>
@@ -47,7 +47,7 @@ const FoodSearchFirstPage = (props) => {
 						register={register({
 							required: true,
 							validate: {
-								validSearchItem: (value) => hints.includes(value),
+								validSearchItem: (value) => hints.includes(value.toLowerCase()),
 							},
 						})}
 						value={props.value}

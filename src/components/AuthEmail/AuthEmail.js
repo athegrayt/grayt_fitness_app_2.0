@@ -36,7 +36,7 @@ const AuthEmail =(props)=>{
 				<form onSubmit={handleSubmit(onSubmit)}>
 					{renderInput}
 					{error && <div className={classes.error}>{error}</div>}
-					<Button type='submit' btnType='Success'>
+					<Button type='submit' btnType='Success' >
 						{btnText}
 					</Button>
 				</form>

@@ -5,7 +5,9 @@
     align-items: center;
     height: 80%;
 }
-
+.profile h3{
+    color: black
+}
 
 .weight{
     display: flex;
@@ -18,6 +20,7 @@
     justify-content: space-evenly;
     align-items: center;
     height: 70vh;
+    width: 80vw;
 }
 .calGoal{
     display: flex;
@@ -32,9 +35,12 @@
     height: 100%;
     justify-content: center;
 
-}   
-
-
+} 
+.weight{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}  
 .verticalLine{
     width: 1vw;
     height: 20vh;
@@ -44,4 +50,15 @@
     width: 80vw;
     height: 1vw;
     background-color: gray;
+}
+
+@media only screen and (min-width: 600px){
+    .update{
+    display: flex;
+    flex-flow: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 80vh;
+    width:60vw
+}
 }

@@ -9,7 +9,7 @@ const Registration = (props) => {
 		name,
 		page,
 		setPage,
-		age,
+		birthdate,
 		sex,
 		height,
 		weight,
@@ -31,7 +31,7 @@ const Registration = (props) => {
 	if (page === 4 && height) {
 		showRight = true;
 	}
-	if (page === 5 && age) {
+	if (page === 5 && birthdate) {
 		showRight = true;
 	}
 	if (page === 6 && weight) {

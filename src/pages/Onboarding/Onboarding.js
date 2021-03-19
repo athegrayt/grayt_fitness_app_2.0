@@ -22,12 +22,15 @@ const Onboarding = (props) => {
 	const { userId, addUser, registered, loading, name } = context;
 	const [userName, setUserName] = useState(name);
 	const [page, setPage] = useState(1);
-	const [age, setAge] = useState(25);
+	const [birthdate, setBirthdate] = useState();
 	const [sex, setSex] = useState();
 	const [height, setHeight] = useState(68);
-	const [weight, setWeight] = useState(150);
+	const [weight, setWeight] = useState();
 	const [goalWeight, setGoalWeight] = useState(weight);
 	const [activity, setActivity] = useState();
+	const cur = new Date();
+	const diff = cur - birthdate; // This is the difference in milliseconds
+	const age = Math.floor(diff / 31557600000); 
 	const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
 
 	useEffect(()=>{
@@ -43,13 +46,13 @@ const Onboarding = (props) => {
 			setPage={setPage}
 			sex={sex}
 			height={height}
-			age={age}
+			birthdate={birthdate}
 			weight={weight}
 			activity={activity}
 			goalWeight={goalWeight}
 			submit={() =>{
 				addUser({
-					name,
+					name:userName,
 					height,
 					age,
 					activity,
@@ -58,7 +61,8 @@ const Onboarding = (props) => {
 					goalWeight,
 					calGoal,
 					userId,
-				})}
+				})
+			}
 			}>
 				{loading && <Loading/>}
 			{!loading && <div className={classes.onboarding}>
@@ -79,7 +83,7 @@ const Onboarding = (props) => {
 					/>
 				)}
 				{page === 5 && (
-					<OnboardingPage5 setAge={(value) => setAge(value)} age={age} />
+					<OnboardingPage5 setBirthdate={(value) => setBirthdate(value)} birthdate={birthdate} />
 				)}
 				{page === 6 && (
 					<OnboardingPage6

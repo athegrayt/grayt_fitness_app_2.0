@@ -98,7 +98,7 @@ export const authSuccess = (token, userId, registered, state) => {
 export const authFail = (error, state) => {
 	return {
 		...state,
-		error: error.error.message,
+		error,
 		loading: false,
 	};
 };

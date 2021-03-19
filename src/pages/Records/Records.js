@@ -15,7 +15,7 @@ import dailyJournalContext from '../../context/global-state-context'
     
 const Records = (props) =>{
    const context = useContext(dailyJournalContext)
-   const {token, userId, breakfast, lunch, dinner, snack, initEntries, updateCurTab, loading } = context;
+   const {token, userId, breakfast, lunch, dinner, snack, initEntries, updateCurTab, loading, calGoal } = context;
    let history = useHistory()
    const parent = 'records'
 	const [value, onChange] = useState(new Date());
@@ -32,7 +32,7 @@ const Records = (props) =>{
 		snack,
 		meal,
 		food,
-		2000
+		calGoal
 	);
    
 	const tabHandler = (status) => {
@@ -131,6 +131,7 @@ const Records = (props) =>{
 					prev2Label={null}
 					maxDetail='month'
 					minDetail='month'
+					maxDate={new Date()}
 				/>
 				<Button
 					type='button'

@@ -1,29 +1,41 @@
 import React from 'react';
-import Picker from 'react-scrollable-picker';
-import { groupValuesGoalWeight } from './OnbaordingPagesUtilities';
+import { useForm } from 'react-hook-form';
+import Input from '../../UI/Forms/Input/Input';
+import Button from '../../UI/Button/Button';
 import * as classes from './OnboardingPages.module.css';
 
 const OnboardingPage8 = (props) => {
 	const { setGoalWeight, goalWeight } = props;
-	const valueGroups = {
-		goalWeight,
-	};
-	const optionGroups = groupValuesGoalWeight(400);
-
+	const { register, handleSubmit, errors } = useForm();
+	
 	return (
-		<div className={classes.OnboardingPages}>
+		<form
+			onSubmit={handleSubmit((values) => setGoalWeight(values.weight))}
+			className={classes.OnboardingPages}>
 			<div className={classes.question}>
 				<h2>What is your goal weight?</h2>
-				<p>This helps us have a clear vision of the final destination.</p>
 			</div>
-			<div className={classes.btns} style={{cursor: 'grab'}}>
-				<Picker
-					optionGroups={optionGroups}
-					valueGroups={valueGroups}
-					onChange={(name, value) => setGoalWeight(value)}
+			<div className={classes.weight}>
+				<Input
+					key='weight'
+					name='weight'
+					placeholder='-'
+					value={goalWeight}
+					type='tel'
+					max='1000'
+					register={register({
+						required: true,
+						min: 1,
+					})}
+					min='1'
 				/>
+				<p>lbs</p>
+				{errors.weight?.type === 'required' && 'Please enter your goal weight'}
 			</div>
-		</div>
+			<Button type='submit' btnType='Success' style={{ width: '40vw' }}>
+				Set Goal Weight
+			</Button>
+		</form>
 	);
 };
 

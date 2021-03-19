@@ -95,7 +95,7 @@ const NutritionSummary = (props) => {
 				className={classes[`icon-${parent}`]}>
 				<FaAngleLeft color='#9b9b9b' size='2rem' />
 			</div>
-			<div>
+			<div className={classes.summary}>
 				<div className={classes[`description-${parent}`]}>
 				<h3>{description}</h3>
 				</div>

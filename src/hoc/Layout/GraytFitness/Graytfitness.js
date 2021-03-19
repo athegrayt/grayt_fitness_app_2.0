@@ -23,7 +23,8 @@ const GraytFitness =(props)=> {
 					to={{
 						pathname: '/dashboard',
 						icon: 'home',
-					}}>
+					}}
+					onClick={() => updateCurTab('home')}>
 					<img className={classes.logo} src={logo} alt='logo'></img>
 				</Link>
 				<main className={classes.content}>{props.children}</main>
@@ -34,9 +35,7 @@ const GraytFitness =(props)=> {
 								pathname: '/records',
 								icon: 'records',
 							}}
-							onClick={() =>
-								updateCurTab('records')
-							}>
+							onClick={() => updateCurTab('records')}>
 							<FaClipboard className={recordIconClass} />
 						</Link>
 						<div className={classes.homeIcon}>
@@ -45,9 +44,7 @@ const GraytFitness =(props)=> {
 									pathname: '/dashboard',
 									icon: 'home',
 								}}
-								onClick={() =>
-									updateCurTab('home')
-								}>
+								onClick={() => updateCurTab('home')}>
 								<HomeIcon
 									fill={homeIconClass}
 									title='home'
@@ -60,9 +57,7 @@ const GraytFitness =(props)=> {
 								pathname: '/profile',
 								icon: 'settings',
 							}}
-							onClick={() =>
-								updateCurTab('settings')
-							}>
+							onClick={() => updateCurTab('settings')}>
 							<FaUser className={settingsIconClass} />
 						</Link>
 					</div>

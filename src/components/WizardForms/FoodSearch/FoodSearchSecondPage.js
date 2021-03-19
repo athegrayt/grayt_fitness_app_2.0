@@ -15,24 +15,24 @@ const FoodSearchSecondPage = (props) => {
 				<FaAngleLeft color='#9b9b9b' size='2rem' />
 			</div>
 			<div className={classes.info}>
-				<h3>FOOD:</h3>
+				<h3>FOOD:</h3>{'  '}
 				<h3>{food}</h3>
 			</div>
 
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className={classes.foodSearchPage}>
+				className={classes.foodSearchSecondPage}>
 				<div className={classes.info}>
 					<h3>Amount:</h3>
 					<div style={{ width: '15vw' }}>
 						<Input
 							key='serving_qty'
 							name='serving_qty'
-							type='number'
+							type='tel'
 							placeholder='Ex. 1'
 							register={register({
-								required:true,
-								min: 1
+								required: true,
+								min: 1,
 							})}
 							defaultValue={qty}
 							min='1'

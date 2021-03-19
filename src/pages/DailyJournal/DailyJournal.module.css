@@ -5,16 +5,16 @@
 	margin-block-start: 2vh;
 	justify-content: space-around;
 	align-items: center;
-	height: 80%;
+	height: 90%;
 	width: 100vw;
 	z-index: 2;
 	position: absolute;
 	top: 0;
 }
 
-.dailyJournal h3{
+/* .dailyJournal h3{
     margin: 0 auto;
-}
+} */
 
 .dailyJournal .btns{
     overflow: auto;

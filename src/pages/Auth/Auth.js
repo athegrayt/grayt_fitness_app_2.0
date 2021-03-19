@@ -11,7 +11,14 @@ import {useHistory} from 'react-router-dom'
     
 const Auth =(props)=>{
 	const context = useContext(DailyJournalContext);
-	const { error, auth, loading, googleAuth, googleAuthData } = context;
+	const {
+		error,
+		auth,
+		loading,
+		googleAuth,
+		googleAuthData,
+		resetError,
+	} = context;
    const [authType, setAuthType] = useState(true)
    const [signIn, setSignIn] = useState(true)
    const [curStatus, setCurStatus] = useState(true)
@@ -55,8 +62,11 @@ const Auth =(props)=>{
 								<p>
 									{authTypeCopy.typeSwitch}{' '}
 									<span
-										onClick={() => setSignIn(!signIn)}
-										style={{ color: 'red', cursor: 'pointer' }}>
+										onClick={() => {
+											setSignIn(!signIn)
+											resetError()
+										}}
+										style={{ color: 'red', cursor: 'pointer', fontWeight: '700' }}>
 										{authTypeCopy.switch}
 									</span>
 								</p>

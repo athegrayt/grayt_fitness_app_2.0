@@ -1,35 +1,40 @@
 import React from 'react';
-import Picker from 'react-scrollable-picker';
-import {groupValuesWeight} from './OnbaordingPagesUtilities'
+import { useForm } from 'react-hook-form';
+import Input from '../../UI/Forms/Input/Input'
 import * as classes from './OnboardingPages.module.css';
+import Button from '../../UI/Button/Button';
 
 const OnboardingPage6 = (props) => {
 	const { setWeight, weight } = props;
-	const valueGroups = {
-		weight
-	};
-	const optionGroups = groupValuesWeight(400);
+	const { register, handleSubmit, errors } = useForm();
 
 	return (
-		<div className={classes.OnboardingPages}>
+		<form
+			onSubmit={handleSubmit((values) => setWeight(values.weight))}
+			className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>How much do you weight?</h2>
-				<p>
-					This helps us to determine your bmi ( body mass index){' '}
-					<span role='img' aria-label="face with glasses">
-						🤓
-					</span>
-					.
-				</p>
+				<h3>How much do you weight?</h3>
 			</div>
-			<div className={classes.btns}>
-				<Picker
-					optionGroups={optionGroups}
-					valueGroups={valueGroups}
-					onChange={(name, value) => setWeight(value)}
+			<div className={classes.weight}>
+				<Input
+					key='weight'
+					name='weight'
+					placeholder='-'
+					defaultValue={weight}
+					type='tel'
+					min='1'
+					max='1000'
+					register={register({
+						required: true,
+					})}
 				/>
+				<p>lbs</p>
+				{errors.weight?.type === "required" && "Please enter your weight"}
 			</div>
-		</div>
+			<Button type='submit' btnType='Success' style={{width: '40vw'}}>
+				Set Weight
+			</Button>
+		</form>
 	);
 };
 

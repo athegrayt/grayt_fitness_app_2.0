@@ -11,12 +11,7 @@ weight,
 activity,
 goalWeight,setPage}= props
     return (
-			<div className={classes.OnboardingPages}>
-				<div className={classes.question}>
-					<h3>Let's review your answers!</h3>
-					<p>If you spot a mistake, click on it to make the correction.</p>
-				</div>
-				<div className={classes.btns}>
+			<div className={classes.summary}>
 					<Button type='button' btnType='Auth' clicked={() => setPage(2)}>
 						Name: {name}
 					</Button>
@@ -39,7 +34,6 @@ goalWeight,setPage}= props
 					<Button type='button' btnType='Auth' clicked={() => setPage(8)}>
 						Goal Weight: {goalWeight} lbs
 					</Button>
-				</div>
 			</div>
 		);
 }

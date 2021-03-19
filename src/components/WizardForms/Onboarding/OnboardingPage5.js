@@ -1,26 +1,27 @@
 import React from 'react';
-import Picker from 'react-scrollable-picker';
-import {optionGroupsAge} from './OnbaordingPagesUtilities';
+import Calendar from 'react-calendar';
+import '../../../pages/Records/Calendar.css';
 import * as classes from './OnboardingPages.module.css';
 
 const OnboardingPage5 = (props) => {
-	const { setAge, age } = props;
-	const valueGroups = {
-		age,
-	};
+	const { setBirthdate, birthdate } = props;
+	const userBirthdate = birthdate || new Date(1985, 1, 1);
 	
-
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>How old are you?</h2>
-				<p>This helps us to better calibrate your plan.</p>
+				<h3>What is your date of birth?</h3>
 			</div>
-			<div className={classes.btns}>
-				<Picker
-					optionGroups={optionGroupsAge(100)}
-					valueGroups={valueGroups}
-					onChange={(name, value) => setAge(value)}
+			<div className={classes.calender}>
+				<Calendar
+					className='react-calendar'
+					onChange={setBirthdate}
+					onClickDay={(birth) => setBirthdate(birth)}
+					value={userBirthdate}
+					next2Label={null}
+					prev2Label={null}
+					defaultView='decade'
+					maxDate={new Date()}
 				/>
 			</div>
 		</div>

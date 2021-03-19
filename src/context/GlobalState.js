@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import axios from 'axios';
 import dailyJournalReducer from './global-state-reducer';
 import * as firebase from '../dataBase/fireBase';
 import DailyJournalContext from './global-state-context';
@@ -100,7 +99,7 @@ const GlobalState = (props) => {
 
 	const initEntries = async (token, userId, date) => {
 		dispatch({ type: AUTH_START });
-		const t = new Date();
+		const t = date || new Date();
 		const z = t.getTimezoneOffset() * 60 * 1000;
 		const tLocal = new Date(t - z);
 		const curDate = tLocal.toISOString().slice(0, 10);
@@ -162,19 +161,27 @@ const GlobalState = (props) => {
 			let tokenExpirationDate = null;
 			let curUserId = null;
 			if (google) {
-				console.log(google)
-				userToken = google.token;
-				tokenExpirationDate = new Date(
-					new Date().getTime() + google.user.ba.currentUser.i.u + 3600 * 1000
-				);
-				curUserId = google.user.l;
-				const displayName = google.user.displayName;
-				dispatch({ type: SET_NAME, displayName });
+				if (google.errorCode) {
+					return dispatch({ type: AUTH_FAIL, error: google.errorMessage });
+				}else{
+					userToken = google.token;
+					tokenExpirationDate = new Date(
+						new Date().getTime() + 3600000
+					);
+					curUserId = google.user.uid;
+					const displayName = google.user.displayName;
+					dispatch({ type: SET_NAME, displayName });
+				}
 			} else {
 				const response = isSignup ? await firebase.newEmailAuth(email, password): await firebase.loginEmailAuth(email, password);
+				if(response.errorCode){
+					return dispatch({ type: AUTH_FAIL, error: response.errorMessage });
+				}else{
 					tokenExpirationDate = new Date(new Date().getTime() + 3600000);
-					userToken = response.l;
+					userToken = response.b.b.h;
 					curUserId = response.uid;
+				}
+					
 			}
 			const user = await firebase.getUser(curUserId);
 			let registered = false;
@@ -212,7 +219,6 @@ const GlobalState = (props) => {
 		dispatch({ type: AUTH_START });
 		const token = localStorage.getItem('token');
 		if (!token) {
-			console.log('!token')
 			dispatch({
 				type: AUTH_LOGOUT,
 			});
@@ -220,13 +226,12 @@ const GlobalState = (props) => {
 		} else {
 			const expirationDate = new Date(localStorage.getItem('expirationDate'));
 			if (expirationDate <= new Date()) {
-				console.log('expirationDate');
 				logout();
 			} else {
 				const userId = localStorage.getItem('userId');
 				const registered = localStorage.getItem('registered');
 				const user = await firebase.getUser(userId);
-				if (JSON.parse(`${registered}`.toLowerCase()) === true) {
+				if (user && JSON.parse(`${registered}`.toLowerCase()) === true) {
 					setUserInfo(
 						user[0].weight,
 						user[0].goalWeight,
@@ -238,6 +243,8 @@ const GlobalState = (props) => {
 						user[0].sex,
 						user[0].docID
 					);
+				}else{
+					localStorage.setItem('registered', false)
 				}
 				dispatch({ type: AUTH_SUCCESS, token, userId, registered });
 			}
@@ -295,6 +302,10 @@ const GlobalState = (props) => {
 		dispatch({ type: UPDATE_CUR_TAB, tab });
 	};
 
+	const resetError = ()=>{
+		dispatch({ type: AUTH_FAIL });
+	}
+
 	let context = {
 		breakfast: dailyJournalState.breakfast,
 		lunch: dailyJournalState.lunch,
@@ -329,6 +340,7 @@ const GlobalState = (props) => {
 		addUser,
 		updateUser,
 		logout,
+		resetError,
 	};
 
 	return (

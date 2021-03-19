@@ -12,6 +12,7 @@
 
 
 .form__field {
+  text-align: center;
   margin: 1rem 0;
   font-family: inherit;
   width: 100%;

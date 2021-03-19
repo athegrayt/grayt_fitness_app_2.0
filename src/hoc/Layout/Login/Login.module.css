@@ -1,5 +1,6 @@
 
 .splashbg{
+  position: fixed;
   background-image: url('../../../assets/images/mike-von-CX0zKCHOpJo-unsplash.jpg');
   background-repeat: no-repeat;
   background-position: center;

@@ -8,10 +8,7 @@ const OnboardingPage3 = (props) => {
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>How do you identify yourself?</h2>
-				<p>
-					We ask this to make sure your journey is fun healthy and balanced.
-				</p>
+				<h3>How do you identify yourself?</h3>
 			</div>
 			<div className={classes.btns}>
 				<Button

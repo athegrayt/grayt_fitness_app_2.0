@@ -8,8 +8,7 @@ const OnboardingPage2 = (props) => {
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
-				<h2>What should we call you?</h2>
-				<p>We ask this to make your experience personal.</p>
+				<h3>What should we call you?</h3>
 			</div>
 			<div className={classes.btns}>
 				<Input placeholder='Ex. Bob Marley' value={name} onChange={event=>setName(event.target.value)}/> 

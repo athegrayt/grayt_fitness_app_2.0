@@ -1,27 +1,30 @@
 .onboarding {
- display: flex;
- flex-flow: column;
- align-items: center;
- height: 80vh;
- margin-bottom: 10vh;
- 
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	height: 80%;
+	margin-bottom: 10vh;
 }
 
-.iconRight{
-  position: absolute;
-  right: 5%;
+.iconRight {
+	position: absolute;
+	right: 5%;
 }
-.iconLeft{
-  position: absolute;
-  left: 5%;
+.iconLeft {
+	position: absolute;
+	left: 5%;
 }
 
-.reviewPage{
-justify-content: space-between;
+.reviewPage {
+	justify-content: space-between;
 }
 
 @media (min-width: 600px) {
-  .JournalLog {
-    width: 500px;
-  }
+	.JournalLog {
+		width: 500px;
+	}
+	.onboarding {
+		justify-content: center;
+		height: 80vh;
+	}
 }

@@ -28,7 +28,7 @@ const DailyJournal = (props) => {
 		goalWeight,
 		activity,
 		sex,
-		loading
+		loading, resetError
 	} = context;
 	const parent = 'dailyJournal'
 	const calGoal = useCalGoal(weight, height, age, goalWeight, activity, sex);
@@ -51,6 +51,7 @@ const DailyJournal = (props) => {
 	useEffect(()=>{
 			const curDate = new Date()
 			initEntries(token, userId,curDate);
+			resetError();
 	}, [])
 
 	const tabHandler = (status) => {
