@@ -35,8 +35,8 @@ const JournalEntries = (props) => {
 			</div>
 		) : (
 			<div className={classes.empty}>
-				<p>Sorry, we weren't able to find any journal entries for </p>
-				<p> your {meal} on {date}</p>
+				<p>We weren't able to find any entries for your {meal} on {date} </p>
+				{/* <p> </p> */}
 			</div>
 		);
 	if (curMeal && curMeal[0].entries.length) {

@@ -4,5 +4,16 @@
     flex-flow: column;
     align-items: center;
     width: 80%;
-    margin: 5% auto; 
+    justify-content: space-around;
+    height: 30vh; 
+}
+
+.mealButtons button{
+    margin: 0;
+}
+
+@media only screen and (min-width: 600px){
+ .mealButtons{
+     height: 40vh
+ }   
 }

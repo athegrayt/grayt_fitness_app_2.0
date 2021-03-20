@@ -21,7 +21,7 @@ const Onboarding = (props) => {
 	let history = useHistory()
 	const { userId, addUser, registered, loading, name } = context;
 	const [userName, setUserName] = useState(name);
-	const [page, setPage] = useState(9);
+	const [page, setPage] = useState(1);
 	const [birthdate, setBirthdate] = useState();
 	const [sex, setSex] = useState();
 	const [height, setHeight] = useState(68);

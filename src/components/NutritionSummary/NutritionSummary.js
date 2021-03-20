@@ -62,9 +62,9 @@ const NutritionSummary = (props) => {
 			})
 		);
 
-	let description = curTotalCal>0 && `Total % of ${calGoal} cal daily goal:`;
+	let description = curTotalCal>0 && `${percentage}% of ${calGoal} cal daily goal:`;
 	if (meal && !food) {
-		description = `${meal} % of consumed calories:`;
+		description = `${meal}: ${percentage}% of calories`;
 	} else if (food) {
 		description = `${food.serving_qty} ${food.serving_unit} of ${food.food_name}`;
 		if (food.food_name === food.serving_unit && breakdown) {
@@ -100,9 +100,9 @@ const NutritionSummary = (props) => {
 				<h3>{description}</h3>
 				</div>
 
-				{((breakdown && !food && !meal && curTotalCal > 0) ||(breakdown && !food && meal && curTotalCal > 0)) && (
+				{/* {(breakdown && !food && !meal && curTotalCal > 0) && (
 					<CalorieMeter percent={percentage} />
-				)}
+				)} */}
 				<div className={classes.nutritionFacts}>{facts}</div>
 				{(breakdown && food && parent==='dailyJournal') && (
 					<div className={classes.btn} onClick={() => deleteHandler()}>
