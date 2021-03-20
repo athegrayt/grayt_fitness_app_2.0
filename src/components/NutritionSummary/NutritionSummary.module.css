@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: column;
   text-align: center;
-  width: 100vw;
+  width: 100%;
   margin: auto;
   /* margin-block-start: 5vh; */
 }
@@ -42,6 +42,9 @@
 }
 @media only screen and (min-width:600px){
   .summary{
-    height: 40vh
+    height: 40vh;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-evenly;
   }
 }

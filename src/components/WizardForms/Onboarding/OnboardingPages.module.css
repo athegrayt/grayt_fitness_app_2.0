@@ -10,6 +10,7 @@
 .summary{
     display: flex;
     flex-flow: column;
+    width: 80%
 }
 .summary h3{
     color: black;
@@ -56,8 +57,13 @@
     color: black;
 }
 
+.error{
+    color: red;
+}
+
 @media only screen and (min-width:600px){
     .OnboardingPages{
     height: 50vh;
 }
+
 }

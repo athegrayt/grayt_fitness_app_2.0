@@ -23,15 +23,18 @@ const OnboardingPage8 = (props) => {
 					value={goalWeight}
 					type='tel'
 					max='1000'
+					min='1'
 					register={register({
 						required: true,
 						min: 1,
+						max: 1000
 					})}
-					min='1'
 				/>
 				<p>lbs</p>
-				{errors.weight?.type === 'required' && 'Please enter your goal weight'}
 			</div>
+				{errors.weight?.type === "required" && <p className={classes.error}>Please enter your goal weight</p>}
+				{errors.weight?.type === "min" && <p className={classes.error}>Weight must be greater than 0lbs</p>}
+				{errors.weight?.type === "max" && <p className={classes.error}>Weight must be less than 1000lbs</p>}
 			<Button type='submit' btnType='Success' style={{ width: '40vw' }}>
 				Set Goal Weight
 			</Button>

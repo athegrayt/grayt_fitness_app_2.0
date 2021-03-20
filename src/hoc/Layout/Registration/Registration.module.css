@@ -57,5 +57,6 @@ box-shadow: inset 0px 7px 3px -3px rgba(50, 50, 50, 0.75);
 	position: absolute;
 	top:50%;
 	left:50%;
-	transform: translate(-50%, -50%)
+	transform: translate(-50%, -50%);
+	width: 60%;
 }

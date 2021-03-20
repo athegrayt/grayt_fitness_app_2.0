@@ -34,13 +34,14 @@
 
 .dailyJournal {
 	height: 90%;
+	width: 80%;
 }
 .records {
 	height: 70vh;
 	display: flex;
 	flex-flow: column;
 	justify-content: space-around;
-	max-width: 80%;
+	width: 80%;
 }
 
 .open {

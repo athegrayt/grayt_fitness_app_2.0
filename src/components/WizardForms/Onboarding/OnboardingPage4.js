@@ -5,11 +5,12 @@ import './Slider.css';
 
 const OnboardingPage4 = (props) => {
 	const { setHeight, height } = props;
-	console.log(height)
 	
 	const formatFeet = foot => foot + 'ft'
 	const formatInches = inches => inches + 'in'
-
+	const feet = Math.floor(height / 12)
+	const inches =height % 12 > 0 ? height % 12 : 0 
+	console.log({height, feet, inches})
 	return (
 		<div className={classes.OnboardingPages}>
 			<div className={classes.question}>
@@ -17,18 +18,17 @@ const OnboardingPage4 = (props) => {
 			</div>
 			<div className={classes.height}>
 				<div style={{fontWeight:'700'}}>
-					{formatFeet(Math.floor(height / 12))}
+					{formatFeet(feet)}
 					{'  '}
-					{formatInches(height % 12)}
+					{formatInches(inches)}
 				</div>
 				<div className='slider custom-labels'>
 					<Slider
-						min={0}
+						min={1}
 						max={6}
-						value={Math.floor(height / 12)}
+						value={feet}
 						format={formatFeet}
-						handleLabel={Math.floor(height / 12)}
-						onChange={(value) => setHeight(value * 12 + (height % 12))}
+						onChange={(value) => value<=6 && setHeight(value * 12 + inches)}
 					/>
 				</div>
 				<div className='slider custom-labels'>
@@ -36,10 +36,9 @@ const OnboardingPage4 = (props) => {
 						className='rangeslider'
 						min={0}
 						max={12}
-						value={height % 12}
+						value={inches }
 						format={formatInches}
-						handleLabel={height % 12}
-						onChange={(value) => setHeight(height - (height % 12) + value)}
+						onChange={(value) => value<12 && (feet<=6) && setHeight(feet*12 + value)}
 					/>
 				</div>
 			</div>

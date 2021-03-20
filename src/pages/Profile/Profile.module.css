@@ -9,6 +9,10 @@
     color: black
 }
 
+.logout{
+    width: 80vw;
+}
+
 .weight{
     display: flex;
     flex-flow: wrap;
@@ -60,5 +64,8 @@
     align-items: center;
     height: 80vh;
     width:60vw
+}
+.logout{
+    width: 40vw;
 }
 }

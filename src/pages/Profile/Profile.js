@@ -131,7 +131,7 @@ const Profile = (props) => {
 					)}
 
 				{logoutStatus && (
-					<div>
+					<div className={classes.logout}>
 						{!loading && (
 							<Button
 								type='button'
