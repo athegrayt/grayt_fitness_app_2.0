@@ -108,7 +108,7 @@ const Records = (props) =>{
 				percentage={percentage}
 				nutritionTotal={nutritionTotal}
 				curTotalCal={curTotalCal}
-				calGoal={2000}
+				calGoal={calGoal}
 				breakdown={breakdown}
 				setPage={(page) => setPage(page)}
 				setCurStatus={(status) => setCurStatus(status)}

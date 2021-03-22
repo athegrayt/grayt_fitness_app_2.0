@@ -283,6 +283,7 @@ const GlobalState = (props) => {
 		localStorage.removeItem('userId');
 		localStorage.removeItem('registered');
 		firebase.signOut()
+		window.location.reload(true)
 		dispatch({
 			type: AUTH_LOGOUT,
 		});
