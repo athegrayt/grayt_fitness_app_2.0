@@ -18,7 +18,7 @@
 
 ## Description
 
-A redesigned and enhanced 2.0 version of the [Grayt Fitness web app](https://github.com/athegrayt/grayt_fitness_app). This is serverless fullstack web app that leverages, React Hooks, Google Cloud Services, CRUD database operations, React Libraries, and third party APIs to offer users an interactive calorie tracking experience. Create an account and begin tracking your calories to reach your health goals.
+A redesigned and enhanced 2.0 version of the [Grayt Fitness web app](https://github.com/athegrayt/grayt_fitness_app). This is a serverless full-stack web app that leverages, React Hooks, Google Cloud Services, CRUD database operations, React Libraries, and third-party APIs to offer users an interactive calorie tracking experience. Create an account and begin tracking your calories to reach your health goals.
 
 #### Technologies
 
@@ -43,7 +43,34 @@ npm start
 
 - Create .env file with personal [Nutritionix](https://developer.nutritionix.com/) and [Google Cloud Services](https://cloud.google.com/docs/authentication/api-keys) api keys 
 
-#### CRUD Operations
+### Project Technologies Usage:
+
+- Design:
+
+  - Figma was used to create the design
+
+- Authentication:
+
+  - Google's Firebase is used to provide the user with the ability to sign in with either an email or a google account
+
+- Nutritional Data:
+
+  - The Nutritionix REST api is used for all nutritional data
+
+- User Interface:
+
+  - React is used to provide the user interface and to manage state
+
+- Backend:
+
+  - Google Cloud Functions are used for backend needs
+
+- Database:
+
+  - Google's Firestore is used to leverage a NOSQL database
+
+
+### CRUD Operations
 
 - C:
     - Create journal entry in data base with fetched nutritional data   
