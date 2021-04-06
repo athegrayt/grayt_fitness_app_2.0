@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import dailyJournalReducer from './global-state-reducer';
+import globalStateReducer from './global-state-reducer';
 import * as firebase from '../dataBase/fireBase';
 import DailyJournalContext from './global-state-context';
 import {
@@ -49,7 +49,7 @@ const GlobalState = (props) => {
 	const error = false;
 	const registered = false;
 	const curTab = 'home';
-	const [dailyJournalState, dispatch] = useReducer(dailyJournalReducer, {
+	const [globalState, dispatch] = useReducer(globalStateReducer, {
 		breakfast,
 		lunch,
 		dinner,
@@ -222,10 +222,12 @@ const GlobalState = (props) => {
 			dispatch({
 				type: AUTH_LOGOUT,
 			});
+			console.log('!token');
 			// logout();
 		} else {
 			const expirationDate = new Date(localStorage.getItem('expirationDate'));
 			if (expirationDate <= new Date()) {
+				console.log('expirationDate')
 				logout();
 			} else {
 				const userId = localStorage.getItem('userId');
@@ -277,6 +279,7 @@ const GlobalState = (props) => {
 	};
 
 	const logout = () => {
+		console.log('logout');
 		dispatch({ type: AUTH_START });
 		localStorage.removeItem('token');
 		localStorage.removeItem('expirationDate');
@@ -291,7 +294,7 @@ const GlobalState = (props) => {
 	const checkAuthTimeout = (expirationTime) => {
 		setTimeout(() => {
 			logout();
-		}, expirationTime);
+		}, 3600000);
 	};
 
 	const updateUser = async (updatedWeigthGoal, updatedWeight, docID) => {
@@ -308,27 +311,27 @@ const GlobalState = (props) => {
 	}
 
 	let context = {
-		breakfast: dailyJournalState.breakfast,
-		lunch: dailyJournalState.lunch,
-		dinner: dailyJournalState.dinner,
-		snack: dailyJournalState.snack,
-		nutritionBreakdown: dailyJournalState.nutritionBreakdown,
-		token: dailyJournalState.token,
-		userId: dailyJournalState.userId,
-		modal: dailyJournalState.modal,
-		error: dailyJournalState.error,
-		curTab: dailyJournalState.curTab,
-		name: dailyJournalState.name,
-		height: dailyJournalState.height,
-		age: dailyJournalState.age,
-		activity: dailyJournalState.activity,
-		sex: dailyJournalState.sex,
-		weight: dailyJournalState.weight,
-		goalWeight: dailyJournalState.goalWeight,
-		calGoal: dailyJournalState.calGoal,
-		registered: dailyJournalState.registered,
-		docID: dailyJournalState.docID,
-		loading: dailyJournalState.loading,
+		breakfast: globalState.breakfast,
+		lunch: globalState.lunch,
+		dinner: globalState.dinner,
+		snack: globalState.snack,
+		nutritionBreakdown: globalState.nutritionBreakdown,
+		token: globalState.token,
+		userId: globalState.userId,
+		modal: globalState.modal,
+		error: globalState.error,
+		curTab: globalState.curTab,
+		name: globalState.name,
+		height: globalState.height,
+		age: globalState.age,
+		activity: globalState.activity,
+		sex: globalState.sex,
+		weight: globalState.weight,
+		goalWeight: globalState.goalWeight,
+		calGoal: globalState.calGoal,
+		registered: globalState.registered,
+		docID: globalState.docID,
+		loading: globalState.loading,
 		setEntries,
 		auth,
 		googleAuth,

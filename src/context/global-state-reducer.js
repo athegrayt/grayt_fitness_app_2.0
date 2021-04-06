@@ -45,7 +45,7 @@ import {
 	setName
 } from './global-state-actions';
 
-const dailyJournalReducer = (state, action) => {
+const globalStateReducer = (state, action) => {
 	switch (action.type) {
 		case SET_USER_SUCCESS:
 			return setUser(
@@ -102,4 +102,4 @@ const dailyJournalReducer = (state, action) => {
 			return state;
 	}
 };
-export default dailyJournalReducer;
+export default globalStateReducer;
